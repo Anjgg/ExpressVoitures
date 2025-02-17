@@ -1,7 +1,9 @@
-﻿using ExpressVoitures.Database.Dto;
-using ExpressVoitures.Database.TableDeLiaison;
+﻿using ExpressVoitures.Dto;
+
+//using ExpressVoitures.Database.TableDeLiaison;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace ExpressVoitures
 {
@@ -19,41 +21,52 @@ namespace ExpressVoitures
         {
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<OperationDto>()
-                .HasOne<VoitureDto>(s => s.VoitureDto)
-                .WithOne(ad => ad.OperationDto)
-                .HasForeignKey<VoitureDto>(ad => ad.OperationId);
-
-            modelBuilder.Entity<VoitureDto>()
-                .HasOne<OperationDto>(s => s.OperationDto)
-                .WithOne(ad => ad.VoitureDto)
-                .HasForeignKey<VoitureDto>(ad => ad.OperationId);
-
-            modelBuilder.Entity<OperationDto>()
-                .HasMany(s => s.ReparationDtos)
-                .WithMany(ad => ad.OperationDtos)
-                .UsingEntity(j => j.ToTable("OperationReparationDto"));
-
-
-            modelBuilder.Entity<ReparationDto>()
-                .HasMany(s => s.OperationDtos)
-                .WithMany(ad => ad.ReparationDtos);
-
-            // Fix decimal precision and scale
-            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            base.OnModelCreating(builder);
+            foreach (var property in builder.Model.GetEntityTypes()
+                         .SelectMany(t => t.GetProperties())
+                         .Where(p => p.ClrType == typeof(decimal) || p.ClrType == typeof(decimal?)))
             {
-                var decimalProperties = entityType.GetProperties()
-                    .Where(p => p.ClrType == typeof(decimal) || p.ClrType == typeof(decimal?));
-                foreach (var property in decimalProperties)
-                {
-                    property.SetPrecision(8);
-                    property.SetScale(2);
-                }
+                property.SetColumnType("decimal(8,2)");
             }
-
         }
+
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    base.OnModelCreating(modelBuilder);
+        //    modelBuilder.Entity<OperationDto>()
+        //        .HasOne<VoitureDto>(s => s.VoitureDto)
+        //        .WithOne(ad => ad.OperationDto)
+        //        .HasForeignKey<VoitureDto>(ad => ad.OperationId);
+
+        //    modelBuilder.Entity<VoitureDto>()
+        //        .HasOne<OperationDto>(s => s.OperationDto)
+        //        .WithOne(ad => ad.VoitureDto)
+        //        .HasForeignKey<VoitureDto>(ad => ad.OperationId);
+
+        //    modelBuilder.Entity<OperationDto>()
+        //        .HasMany(s => s.ReparationDtos)
+        //        .WithMany(ad => ad.OperationDtos)
+        //        .UsingEntity(j => j.ToTable("OperationReparationDto"));
+
+
+        //    modelBuilder.Entity<ReparationDto>()
+        //        .HasMany(s => s.OperationDtos)
+        //        .WithMany(ad => ad.ReparationDtos);
+
+        //    // Fix decimal precision and scale
+        //    foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        //    {
+        //        var decimalProperties = entityType.GetProperties()
+        //            .Where(p => p.ClrType == typeof(decimal) || p.ClrType == typeof(decimal?));
+        //        foreach (var property in decimalProperties)
+        //        {
+        //            property.SetPrecision(8);
+        //            property.SetScale(2);
+        //        }
+        //    }
+
+        //}
     }
 }

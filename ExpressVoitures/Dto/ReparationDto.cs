@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ExpressVoitures.Database.Dto
+namespace ExpressVoitures.Dto
 {
     public class ReparationDto
     {
@@ -18,6 +18,7 @@ namespace ExpressVoitures.Database.Dto
         public double DureeHeure { get; set; }
 
         public int OperationId { get; set; }
+
         public ICollection<OperationDto> OperationDtos { get; set; }
     }
 }

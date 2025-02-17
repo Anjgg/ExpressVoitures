@@ -1,10 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace ExpressVoitures.Database.Dto
+﻿namespace ExpressVoitures.Models
 {
-    public class VoitureDto
+    public class VoitureModel
     {
-        [Key]
         public string CodeVin { get; set; }
 
         public string Marque { get; set; }
@@ -14,8 +11,5 @@ namespace ExpressVoitures.Database.Dto
         public string Finition { get; set; }
 
         public int Annee { get; set; }
-
-        public int OperationId { get; set; }
-        public OperationDto OperationDto { get; set; }
     }
 }
