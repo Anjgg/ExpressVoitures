@@ -15,8 +15,14 @@ namespace ExpressVoitures.Dto
         public string Finition { get; set; }
 
         public int Annee { get; set; }
+        
+        public int ReparationId { get; set; }
+        public virtual ReparationDto Reparation { get; set; }
 
-        [ForeignKey("OperationId")]
-        public OperationDto OperationDto { get; set; }
+        public int PrixId { get; set; }
+        public virtual PrixDto Prix { get; set; }
+       
+        public int DateId { get; set; }
+        public virtual DateDto Date { get; set; }
     }
 }

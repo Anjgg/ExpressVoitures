@@ -6,7 +6,7 @@ namespace ExpressVoitures.Dto
     public class DateDto
     {
         [Key]
-        public int DateId { get; set; }
+        public int Id { get; set; }
 
         public DateTimeOffset DateAchat { get; set; }
 
@@ -14,7 +14,6 @@ namespace ExpressVoitures.Dto
 
         public DateTimeOffset DateVente { get; set; }
 
-        [ForeignKey("OperationId")]
-        public OperationDto Operation { get; set; }
+        public virtual VoitureDto Voiture { get; set; }
     }
 }

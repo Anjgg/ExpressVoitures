@@ -5,20 +5,10 @@ namespace ExpressVoitures.Dto
     public class ReparationDto
     {
         [Key]
-        public int ReparationId { get; set; }
+        public int Id { get; set; }
 
-        public string Type { get; set; }
+        public virtual ICollection<TypeDto> Types { get; set; }
 
-        public string Code { get; set; }
-
-        public decimal Prix { get; set; }
-
-        public double DureeJour { get; set; }
-
-        public double DureeHeure { get; set; }
-
-        public int OperationId { get; set; }
-
-        public ICollection<OperationDto> OperationDtos { get; set; }
+        public virtual ICollection<VoitureDto> Voitures { get; set; }
     }
 }

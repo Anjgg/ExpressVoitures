@@ -11,5 +11,11 @@
         public string Finition { get; set; }
 
         public int Annee { get; set; }
+
+        public ReparationModel Reparations { get; set; }
+
+        public PrixModel Prix { get; set; }
+
+        public DateModel Date { get; set; }
     }
 }
