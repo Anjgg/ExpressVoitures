@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using ExpressVoitures.Dto;
-using ExpressVoitures.Models;
+using ExpressVoitures.Data.Dto;
+using ExpressVoitures.Data.Models;
 
 namespace ExpressVoitures
 {
