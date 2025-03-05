@@ -1,4 +1,5 @@
-﻿using ExpressVoitures.Dto;
+﻿using ExpressVoitures.Data.Dto;
+
 
 //using ExpressVoitures.Database.TableDeLiaison;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
