@@ -2,6 +2,7 @@ using ExpressVoitures;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using ExpressVoitures.Data.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,11 @@ builder.Services.AddControllersWithViews();
 // Setup AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
+// Setup Services Scope
+builder.Services.AddScoped<IExpressVoituresService, ExpressVoituresService>();
+
+
+
 
 
 
@@ -38,8 +44,10 @@ else
     app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
-}
 
+    
+}
+app.SeedDataBase();
 
 
 app.UseHttpsRedirection();
