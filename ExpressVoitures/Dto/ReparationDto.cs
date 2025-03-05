@@ -9,6 +9,7 @@ namespace ExpressVoitures.Dto
 
         public virtual ICollection<TypeDto> Types { get; set; }
 
+        public string CodeVin { get; set; }
         public virtual ICollection<VoitureDto> Voitures { get; set; }
     }
 }
