@@ -1,8 +1,43 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model List<VoitureModel>
+@{
+    ViewData["Title"] = "Acceuil";
 }
 
+@{
+    // var listAllCars = Model;
+}
+
+
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Bienvenue</h1>
+</div>
+
+<div class="text-center">
+    <h2>ExpressVoitures</h2>
+</div>
+
+<div>
+    <p>ExpressVoitures est une application web qui permet de gérer les voitures.</p>
+    <p>Vous pouvez ajouter une voiture, afficher toutes les voitures, modifier une voiture et supprimer une voiture
+</div>
+
+<div >
+    @foreach (var item in Model) {
+        <div class="card" style="width: 18rem;">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">@item.Marque</h5>
+                <p class="card-text">@item.Modele</p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">@item.CodeVin</li>
+                <li class="list-group-item">@item.Annee</li>
+                <li class="list-group-item">@item.Finition</li>
+            </ul>
+            <div class="card-body">
+                <a href="#" class="card-link">Card link</a>
+                <a href="#" class="card-link">Another link</a>
+            </div>
+        </div>
+    }
 </div>
