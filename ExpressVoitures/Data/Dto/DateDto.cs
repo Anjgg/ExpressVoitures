@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ExpressVoitures.Dto
+namespace ExpressVoitures.Data.Dto
 {
     public class DateDto
     {
         [Key]
-        public int Id { get; set; }
+        public int Id { get; init; }
 
         public DateTimeOffset DateAchat { get; set; }
 

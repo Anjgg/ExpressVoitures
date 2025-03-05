@@ -1,5 +1,4 @@
-﻿
-namespace ExpressVoitures.Models
+﻿namespace ExpressVoitures.Data.Models
 {
     public class DateModel
     {

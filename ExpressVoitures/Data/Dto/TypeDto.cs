@@ -1,8 +1,8 @@
-﻿namespace ExpressVoitures.Dto
+﻿namespace ExpressVoitures.Data.Dto
 {
     public class TypeDto
     {
-        public int Id { get; set; }
+        public int Id { get; init; }
 
         public string Nom { get; set; }
 
