@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using ExpressVoitures.Data.Dto;
 using ExpressVoitures.Data.Models;
 using ExpressVoitures.Data.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -22,9 +23,15 @@ namespace ExpressVoitures.Controllers
             return View(listAllCars);
         }
 
-        public IActionResult Create()
+        public IActionResult CreateNew()
         {
             return View();
+        }
+
+        public IActionResult Create(VoitureModel model)
+        {
+            var a = _service.CreateVoitureAsync(model);
+            return RedirectToAction("Index");
         }
 
         public IActionResult Update()

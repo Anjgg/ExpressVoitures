@@ -36,9 +36,20 @@ namespace ExpressVoitures.Data.Services
             throw new NotImplementedException();
         }
 
-        public Task<VoitureModel> CreateVoitureAsync(VoitureModel voiture)
+        public async Task<VoitureModel> CreateVoitureAsync(VoitureModel voiture)
         {
-            throw new NotImplementedException();
+            var a = new VoitureDto {
+                CodeVin = voiture.CodeVin,
+                Marque = voiture.Marque,
+                Modele = voiture.Modele,
+                Finition = voiture.Finition,
+                Annee = voiture.Annee,
+            };
+
+
+            await _context.Voitures.AddRangeAsync(a);
+            _context.SaveChanges();
+            return voiture;
         }
 
         public Task<VoitureModel> UpdateVoitureAsync(VoitureModel voiture)
