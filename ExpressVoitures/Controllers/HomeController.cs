@@ -3,6 +3,7 @@ using ExpressVoitures.Data.Dto;
 using ExpressVoitures.Data.Models;
 using ExpressVoitures.Data.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace ExpressVoitures.Controllers
 {
@@ -23,15 +24,33 @@ namespace ExpressVoitures.Controllers
             return View(listAllCars);
         }
 
-        public IActionResult CreateNew()
-        {
-            return View();
-        }
-
         public IActionResult Create(VoitureModel model)
         {
-            var a = _service.CreateVoitureAsync(model);
-            return RedirectToAction("Index");
+            if (model.CodeVin == null)
+            {
+                return View(new VoitureModel());
+            }
+            var voiture = _service.CreateVoitureAsync(model).Result;
+            return View("GetCar", voiture);
+        }
+
+        public IActionResult GetCar(VoitureModel model)
+        {
+            if (model.CodeVin == null)
+            {
+                return RedirectToAction("Index");
+            }
+            return View(model);
+        }
+
+        public IActionResult Delete(VoitureModel model)
+        {
+            if (model.CodeVin == null)
+            {
+                return RedirectToAction("Index");
+            }
+            _service.DeleteVoitureAsync(model);
+            return View("Index");
         }
 
         public IActionResult Update()

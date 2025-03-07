@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ExpressVoitures.Data.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ExpressVoitures.Controllers
 {
@@ -10,5 +11,7 @@ namespace ExpressVoitures.Controllers
             
             return View();
         }
+
+        
     }
 }
