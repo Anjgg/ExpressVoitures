@@ -38,7 +38,7 @@
                 <a href="#" class="card-link">Card link</a>
                 <a href="#" class="card-link">Another link</a>
             </div>
-            <a asp-area="" asp-controller="Home" asp-action="Delete" type="button" class="btn btn-primary">Delete</a>
+            <a asp-controller="Home" asp-action="Delete" asp-route-codeVin="@item.CodeVin" class="btn btn-primary">Delete</a>
         </div>
     }
 </div>

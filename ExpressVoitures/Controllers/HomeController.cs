@@ -24,11 +24,11 @@ namespace ExpressVoitures.Controllers
             return View(listAllCars);
         }
 
-        public IActionResult Create(VoitureModel model)
+        public IActionResult AddCar()
         {
-            if (model.CodeVin == null)
+            if (model.CodeVin.IsNullOrEmpty())
             {
-                return View(new VoitureModel());
+                return View();
             }
             var voiture = _service.CreateVoitureAsync(model).Result;
             return View("GetCar", voiture);
@@ -43,14 +43,14 @@ namespace ExpressVoitures.Controllers
             return View(model);
         }
 
-        public IActionResult Delete(VoitureModel model)
+        public IActionResult Delete(string? codeVin)
         {
-            if (model.CodeVin == null)
+            if (codeVin == null)
             {
                 return RedirectToAction("Index");
             }
-            _service.DeleteVoitureAsync(model);
-            return View("Index");
+            _service.DeleteVoitureAsync(codeVin);
+            return RedirectToAction("Index");
         }
 
         public IActionResult Update()

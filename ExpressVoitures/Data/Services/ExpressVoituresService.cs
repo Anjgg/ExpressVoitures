@@ -11,7 +11,7 @@ namespace ExpressVoitures.Data.Services
         Task<VoitureModel> GetVoitureAsync(int id);
         Task<VoitureModel> CreateVoitureAsync(VoitureModel voiture);
         Task<VoitureModel> UpdateVoitureAsync(VoitureModel voiture);
-        Task DeleteVoitureAsync(VoitureModel model);
+        Task DeleteVoitureAsync(string codeVin);
     }
 
     public class ExpressVoituresService : IExpressVoituresService
@@ -57,9 +57,9 @@ namespace ExpressVoitures.Data.Services
             throw new NotImplementedException();
         }
 
-        public async Task DeleteVoitureAsync(VoitureModel model)
+        public async Task DeleteVoitureAsync(string codeVin)
         {
-            await _context.Voitures.Where(a => a.CodeVin == model.CodeVin).ExecuteDeleteAsync();
+            await _context.Voitures.Where(a => a.CodeVin == codeVin).ExecuteDeleteAsync();
             return;
         }
 
