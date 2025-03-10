@@ -1,6 +1,14 @@
 ﻿@model VoitureModel
 @{
-    ViewData["Title"] = "Ajouter une Voiture";
+    ViewData["Title"] = "Index";
+    var actionName = ViewContext.RouteData.Values["action"]?.ToString();
+    string actionString;
+}
+
+@if (actionName == "Index") {
+    actionString = "Create"; 
+} else {
+    actionString = "Update";
 }
 
 <div>
@@ -9,14 +17,13 @@
 
 <div class="row">
     <div class="col-md-4">
-        <form asp-controller="Home" asp-action="Create" method="post">
+        <form asp-controller="Car" asp-action="@actionString" method="post">
             <div class="form-group row">
                 <label asp-for="@Model.Marque" class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-10">
                     <input asp-for="@Model.Marque" class="form-control" />
                     <span asp-validation-for="@Model.Marque" class="text-danger"></span>
                 </div>
-
             </div>
 
             <div class="form-group row">
@@ -26,14 +33,13 @@
                     <span asp-validation-for="@Model.Modele" class="text-danger"></span>
                 </div>
             </div>
-  
+
             <div class="form-group row">
                 <label asp-for="@Model.CodeVin" class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-10">
                     <input asp-for="@Model.CodeVin" class="form-control" />
                     <span asp-validation-for="@Model.CodeVin" class="text-danger"></span>
                 </div>
-
             </div>
 
             <div class="form-group row">
@@ -42,7 +48,6 @@
                     <input asp-for="@Model.Annee" class="form-control" />
                     <span asp-validation-for="@Model.Annee" class="text-danger"></span>
                 </div>
-
             </div>
 
             <div class="form-group row">
@@ -55,11 +60,9 @@
 
             <div class="form-group row">
                 <div class="col-sm-10">
-                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                    <button type="submit" class="btn btn-primary">@actionString</button>
                 </div>
-
             </div>
-
         </form>
     </div>
 </div>

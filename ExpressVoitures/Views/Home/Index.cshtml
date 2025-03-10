@@ -3,11 +3,6 @@
     ViewData["Title"] = "Acceuil";
 }
 
-@{
-    // var listAllCars = Model;
-}
-
-
 <div class="text-center">
     <h1 class="display-4">Bienvenue</h1>
 </div>
@@ -38,7 +33,8 @@
                 <a href="#" class="card-link">Card link</a>
                 <a href="#" class="card-link">Another link</a>
             </div>
-            <a asp-controller="Home" asp-action="Delete" asp-route-codeVin="@item.CodeVin" class="btn btn-primary">Delete</a>
+            <a asp-controller="Home" asp-action="ShowOneCar" asp-route-codeVin=@item.CodeVin class="btn btn-primary">Show</a>
+            <a asp-controller="Car" asp-action="Delete" asp-route-codeVin=@item.CodeVin class="btn btn-primary">Delete</a>
         </div>
     }
 </div>

@@ -14,27 +14,45 @@ namespace ExpressVoitures.Controllers
             _service = service;
         }
 
-        public IActionResult ShowCar(string carId)
+        public IActionResult Index()
         {
             return View();
         }
-        public IActionResult CreateCar(VoitureModel model)
+
+        public IActionResult Read(string codeVin)
         {
-            if (model.CodeVin.IsNullOrEmpty())
-            {
-                return View();
-            }
-            var voiture = _service.CreateVoitureAsync(model).Result;
-            return View("GetCar", voiture);
+            var voiture = _service.GetVoitureAsync(codeVin).Result;
+            return View("Index", voiture);
         }
 
-        public IActionResult GetCar(VoitureModel model)
+        public IActionResult Create(VoitureModel model)
         {
-            if (model.CodeVin == null)
+            if (!ModelState.IsValid)
             {
-                return RedirectToAction("Index");
+                return View("Index");
             }
+            var voiture = _service.CreateVoitureAsync(model).Result;
             return View(model);
+        }
+
+        public IActionResult Update(VoitureModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("Index", model);
+            }
+            var voiture = _service.UpdateVoitureAsync(model).Result;    
+            return View(voiture);
+        }
+
+        public IActionResult Delete(string? codeVin)
+        {
+            if (string.IsNullOrEmpty(codeVin))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            var car = _service.DeleteVoitureAsync(codeVin).Result;
+            return View(car);
         }
     }
 }

@@ -24,33 +24,18 @@ namespace ExpressVoitures.Controllers
             return View(listAllCars);
         }
 
-        public IActionResult AddCar()
+        public IActionResult ShowOneCar(string codeVin)
         {
-            if (model.CodeVin.IsNullOrEmpty())
-            {
-                return View();
-            }
-            var voiture = _service.CreateVoitureAsync(model).Result;
-            return View("GetCar", voiture);
-        }
-
-        public IActionResult GetCar(VoitureModel model)
-        {
-            if (model.CodeVin == null)
+            if (codeVin.IsNullOrEmpty())
             {
                 return RedirectToAction("Index");
             }
-            return View(model);
-        }
-
-        public IActionResult Delete(string? codeVin)
-        {
-            if (codeVin == null)
+            var voiture = _service.GetVoitureAsync(codeVin).Result;
+            if (voiture == null)
             {
                 return RedirectToAction("Index");
             }
-            _service.DeleteVoitureAsync(codeVin);
-            return RedirectToAction("Index");
+            return View(voiture);
         }
 
         public IActionResult Update()
@@ -58,10 +43,6 @@ namespace ExpressVoitures.Controllers
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        
     }
 }

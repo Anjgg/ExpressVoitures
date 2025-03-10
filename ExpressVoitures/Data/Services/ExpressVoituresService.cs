@@ -8,10 +8,10 @@ namespace ExpressVoitures.Data.Services
     public interface IExpressVoituresService
     {
         Task<List<VoitureModel>> GetAllCars();
-        Task<VoitureModel> GetVoitureAsync(int id);
+        Task<VoitureModel?> GetVoitureAsync(string codeVin);
         Task<VoitureModel> CreateVoitureAsync(VoitureModel voiture);
-        Task<VoitureModel> UpdateVoitureAsync(VoitureModel voiture);
-        Task DeleteVoitureAsync(string codeVin);
+        Task<VoitureModel> UpdateVoitureAsync(VoitureModel model);
+        Task<VoitureModel> DeleteVoitureAsync(string codeVin);
     }
 
     public class ExpressVoituresService : IExpressVoituresService
@@ -31,9 +31,14 @@ namespace ExpressVoitures.Data.Services
             return _mapper.Map<List<VoitureModel>>(listAllCars);
         }
 
-        public Task<VoitureModel> GetVoitureAsync(int id)
+        public async Task<VoitureModel?> GetVoitureAsync(string codeVin)
         {
-            throw new NotImplementedException();
+            var voitureContext = await _context.Voitures.Where(a => a.CodeVin == codeVin).FirstOrDefaultAsync();
+            if (voitureContext == null)
+            {
+                return null;
+            }
+            return _mapper.Map<VoitureModel>(voitureContext);
         }
 
         public async Task<VoitureModel> CreateVoitureAsync(VoitureModel voiture)
@@ -52,15 +57,25 @@ namespace ExpressVoitures.Data.Services
             return voiture;
         }
 
-        public Task<VoitureModel> UpdateVoitureAsync(VoitureModel voiture)
+        public async Task<VoitureModel> UpdateVoitureAsync(VoitureModel model)
         {
-            throw new NotImplementedException();
+            await _context.Voitures
+                        .Where(a => a.CodeVin == model.CodeVin)
+                        .ExecuteUpdateAsync(setPropertyCalls => setPropertyCalls
+                            .SetProperty(v => v.Marque, model.Marque)
+                            .SetProperty(v => v.Modele, model.Modele)
+                            .SetProperty(v => v.Finition, model.Finition)
+                            .SetProperty(v => v.Annee, model.Annee)
+                        );
+            var voiture = await _context.Voitures.Where(a => a.CodeVin == model.CodeVin).FirstOrDefaultAsync();
+            return _mapper.Map<VoitureModel>(voiture);
         }
 
-        public async Task DeleteVoitureAsync(string codeVin)
+        public async Task<VoitureModel> DeleteVoitureAsync(string codeVin)
         {
+            var voiture = await _context.Voitures.Where(a => a.CodeVin == codeVin).FirstOrDefaultAsync();
             await _context.Voitures.Where(a => a.CodeVin == codeVin).ExecuteDeleteAsync();
-            return;
+            return _mapper.Map<VoitureModel>(voiture);
         }
 
     }
