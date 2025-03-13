@@ -12,6 +12,7 @@ namespace ExpressVoitures.Data.Services
         Task<VoitureModel> CreateVoitureAsync(VoitureModel voiture);
         Task<VoitureModel> UpdateVoitureAsync(VoitureModel model);
         Task<VoitureModel> DeleteVoitureAsync(string codeVin);
+        Task<(bool, string)> CheckIfModified(VoitureModel model);
     }
 
     public class ExpressVoituresService : IExpressVoituresService
@@ -69,6 +70,20 @@ namespace ExpressVoitures.Data.Services
                         );
             var voiture = await _context.Voitures.Where(a => a.CodeVin == model.CodeVin).FirstOrDefaultAsync();
             return _mapper.Map<VoitureModel>(voiture);
+        }
+
+        public async Task<(bool, string)> CheckIfModified(VoitureModel voitureModel)
+        {
+            var voitureDto = await _context.Voitures.Where(a => a.CodeVin == voitureModel.CodeVin).FirstOrDefaultAsync();
+            if (voitureDto == null)
+            {
+                string errorMessage = $"VoitureDto not found with the CodeVin : {voitureModel.CodeVin}.";
+                return (false, errorMessage);
+            }
+            var voitureModelV2 = _mapper.Map<VoitureModel>(voitureDto);
+
+            bool isModified = !voitureModelV2.Equals(voitureModel);
+            return (isModified, string.Empty);
         }
 
         public async Task<VoitureModel> DeleteVoitureAsync(string codeVin)

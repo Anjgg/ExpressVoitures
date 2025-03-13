@@ -37,12 +37,23 @@ namespace ExpressVoitures.Controllers
 
         public IActionResult Update(VoitureModel model)
         {
-            if (!ModelState.IsValid)
+            (var isModified, string errorMessage) = _service.CheckIfModified(model).Result;
+
+            if (errorMessage != string.Empty)
             {
+                ModelState.AddModelError("CodeVin", errorMessage);
+            }
+
+            if (isModified && ModelState.IsValid)
+            {
+                var voiture = _service.UpdateVoitureAsync(model).Result;
+                return View(voiture);
+            } 
+            else
+            {
+                ViewBag.isModified = false;
                 return View("Index", model);
             }
-            var voiture = _service.UpdateVoitureAsync(model).Result;    
-            return View(voiture);
         }
 
         public IActionResult Delete(string? codeVin)
