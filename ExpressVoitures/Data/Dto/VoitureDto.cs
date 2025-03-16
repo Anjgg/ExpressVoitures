@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Humanizer.Bytes;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ExpressVoitures.Data.Dto
@@ -15,6 +16,8 @@ namespace ExpressVoitures.Data.Dto
         public required string Finition { get; set; }
 
         public int Annee { get; set; }
+
+        public byte[]? Image { get; set; }
 
         public virtual ReparationDto? Reparation { get; set; }
 

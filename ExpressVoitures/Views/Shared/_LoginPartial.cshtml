@@ -1,6 +1,9 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
+@{
+    var areaName = ViewContext.RouteData.Values["area"]?.ToString();
+}
 
 
 @if (SignInManager.IsSignedIn(User))
@@ -16,8 +19,15 @@
 }
 else
 {
-    <li class="nav-item">
-        <a class="nav-link onglet-menu-skinny" asp-area="Identity" asp-page="/Account/Login">Se connecter</a>
-    </li>
+    if (areaName == "Identity") {
+        <li class="nav-item">
+            <a class="nav-link onglet-menu-bold" asp-area="Identity" asp-page="/Account/Login">Se connecter</a>
+        </li>
+    } else {
+        <li class="nav-item">
+            <a class="nav-link onglet-menu-skinny" asp-area="Identity" asp-page="/Account/Login">Se connecter</a>
+        </li>
+    }
+    
 }
 

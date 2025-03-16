@@ -9,58 +9,55 @@
     actionString = "Update"; 
 } 
 
-<div>
-    <h1 class="text-center">Ajouter une voiture</h1>
+<div class="my-5 text-center">
+    <h1 class=" titre-homepage ">Ajouter une voiture</h1>
+    <p class="onglet-menu-skinny">tous les champs sont obligatoires</p>
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-controller="Car" asp-action="@actionString" method="post">
-            <div class="form-group row">
-                <label asp-for="Marque" class="col-sm-2 col-form-label"></label>
-                <div class="col-sm-10">
-                    <input asp-for="Marque" class="form-control" />
-                    <span asp-validation-for="Marque" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="form-group row">
-                <label asp-for="Modele" class="col-sm-2 col-form-label"></label>
-                <div class="col-sm-10">
-                    <input asp-for="Modele" class="form-control" />
-                    <span asp-validation-for="Modele" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="form-group row">
-                <label asp-for="CodeVin" class="col-sm-2 col-form-label"></label>
-                <div class="col-sm-10">
-                    <input asp-for="CodeVin" class="form-control" />
+<div class="container-fluid shadow  py-5">
+    <div class="row justify-content-center ">
+        <div class="col-md-6">
+            <form asp-controller="Car" asp-action="@actionString" method="post">
+                <div class="mb-3">
+                    <label asp-for="CodeVin" class="form-label">Code VIN</label>
+                    <input asp-for="CodeVin" type="text" class="form-control">
                     <span asp-validation-for="CodeVin" class="text-danger"></span>
                 </div>
-            </div>
 
-            <div class="form-group row">
-                <label asp-for="Annee" class="col-sm-2 col-form-label"></label>
-                <div class="col-sm-10">
-                    <input asp-for="Annee" class="form-control" />
+                <div class="mb-3">
+                    <label asp-for="Annee" class="form-label">Année</label>
+                    <input asp-for="Annee"  type="number" class="form-control">
                     <span asp-validation-for="Annee" class="text-danger"></span>
                 </div>
-            </div>
 
-            <div class="form-group row">
-                <label asp-for="Finition" class="col-sm-2 col-form-label"></label>
-                <div class="col-sm-10">
-                    <input asp-for="Finition" class="form-control" />
+                <div class="mb-3">
+                    <label asp-for="Marque" class="form-label">Marque</label>
+                    <input asp-for="Marque" type="text" class="form-control">
+                    <span asp-validation-for="Marque" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Modele" class="form-label">Modèle</label>
+                    <input asp-for="Modele" type="text" class="form-control">
+                    <span asp-validation-for="Modele" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Finition" class="form-label">Finition</label>
+                    <input asp-for="Finition" type="text" class="form-control">
                     <span asp-validation-for="Finition" class="text-danger"></span>
                 </div>
-            </div>
 
-            <div class="form-group row">
-                <div class="col-sm-10">
-                    <button type="submit" class="btn btn-primary"> @actionString </button>
+                <div class="mb-3">
+                    <label asp-for="Image" class="form-label">Image</label>
+                    <input asp-for="Image" type="file" class="form-control" accept="image/jpeg, image/jpg" >
+                    <span asp-validation-for="Image" class="text-danger"></span>
                 </div>
-            </div>
-        </form>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-custom">@actionString</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>

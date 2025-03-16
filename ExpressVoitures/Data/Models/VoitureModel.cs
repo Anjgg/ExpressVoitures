@@ -12,6 +12,8 @@
 
         public int Annee { get; set; }
 
+        public byte[]? Image { get; set; }
+
         public ReparationModel? Reparations { get; set; }
 
         public PrixModel? Prix { get; set; }

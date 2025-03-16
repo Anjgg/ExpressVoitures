@@ -52,6 +52,12 @@ namespace ExpressVoitures.Data.Services
                 Annee = voiture.Annee,
             };
 
+            if (voiture.Image != null)
+            {
+                
+                 
+            }
+
 
             await _context.Voitures.AddRangeAsync(a);
             _context.SaveChanges();

@@ -55,16 +55,16 @@ body {
 
 .btn-custom {
     background-color: #D9A963;
-    color: black; /* Texte blanc pour un meilleur contraste */
-    border: none; /* Supprime la bordure */
+    color: black; 
+    border: none; 
     padding: 10px 20px;
-    border-radius: 5px; /* Coins arrondis */
+    border-radius: 5px; 
     font-weight: bold;
     transition: background-color 0.3s;
 }
 
     .btn-custom:hover {
-        background-color: #c08f4f; /* Assombrit au survol */
+        background-color: #c08f4f; 
     }
 
 
