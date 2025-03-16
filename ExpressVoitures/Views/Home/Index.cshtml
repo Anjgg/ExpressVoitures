@@ -3,38 +3,36 @@
     ViewData["Title"] = "Acceuil";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Bienvenue</h1>
+<div class="text-center" style="margin-top: 300px; margin-bottom: 200px;">
+    <h1 class="titre-homepage">Nos voitures</h1>
+    <a asp-controller="Car" asp-action="Add" class="btn btn-custom dm-sans-400">+ Ajouter une voiture </a>
 </div>
 
-<div class="text-center">
-    <h2>ExpressVoitures</h2>
-</div>
 
-<div>
-    <p>ExpressVoitures est une application web qui permet de gérer les voitures.</p>
-    <p>Vous pouvez ajouter une voiture, afficher toutes les voitures, modifier une voiture et supprimer une voiture
-</div>
-
-<div >
-    @foreach (var item in Model) {
-        <div class="card" style="width: 18rem;">
-            <img src="..." class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">@item.Marque</h5>
-                <p class="card-text">@item.Modele</p>
-            </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">@item.CodeVin</li>
-                <li class="list-group-item">@item.Annee</li>
-                <li class="list-group-item">@item.Finition</li>
-            </ul>
-            <div class="card-body">
-                <a href="#" class="card-link">Card link</a>
-                <a href="#" class="card-link">Another link</a>
-            </div>
-            <a asp-controller="Home" asp-action="ShowOneCar" asp-route-codeVin=@item.CodeVin class="btn btn-primary">Show</a>
-            <a asp-controller="Car" asp-action="Delete" asp-route-codeVin=@item.CodeVin class="btn btn-primary">Delete</a>
-        </div>
-    }
+<div class="container mt-5">
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        @foreach (var item in Model)
+        {
+            <a asp-controller="Home" asp-action="ShowOneCar" asp-route-codeVin="@item.CodeVin" class="text-decoration-none" style="color: #2C1810;">
+                <div class="col">
+                    <div class="card p-3 shadow">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="image_voiture1.jpg" class="img-fluid image" alt="Voiture">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">@item.Prix.PrixVente €</h5>
+                                    <p class="card-text"><strong>Année : </strong>@item.Annee</p>
+                                    <p class="card-text"><strong>Marque : </strong>@item.Marque</p>
+                                    <p class="card-text"><strong>Modèle : </strong>@item.Modele</p>
+                                    <p class="card-text"><strong>Finition : </strong>@item.Finition</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        }
+    </div>
 </div>
