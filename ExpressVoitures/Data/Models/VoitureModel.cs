@@ -10,9 +10,9 @@
 
         public required string Finition { get; set; }
 
-        public int Annee { get; set; }
+        public int? Annee { get; set; }
 
-        public byte[]? Image { get; set; }
+        public string? ImagePath { get; set; }
 
         public ReparationModel? Reparations { get; set; }
 

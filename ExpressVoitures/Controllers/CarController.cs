@@ -1,6 +1,9 @@
 ﻿using ExpressVoitures.Data.Models;
-using ExpressVoitures.Data.Services;
+using ExpressVoitures.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 namespace ExpressVoitures.Controllers
@@ -14,56 +17,73 @@ namespace ExpressVoitures.Controllers
             _service = service;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index(string codeVin)
+        {
+            if (codeVin.IsNullOrEmpty())
+            {
+                return RedirectToAction("Index");
+            }
+            var voiture = await _service.GetCarAsync(codeVin);
+            if (voiture == null)
+            {
+                return RedirectToAction("Index");
+            }
+            return View(voiture);
+        }
+
+        [HttpGet]
+        public IActionResult Create()
         {
             return View();
         }
 
-        public IActionResult Read(string codeVin)
-        {
-            var voiture = _service.GetVoitureAsync(codeVin).Result;
-            return View("Index", voiture);
-        }
-
-        public IActionResult Create(VoitureModel model)
+        [HttpPost]
+        public async Task<IActionResult> Create(VoitureModel model)
         {
             if (!ModelState.IsValid)
             {
-                return View("Index");
+                return View(model);
             }
-            var voiture = _service.CreateVoitureAsync(model).Result;
+            var voiture = await _service.CreateVoitureAsync(model);
+            return RedirectToAction("CarCreated", voiture);
+        }
+
+        [HttpGet]
+        public IActionResult CarCreated(VoitureModel model)
+        {
             return View(model);
         }
 
-        public IActionResult Update(VoitureModel model)
+        [HttpGet]
+        public async Task<IActionResult> Update(string codeVin)
         {
-            (var isModified, string errorMessage) = _service.CheckIfModified(model).Result;
-
-            if (errorMessage != string.Empty)
-            {
-                ModelState.AddModelError("CodeVin", errorMessage);
-            }
-
-            if (isModified && ModelState.IsValid)
-            {
-                var voiture = _service.UpdateVoitureAsync(model).Result;
-                return View(voiture);
-            } 
-            else
-            {
-                ViewBag.isModified = false;
-                return View("Index", model);
-            }
+            var voiture = await _service.GetCarAsync(codeVin);
+            return View(voiture);
         }
 
-        public IActionResult Delete(string? codeVin)
+        [HttpPost]
+        public async Task<IActionResult> Update(VoitureModel model)
         {
-            if (string.IsNullOrEmpty(codeVin))
+            if (!ModelState.IsValid)
             {
-                return RedirectToAction("Index", "Home");
+                return View(model);
             }
-            var car = _service.DeleteVoitureAsync(codeVin).Result;
-            return View(car);
+            var voiture = await _service.UpdateCarAsync(model);
+            return RedirectToAction("CarUpdated", voiture);
+        }
+
+        [HttpGet]
+        public IActionResult CarUpdated(VoitureModel model)
+        {
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(string codeVin)
+        {
+            var voiture = await _service.DeleteCarAsync(codeVin);
+            return View(voiture);
         }
     }
 }

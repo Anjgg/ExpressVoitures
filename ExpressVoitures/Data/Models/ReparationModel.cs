@@ -4,8 +4,8 @@
     {
         public int Id { get; set; }
 
-        public ICollection<VoitureModel> Voiture { get; set; }
+        public ICollection<VoitureModel> Voitures { get; set; }
 
-        public ICollection<TypeModel> Type { get; set; }
+        public ICollection<TypeModel> Types { get; set; }
     }
 }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExpressVoitures.Migrations
 {
     [DbContext(typeof(ExpressVoituresContext))]
-    [Migration("20250305213732_Init-Date-Prix")]
-    partial class InitDatePrix
+    [Migration("20250323202925_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -124,6 +124,9 @@ namespace ExpressVoitures.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Marque")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -135,7 +138,7 @@ namespace ExpressVoitures.Migrations
                     b.Property<int>("PrixId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ReparationId")
+                    b.Property<int?>("ReparationId")
                         .HasColumnType("int");
 
                     b.HasKey("CodeVin");
@@ -384,9 +387,7 @@ namespace ExpressVoitures.Migrations
 
                     b.HasOne("ExpressVoitures.Data.Dto.ReparationDto", "Reparation")
                         .WithMany("Voitures")
-                        .HasForeignKey("ReparationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ReparationId");
 
                     b.Navigation("Date");
 

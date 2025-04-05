@@ -1,0 +1,17 @@
+﻿@model VoitureModel
+@{
+    ViewData["Title"] = "SaveUpdate";
+}
+
+
+<div>
+    <h1 class="text-center">La voiture @Model.CodeVin a été modifiée</h1>
+    <h2 class="text-center">@Model.Marque</h2>
+    <h3 class="text-center">@Model.Modele</h3>
+    <h4 class="text-center">@Model.Annee</h4>
+    <h5 class="text-center">@Model.Finition</h5>
+</div>
+
+<div>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Retour</a>
+</div>

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ExpressVoitures.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -223,7 +223,8 @@ namespace ExpressVoitures.Migrations
                     Modele = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Finition = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Annee = table.Column<int>(type: "int", nullable: false),
-                    ReparationId = table.Column<int>(type: "int", nullable: false),
+                    ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReparationId = table.Column<int>(type: "int", nullable: true),
                     PrixId = table.Column<int>(type: "int", nullable: false),
                     DateId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -246,8 +247,7 @@ namespace ExpressVoitures.Migrations
                         name: "FK_Voitures_Reparations_ReparationId",
                         column: x => x.ReparationId,
                         principalTable: "Reparations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(

@@ -1,11 +1,12 @@
 ﻿@model List<VoitureModel>
 @{
     ViewData["Title"] = "Acceuil";
+    
 }
 
 <div class="text-center" style="margin-top: 300px; margin-bottom: 200px;">
     <h1 class="titre-homepage">Nos voitures</h1>
-    <a asp-controller="Car" asp-action="Add" class="btn btn-custom dm-sans-400">+ Ajouter une voiture </a>
+    <a asp-controller="Car" asp-action="Create" class="btn btn-custom dm-sans-400">+ Ajouter une voiture </a>
 </div>
 
 
@@ -13,20 +14,18 @@
     <div class="row row-cols-1 row-cols-md-2 g-4">
         @foreach (var item in Model)
         {
-            <a asp-controller="Home" asp-action="ShowOneCar" asp-route-codeVin="@item.CodeVin" class="text-decoration-none" style="color: #2C1810;">
+            <a asp-controller="Car" asp-action="Index" asp-route-codeVin="@item.CodeVin" class="text-decoration-none" style="color: #2C1810;">
                 <div class="col">
                     <div class="card p-3 shadow">
                         <div class="row g-0">
                             <div class="col-md-4">
-                                <img src="image_voiture1.jpg" class="img-fluid image" alt="Voiture">
+                                <img src="~/images/Voiture.jpg" class="img-fluid img-thumbnail" alt="Voiture">
                             </div>
                             <div class="col-md-8">
                                 <div class="card-body">
                                     <h5 class="card-title">@item.Prix.PrixVente €</h5>
-                                    <p class="card-text"><strong>Année : </strong>@item.Annee</p>
                                     <p class="card-text"><strong>Marque : </strong>@item.Marque</p>
                                     <p class="card-text"><strong>Modèle : </strong>@item.Modele</p>
-                                    <p class="card-text"><strong>Finition : </strong>@item.Finition</p>
                                 </div>
                             </div>
                         </div>

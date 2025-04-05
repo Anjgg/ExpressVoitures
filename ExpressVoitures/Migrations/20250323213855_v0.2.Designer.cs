@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExpressVoitures.Migrations
 {
     [DbContext(typeof(ExpressVoituresContext))]
-    [Migration("20250305213824_Init-Type")]
-    partial class InitType
+    [Migration("20250323213855_v0.2")]
+    partial class v02
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -114,7 +114,7 @@ namespace ExpressVoitures.Migrations
                     b.Property<string>("CodeVin")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("Annee")
+                    b.Property<int?>("Annee")
                         .HasColumnType("int");
 
                     b.Property<int>("DateId")
@@ -122,6 +122,9 @@ namespace ExpressVoitures.Migrations
 
                     b.Property<string>("Finition")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImagePath")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Marque")
@@ -135,7 +138,7 @@ namespace ExpressVoitures.Migrations
                     b.Property<int>("PrixId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ReparationId")
+                    b.Property<int?>("ReparationId")
                         .HasColumnType("int");
 
                     b.HasKey("CodeVin");
@@ -384,9 +387,7 @@ namespace ExpressVoitures.Migrations
 
                     b.HasOne("ExpressVoitures.Data.Dto.ReparationDto", "Reparation")
                         .WithMany("Voitures")
-                        .HasForeignKey("ReparationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ReparationId");
 
                     b.Navigation("Date");
 

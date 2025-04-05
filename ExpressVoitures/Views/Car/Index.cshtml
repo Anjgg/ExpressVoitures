@@ -1,63 +1,31 @@
 ﻿@model VoitureModel
 @{
-    ViewData["Title"] = "Index";
-    var actionName = ViewContext.RouteData.Values["action"]?.ToString();
-    string actionString = "Create";
+    ViewData["Title"] = "Afficher une voiture";
 }
 
-@if (actionName == "Read" || actionName == "Update") {
-    actionString = "Update"; 
-} 
-
-<div class="my-5 text-center">
-    <h1 class=" titre-homepage ">Ajouter une voiture</h1>
-    <p class="onglet-menu-skinny">tous les champs sont obligatoires</p>
+<div>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Retour</a>
 </div>
-
-<div class="container-fluid shadow  py-5">
-    <div class="row justify-content-center ">
-        <div class="col-md-6">
-            <form asp-controller="Car" asp-action="@actionString" method="post">
-                <div class="mb-3">
-                    <label asp-for="CodeVin" class="form-label">Code VIN</label>
-                    <input asp-for="CodeVin" type="text" class="form-control">
-                    <span asp-validation-for="CodeVin" class="text-danger"></span>
+<div class="col">
+    <div class="card p-3 shadow">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="~/images/Voiture.jpg" class="img-fluid img-thumbnail" alt="Voiture">
+            </div>
+            <div class="col-md-8">
+                <div class="ms-5 mt-3">
+                    <h5 class="card-title">@Model.Prix.PrixVente €</h5>
+                    <p class="card-text"><strong>Marque : </strong>@Model.Marque</p>
+                    <p class="card-text"><strong>Modèle : </strong>@Model.Modele</p>
+                    <p class="card-text"><strong>Finition : </strong>@Model.Finition</p>
+                    <p class="card-text"><strong>Année : </strong>@Model.Annee</p>
+                    <p class="card-text"><strong>Date de disponibilité : </strong>@Model.Date.DateMiseEnVente.ToString("d")</p>
                 </div>
-
-                <div class="mb-3">
-                    <label asp-for="Annee" class="form-label">Année</label>
-                    <input asp-for="Annee"  type="number" class="form-control">
-                    <span asp-validation-for="Annee" class="text-danger"></span>
+                <div class="text-center mt-3">
+                    <a asp-controller="Home" asp-action="Contact" class="btn btn-success">Nous contacter</a>
+                    <a asp-controller="Car" asp-action="Update" asp-route-codeVin="@Model.CodeVin" class="btn btn-success">Modifier les informations</a>
                 </div>
-
-                <div class="mb-3">
-                    <label asp-for="Marque" class="form-label">Marque</label>
-                    <input asp-for="Marque" type="text" class="form-control">
-                    <span asp-validation-for="Marque" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="Modele" class="form-label">Modèle</label>
-                    <input asp-for="Modele" type="text" class="form-control">
-                    <span asp-validation-for="Modele" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="Finition" class="form-label">Finition</label>
-                    <input asp-for="Finition" type="text" class="form-control">
-                    <span asp-validation-for="Finition" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="Image" class="form-label">Image</label>
-                    <input asp-for="Image" type="file" class="form-control" accept="image/jpeg, image/jpg" >
-                    <span asp-validation-for="Image" class="text-danger"></span>
-                </div>
-
-                <div class="text-center">
-                    <button type="submit" class="btn btn-custom">@actionString</button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>

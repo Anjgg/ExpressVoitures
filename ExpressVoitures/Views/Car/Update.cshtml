@@ -1,13 +1,68 @@
 ﻿@model VoitureModel
 @{
-    ViewData["Title"] = "Update";
+    ViewData["Title"] = "Modifier";
 }
 
+<div class="my-5 text-center">
+    <h1 class=" titre-homepage ">Ajouter une voiture</h1>
+    <p class="onglet-menu-skinny">tous les champs sont obligatoires</p>
+</div>
 
-<div>
-    <h1 class="text-center">La voiture @Model.CodeVin a été modifiée</h1>
-    <h2 class="text-center">@Model.Marque</h2>
-    <h3 class="text-center">@Model.Modele</h3>
-    <h4 class="text-center">@Model.Annee</h4>
-    <h5 class="text-center">@Model.Finition</h5>
+<div class="container-fluid shadow  py-5">
+    <div class="row justify-content-center ">
+        <div class="col-md-6">
+
+            <form asp-controller="Car" asp-action="Update" method="post">
+                <div class="mb-3">
+                    <label asp-for="CodeVin" class="form-label">Code VIN</label>
+                    <input asp-for="CodeVin" type="text" class="form-control">
+                    <span asp-validation-for="CodeVin" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Annee" class="form-label">Année</label>
+                    <input asp-for="Annee" type="number" class="form-control">
+                    <span asp-validation-for="Annee" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Marque" class="form-label">Marque</label>
+                    <input asp-for="Marque" type="text" class="form-control">
+                    <span asp-validation-for="Marque" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Modele" class="form-label">Modèle</label>
+                    <input asp-for="Modele" type="text" class="form-control">
+                    <span asp-validation-for="Modele" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Finition" class="form-label">Finition</label>
+                    <input asp-for="Finition" type="text" class="form-control">
+                    <span asp-validation-for="Finition" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Prix.PrixAchat" class="form-label">Prix</label>
+                    <input asp-for="Prix.PrixAchat" type="number" class="form-control">
+                    <span asp-validation-for="Prix.PrixAchat" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Prix.PrixReparation" class="form-label">Prix</label>
+                    <input asp-for="Prix.PrixReparation" type="number" class="form-control">
+                    <span asp-validation-for="Prix.PrixReparation" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Prix.PrixVente" class="form-label">Prix</label>
+                    <input asp-for="Prix.PrixVente" type="number" class="form-control">
+                    <span asp-validation-for="Prix.PrixVente" class="text-danger"></span>
+                </div>
+
+                <div class="text-center">
+                    <button asp-controller="Car" asp-action="Update" class="btn-primary btn">Enregistrer la voiture</button>
+                    <a asp-controller="Car" asp-action="Delete" asp-route-codeVin="@Model.CodeVin" class="btn btn-danger">Supprimer la voiture</a>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>

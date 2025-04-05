@@ -1,14 +1,14 @@
 ﻿@{
-    var controllerName = ViewContext.RouteData.Values["controller"]?.ToString();
+    var actionName = ViewContext.RouteData.Values["Action"]?.ToString();
 }
 
 
-@if (controllerName == "Car")
+@if (actionName == "Create")
 {
-    <a class="nav-link onglet-menu-bold" asp-area="" asp-controller="Car" asp-action="Index">Ajouter une voiture</a>
+    <a class="nav-link onglet-menu-bold" asp-area="" asp-controller="Car" asp-action="Create">Ajouter une voiture</a>
 }
 else
 {
-    <a class="nav-link onglet-menu-skinny" asp-area="" asp-controller="Car" asp-action="Index">Ajouter une voiture</a>
+    <a class="nav-link onglet-menu-skinny" asp-area="" asp-controller="Car" asp-action="Create">Ajouter une voiture</a>
 }
 

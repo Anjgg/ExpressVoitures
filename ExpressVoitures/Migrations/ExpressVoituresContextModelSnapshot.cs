@@ -111,7 +111,7 @@ namespace ExpressVoitures.Migrations
                     b.Property<string>("CodeVin")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("Annee")
+                    b.Property<int?>("Annee")
                         .HasColumnType("int");
 
                     b.Property<int>("DateId")
@@ -121,8 +121,8 @@ namespace ExpressVoitures.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("Image")
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Marque")
                         .IsRequired()

@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using ExpressVoitures.Data.Dto;
 using ExpressVoitures.Data.Models;
-using ExpressVoitures.Data.Services;
+using ExpressVoitures.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -18,31 +18,15 @@ namespace ExpressVoitures.Controllers
             _service = service;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            List<VoitureModel> listAllCars = _service.GetAllCars().Result;
+            List<VoitureModel> listAllCars = await _service.GetAllCars();
             return View(listAllCars);
         }
 
-        public IActionResult ShowOneCar(string codeVin)
-        {
-            if (codeVin.IsNullOrEmpty())
-            {
-                return RedirectToAction("Index");
-            }
-            var voiture = _service.GetVoitureAsync(codeVin).Result;
-            if (voiture == null)
-            {
-                return RedirectToAction("Index");
-            }
-            return View(voiture);
-        }
-
-        public IActionResult Update()
+        public IActionResult Contact()
         {
             return View();
         }
-
-        
     }
 }
