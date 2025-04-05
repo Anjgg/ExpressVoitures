@@ -18,13 +18,6 @@
                     <input asp-for="CodeVin" type="text" class="form-control">
                     <span asp-validation-for="CodeVin" class="text-danger"></span>
                 </div>
-
-                <div class="mb-3">
-                    <label asp-for="Annee" class="form-label">Année</label>
-                    <input asp-for="Annee" type="number" class="form-control">
-                    <span asp-validation-for="Annee" class="text-danger"></span>
-                </div>
-
                 <div class="mb-3">
                     <label asp-for="Marque" class="form-label">Marque</label>
                     <input asp-for="Marque" type="text" class="form-control">
@@ -43,6 +36,16 @@
                     <span asp-validation-for="Finition" class="text-danger"></span>
                 </div>
                 <div class="mb-3">
+                    <label asp-for="Annee" class="form-label">Année</label>
+                    <input asp-for="Annee" type="number" class="form-control">
+                    <span asp-validation-for="Annee" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="ImagePath" class="form-label">Finition</label>
+                    <input asp-for="ImagePath" type="text" class="form-control">
+                    <span asp-validation-for="ImagePath" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
                     <label asp-for="Prix.PrixAchat" class="form-label">Prix</label>
                     <input asp-for="Prix.PrixAchat" type="number" class="form-control">
                     <span asp-validation-for="Prix.PrixAchat" class="text-danger"></span>
@@ -57,6 +60,22 @@
                     <input asp-for="Prix.PrixVente" type="number" class="form-control">
                     <span asp-validation-for="Prix.PrixVente" class="text-danger"></span>
                 </div>
+                <div class="mb-3">
+                    <label asp-for="Date.DateAchat" class"form-label">Date d'Achat</label>
+                    <input asp-for="Date.DateAchat" type="date" class="form-control">
+                    <span asp-validation-for="Date.DateAchat" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Date.DateMiseEnVente" class"form-label">Date de Reparation</label>
+                    <input asp-for="Date.DateMiseEnVente" type="date" class="form-control">
+                    <span asp-validation-for="Date.DateMiseEnVente" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Date.DateVente" class"form-label">Date de Vente</label>
+                    <input asp-for="Date.DateVente" type="date" class="form-control">
+                    <span asp-validation-for="Date.DateVente" class="text-danger"></span>
+                </div>
+                
 
                 <div class="text-center">
                     <button asp-controller="Car" asp-action="Update" class="btn-primary btn">Enregistrer la voiture</button>

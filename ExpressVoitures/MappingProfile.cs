@@ -9,10 +9,11 @@ namespace ExpressVoitures
         public MappingProfile()
         {
             CreateMap<VoitureDto, VoitureModel>().ReverseMap();
-            CreateMap<ReparationDto, ReparationModel>().ReverseMap();
-            CreateMap<PrixDto, PrixModel>().ReverseMap();
             CreateMap<DateDto, DateModel>().ReverseMap();
+            CreateMap<PrixDto, PrixModel>().ReverseMap();
+            CreateMap<ReparationDto, ReparationModel>().ReverseMap();
             CreateMap<TypeDto, TypeModel>().ReverseMap();
+            
         }
     }
 }

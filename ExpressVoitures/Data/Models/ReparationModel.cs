@@ -3,9 +3,9 @@
     public class ReparationModel
     {
         public int Id { get; set; }
+        
+        
+        public ICollection<ReparationTypeModel> ReparationTypes { get; set; } = new List<ReparationTypeModel>();
 
-        public ICollection<VoitureModel> Voitures { get; set; }
-
-        public ICollection<TypeModel> Types { get; set; }
     }
 }

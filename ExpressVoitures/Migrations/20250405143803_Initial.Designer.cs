@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExpressVoitures.Migrations
 {
     [DbContext(typeof(ExpressVoituresContext))]
-    [Migration("20250323202925_Initial")]
+    [Migration("20250405143803_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -39,7 +39,7 @@ namespace ExpressVoitures.Migrations
                     b.Property<DateTimeOffset>("DateMiseEnVente")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<DateTimeOffset>("DateVente")
+                    b.Property<DateTimeOffset?>("DateVente")
                         .HasColumnType("datetimeoffset");
 
                     b.HasKey("Id");
@@ -77,13 +77,32 @@ namespace ExpressVoitures.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CodeVin")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.ToTable("Reparations");
+                });
+
+            modelBuilder.Entity("ExpressVoitures.Data.Dto.ReparationTypeDto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ReparationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReparationId");
+
+                    b.HasIndex("TypeId");
+
+                    b.ToTable("ReparationTypes");
                 });
 
             modelBuilder.Entity("ExpressVoitures.Data.Dto.TypeDto", b =>
@@ -114,7 +133,7 @@ namespace ExpressVoitures.Migrations
                     b.Property<string>("CodeVin")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("Annee")
+                    b.Property<int?>("Annee")
                         .HasColumnType("int");
 
                     b.Property<int>("DateId")
@@ -138,7 +157,7 @@ namespace ExpressVoitures.Migrations
                     b.Property<int>("PrixId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ReparationId")
+                    b.Property<int>("ReparationId")
                         .HasColumnType("int");
 
                     b.HasKey("CodeVin");
@@ -149,7 +168,8 @@ namespace ExpressVoitures.Migrations
                     b.HasIndex("PrixId")
                         .IsUnique();
 
-                    b.HasIndex("ReparationId");
+                    b.HasIndex("ReparationId")
+                        .IsUnique();
 
                     b.ToTable("Voitures");
                 });
@@ -356,19 +376,23 @@ namespace ExpressVoitures.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ReparationDtoTypeDto", b =>
+            modelBuilder.Entity("ExpressVoitures.Data.Dto.ReparationTypeDto", b =>
                 {
-                    b.Property<int>("ReparationsId")
-                        .HasColumnType("int");
+                    b.HasOne("ExpressVoitures.Data.Dto.ReparationDto", "Reparation")
+                        .WithMany("ReparationTypes")
+                        .HasForeignKey("ReparationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<int>("TypesId")
-                        .HasColumnType("int");
+                    b.HasOne("ExpressVoitures.Data.Dto.TypeDto", "Type")
+                        .WithMany("ReparationTypes")
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasKey("ReparationsId", "TypesId");
+                    b.Navigation("Reparation");
 
-                    b.HasIndex("TypesId");
-
-                    b.ToTable("ReparationDtoTypeDto");
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("ExpressVoitures.Data.Dto.VoitureDto", b =>
@@ -386,8 +410,10 @@ namespace ExpressVoitures.Migrations
                         .IsRequired();
 
                     b.HasOne("ExpressVoitures.Data.Dto.ReparationDto", "Reparation")
-                        .WithMany("Voitures")
-                        .HasForeignKey("ReparationId");
+                        .WithOne("Voiture")
+                        .HasForeignKey("ExpressVoitures.Data.Dto.VoitureDto", "ReparationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Date");
 
@@ -447,21 +473,6 @@ namespace ExpressVoitures.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ReparationDtoTypeDto", b =>
-                {
-                    b.HasOne("ExpressVoitures.Data.Dto.ReparationDto", null)
-                        .WithMany()
-                        .HasForeignKey("ReparationsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ExpressVoitures.Data.Dto.TypeDto", null)
-                        .WithMany()
-                        .HasForeignKey("TypesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ExpressVoitures.Data.Dto.DateDto", b =>
                 {
                     b.Navigation("Voiture")
@@ -476,7 +487,15 @@ namespace ExpressVoitures.Migrations
 
             modelBuilder.Entity("ExpressVoitures.Data.Dto.ReparationDto", b =>
                 {
-                    b.Navigation("Voitures");
+                    b.Navigation("ReparationTypes");
+
+                    b.Navigation("Voiture")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ExpressVoitures.Data.Dto.TypeDto", b =>
+                {
+                    b.Navigation("ReparationTypes");
                 });
 #pragma warning restore 612, 618
         }

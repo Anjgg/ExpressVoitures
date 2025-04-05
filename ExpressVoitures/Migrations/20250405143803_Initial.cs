@@ -58,7 +58,7 @@ namespace ExpressVoitures.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DateAchat = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     DateMiseEnVente = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    DateVente = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
+                    DateVente = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -85,8 +85,7 @@ namespace ExpressVoitures.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CodeVin = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1")
                 },
                 constraints: table =>
                 {
@@ -222,9 +221,9 @@ namespace ExpressVoitures.Migrations
                     Marque = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Modele = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Finition = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Annee = table.Column<int>(type: "int", nullable: false),
+                    Annee = table.Column<int>(type: "int", nullable: true),
                     ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ReparationId = table.Column<int>(type: "int", nullable: true),
+                    ReparationId = table.Column<int>(type: "int", nullable: false),
                     PrixId = table.Column<int>(type: "int", nullable: false),
                     DateId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -247,28 +246,31 @@ namespace ExpressVoitures.Migrations
                         name: "FK_Voitures_Reparations_ReparationId",
                         column: x => x.ReparationId,
                         principalTable: "Reparations",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ReparationDtoTypeDto",
+                name: "ReparationTypes",
                 columns: table => new
                 {
-                    ReparationsId = table.Column<int>(type: "int", nullable: false),
-                    TypesId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ReparationId = table.Column<int>(type: "int", nullable: false),
+                    TypeId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ReparationDtoTypeDto", x => new { x.ReparationsId, x.TypesId });
+                    table.PrimaryKey("PK_ReparationTypes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ReparationDtoTypeDto_Reparations_ReparationsId",
-                        column: x => x.ReparationsId,
+                        name: "FK_ReparationTypes_Reparations_ReparationId",
+                        column: x => x.ReparationId,
                         principalTable: "Reparations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ReparationDtoTypeDto_Types_TypesId",
-                        column: x => x.TypesId,
+                        name: "FK_ReparationTypes_Types_TypeId",
+                        column: x => x.TypeId,
                         principalTable: "Types",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -314,9 +316,14 @@ namespace ExpressVoitures.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ReparationDtoTypeDto_TypesId",
-                table: "ReparationDtoTypeDto",
-                column: "TypesId");
+                name: "IX_ReparationTypes_ReparationId",
+                table: "ReparationTypes",
+                column: "ReparationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReparationTypes_TypeId",
+                table: "ReparationTypes",
+                column: "TypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Voitures_DateId",
@@ -333,7 +340,8 @@ namespace ExpressVoitures.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Voitures_ReparationId",
                 table: "Voitures",
-                column: "ReparationId");
+                column: "ReparationId",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -355,7 +363,7 @@ namespace ExpressVoitures.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "ReparationDtoTypeDto");
+                name: "ReparationTypes");
 
             migrationBuilder.DropTable(
                 name: "Voitures");

@@ -24,7 +24,7 @@ namespace ExpressVoitures
                         Modele = "Corolla",
                         Finition = "LE",
                         Annee = 2020,
-                        
+                        ImagePath = "https://example.com/images/toyota_corolla.jpg",
                     },
                     new VoitureDto
                     {

@@ -21,6 +21,9 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.AddControllersWithViews();
 
 // Setup AutoMapper
+
+
+
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 // Setup Services Scope

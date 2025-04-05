@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ExpressVoitures.Data.Dto
 {
@@ -7,9 +8,8 @@ namespace ExpressVoitures.Data.Dto
         [Key]
         public int Id { get; init; }
 
-        public virtual ICollection<TypeDto> Types { get; set; } = new List<TypeDto>();
-
-        public string CodeVin { get; set; }
-        public virtual ICollection<VoitureDto> Voitures { get; set; }
+        public virtual VoitureDto Voiture { get; set; } = null!;
+        public virtual ICollection<ReparationTypeDto> ReparationTypes { get; set; } = new List<ReparationTypeDto>();
+        
     }
 }

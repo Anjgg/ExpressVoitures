@@ -10,7 +10,7 @@ namespace ExpressVoitures.Services
     {
         Task<List<VoitureModel>> GetAllCars();
         Task<VoitureModel?> GetCarAsync(string codeVin);
-        Task<VoitureModel> CreateVoitureAsync(VoitureModel voiture);
+        Task<VoitureModel> CreateVoitureAsync(VoitureModel model);
         Task<VoitureModel> UpdateCarAsync(VoitureModel model);
         Task<VoitureModel> DeleteCarAsync(string codeVin);
     }
@@ -28,13 +28,20 @@ namespace ExpressVoitures.Services
 
         public async Task<List<VoitureModel>> GetAllCars()
         {
-            List<VoitureDto> listAllCars = await _context.Voitures.Where(a => a.CodeVin != null).ToListAsync();
+            List<VoitureDto> listAllCars = await _context.Voitures.Include(v => v.Date)
+                                                                  .Include(v => v.Prix)
+                                                                  .Include(v => v.Reparation)
+                                                                  .ToListAsync();
             return _mapper.Map<List<VoitureModel>>(listAllCars);
         }
 
         public async Task<VoitureModel?> GetCarAsync(string codeVin)
         {
-            var voitureContext = await _context.Voitures.Where(a => a.CodeVin == codeVin).FirstOrDefaultAsync();
+            var voitureContext = await _context.Voitures.Where(a => a.CodeVin == codeVin)
+                                                        .Include(v => v.Date)
+                                                        .Include(v => v.Prix)
+                                                        .Include(v => v.Reparation)
+                                                        .FirstOrDefaultAsync();
             if (voitureContext == null)
             {
                 return null;
@@ -51,10 +58,26 @@ namespace ExpressVoitures.Services
                 Modele = model.Modele,
                 Finition = model.Finition,
                 Annee = model.Annee,
-                ImagePath = model.ImagePath
+                ImagePath = model.ImagePath,
+                Prix = new PrixDto
+                {
+                    PrixAchat = model.Prix.PrixAchat,
+                    PrixReparation = model.Prix.PrixReparation,
+                    PrixVente = model.Prix.PrixVente
+                },
+                Date = new DateDto
+                {
+                    DateAchat = model.Date.DateAchat,
+                    DateMiseEnVente = model.Date.DateMiseEnVente,
+                    DateVente = model.Date.DateVente
+                },
+                Reparation = new ReparationDto
+                {
+                }
             };
             await _context.Voitures.AddAsync(voiture);
             await _context.SaveChangesAsync();
+
             return _mapper.Map<VoitureModel>(voiture);
         }
 

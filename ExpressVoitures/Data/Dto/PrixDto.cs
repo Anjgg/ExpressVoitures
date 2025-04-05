@@ -6,14 +6,12 @@ namespace ExpressVoitures.Data.Dto
     public class PrixDto
     {
         [Key]
-        public int Id { get; init; }
+        public int Id { get; set; }
 
         public decimal PrixAchat { get; set; }
-
         public decimal PrixReparation { get; set; }
-
         public decimal PrixVente { get; set; }
 
-        public virtual VoitureDto Voiture { get; set; }
+        public virtual VoitureDto Voiture { get; set; } = null!;
     }
 }
