@@ -1,4 +1,5 @@
-﻿@model VoitureModel
+﻿
+@model VoitureModel
 @{
     ViewData["Title"] = "Create";
 }
@@ -7,10 +8,9 @@
     <a asp-controller="Home" asp-action="Index">Retour</a>
 </div>
 
-<div class="container-fluid shadow  py-5">
-    <div class="row justify-content-center ">
+<div class="container-fluid shadow py-5">
+    <div class="row justify-content-center">
         <div class="col-md-6">
-            
             <form asp-controller="Car" asp-action="Create" method="post">
                 <div class="mb-3">
                     <label asp-for="CodeVin" class="form-label">Code VIN</label>
@@ -20,7 +20,7 @@
 
                 <div class="mb-3">
                     <label asp-for="Annee" class="form-label">Année</label>
-                    <input asp-for="Annee"  type="number" class="form-control">
+                    <input asp-for="Annee" type="number" class="form-control">
                     <span asp-validation-for="Annee" class="text-danger"></span>
                 </div>
 
@@ -76,16 +76,63 @@
                     <input asp-for="Date.DateVente" type="date" class="form-control">
                     <span asp-validation-for="Date.DateVente" class="text-danger"></span>
                 </div>
-                @* <div class="mb-3">
-                    <label asp-for="Reparation.ReparationTypes.First().Type.Name" class="form-label">Reparation</label>
-                    <input asp-for="Reparation.ReparationTypes.First().Type.Name" type="text" class="form-control">
-                    <span asp-validation-for="Reparation.ReparationTypes.First().Type.Name" class="text-danger"></span>
-                </div> *@
+
+                <hr />
+
+                <h4>Réparations</h4>
+                <div id="reparations-container" class="mb-3">
+                   <!-- The JS code for AddReparation() will appear here -->
+                </div>
+
+                <button type="button" class="btn btn-outline-primary mb-3" onclick="AddReparation()">
+                    <i class="bi bi-plus-circle"></i> Ajouter une réparation
+                </button>
+                <button type="button" class="btn btn-outline-danger mb-3" onclick="DeleteReparation()">Supprimer</button>
                 
+
                 <div class="text-center">
-                    <button asp-controller="Car" asp-action="Create" class="btn-primary btn">Enregistrer la voiture</button>
+                    <button type="submit" class="btn-primary btn">Enregistrer la voiture</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+
+<script>
+    let index = 0;
+    function AddReparation() {
+        const container = document.getElementById("reparations-container");
+        const html = `
+             <div class="reparation-group">
+                <div class="mb-3">
+                    <label for="Reparations_${index}__Description" class="form-label">Description</label>
+                    <input name="Reparations[${index}].Description" id="Reparations_${index}__Description" class="form-control" type="text" >
+                </div>
+                <div class="mb-3">
+                    <label for="Reparations_${index}__Prix" class="form-label">Prix</label>
+                    <input name="Reparations[${index}].Prix" id="Reparations_${index}__Prix" class="form-control" type="number">
+                </div>
+                <div class="mb-3">
+                    <label for="Reparations_${index}__Duree" class="form-label">Durée</label>
+                    <input name="Reparations[${index}].Duree" id="Reparations_${index}__Duree" class="form-control" type="number">
+                </div>
+                
+                <hr />
+            </div>`;
+        container.insertAdjacentHTML('beforeend', html);
+        index++;
+    }
+    function DeleteReparation() {
+            const parent = document.getElementById('reparations-container');
+            const cibles = parent.getElementsByClassName('reparation-group');
+            if (cibles.length > 0) {
+                const lastOne = cibles[cibles.length - 1];
+                lastOne.remove();
+                index--;
+            }
+        }
+    
+</script>
+
+                                        

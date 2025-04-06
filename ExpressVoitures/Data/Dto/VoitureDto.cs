@@ -14,16 +14,8 @@ namespace ExpressVoitures.Data.Dto
         public int? Annee { get; set; }
         public string? ImagePath { get; set; }
 
-        [ForeignKey("Reparation")]
-        public int ReparationId { get; set; }
-        public virtual ReparationDto? Reparation { get; set; }
-
-        [ForeignKey("Prix")]
-        public int PrixId { get; set; }
-        public virtual PrixDto? Prix { get; set; }
-
-        [ForeignKey("Date")]
-        public int DateId { get; set; }
-        public virtual DateDto? Date { get; set; }
+        public virtual IList<ReparationDto> Reparations { get; set; } = new List<ReparationDto>();
+        public virtual PrixDto Prix { get; set; } = new PrixDto();
+        public virtual DateDto Date { get; set; } = new DateDto();
     }
 }

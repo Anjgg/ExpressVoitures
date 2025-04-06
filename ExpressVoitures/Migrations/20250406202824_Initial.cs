@@ -51,60 +51,19 @@ namespace ExpressVoitures.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Dates",
+                name: "Voitures",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    DateAchat = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    DateMiseEnVente = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    DateVente = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true)
+                    CodeVin = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Marque = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Modele = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Finition = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Annee = table.Column<int>(type: "int", nullable: true),
+                    ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Dates", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Prixs",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PrixAchat = table.Column<decimal>(type: "decimal(8,2)", nullable: false),
-                    PrixReparation = table.Column<decimal>(type: "decimal(8,2)", nullable: false),
-                    PrixVente = table.Column<decimal>(type: "decimal(8,2)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Prixs", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Reparations",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Reparations", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Types",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nom = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Prix = table.Column<decimal>(type: "decimal(8,2)", nullable: false),
-                    Duree = table.Column<decimal>(type: "decimal(8,2)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Types", x => x.Id);
+                    table.PrimaryKey("PK_Voitures", x => x.CodeVin);
                 });
 
             migrationBuilder.CreateTable(
@@ -214,65 +173,68 @@ namespace ExpressVoitures.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Voitures",
-                columns: table => new
-                {
-                    CodeVin = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Marque = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Modele = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Finition = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Annee = table.Column<int>(type: "int", nullable: true),
-                    ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ReparationId = table.Column<int>(type: "int", nullable: false),
-                    PrixId = table.Column<int>(type: "int", nullable: false),
-                    DateId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Voitures", x => x.CodeVin);
-                    table.ForeignKey(
-                        name: "FK_Voitures_Dates_DateId",
-                        column: x => x.DateId,
-                        principalTable: "Dates",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Voitures_Prixs_PrixId",
-                        column: x => x.PrixId,
-                        principalTable: "Prixs",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Voitures_Reparations_ReparationId",
-                        column: x => x.ReparationId,
-                        principalTable: "Reparations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ReparationTypes",
+                name: "Dates",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ReparationId = table.Column<int>(type: "int", nullable: false),
-                    TypeId = table.Column<int>(type: "int", nullable: false)
+                    DateAchat = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    DateMiseEnVente = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    DateVente = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CodeVin = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ReparationTypes", x => x.Id);
+                    table.PrimaryKey("PK_Dates", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ReparationTypes_Reparations_ReparationId",
-                        column: x => x.ReparationId,
-                        principalTable: "Reparations",
-                        principalColumn: "Id",
+                        name: "FK_Dates_Voitures_CodeVin",
+                        column: x => x.CodeVin,
+                        principalTable: "Voitures",
+                        principalColumn: "CodeVin",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Prixs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PrixAchat = table.Column<decimal>(type: "decimal(8,2)", nullable: false),
+                    PrixReparation = table.Column<decimal>(type: "decimal(8,2)", nullable: false),
+                    PrixVente = table.Column<decimal>(type: "decimal(8,2)", nullable: false),
+                    CodeVin = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Prixs", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ReparationTypes_Types_TypeId",
-                        column: x => x.TypeId,
-                        principalTable: "Types",
-                        principalColumn: "Id",
+                        name: "FK_Prixs_Voitures_CodeVin",
+                        column: x => x.CodeVin,
+                        principalTable: "Voitures",
+                        principalColumn: "CodeVin",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Reparations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Prix = table.Column<decimal>(type: "decimal(8,2)", nullable: false),
+                    Duree = table.Column<decimal>(type: "decimal(8,2)", nullable: false),
+                    CodeVin = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reparations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reparations_Voitures_CodeVin",
+                        column: x => x.CodeVin,
+                        principalTable: "Voitures",
+                        principalColumn: "CodeVin",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -316,32 +278,23 @@ namespace ExpressVoitures.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ReparationTypes_ReparationId",
-                table: "ReparationTypes",
-                column: "ReparationId");
+                name: "IX_Dates_CodeVin",
+                table: "Dates",
+                column: "CodeVin",
+                unique: true,
+                filter: "[CodeVin] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ReparationTypes_TypeId",
-                table: "ReparationTypes",
-                column: "TypeId");
+                name: "IX_Prixs_CodeVin",
+                table: "Prixs",
+                column: "CodeVin",
+                unique: true,
+                filter: "[CodeVin] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Voitures_DateId",
-                table: "Voitures",
-                column: "DateId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Voitures_PrixId",
-                table: "Voitures",
-                column: "PrixId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Voitures_ReparationId",
-                table: "Voitures",
-                column: "ReparationId",
-                unique: true);
+                name: "IX_Reparations_CodeVin",
+                table: "Reparations",
+                column: "CodeVin");
         }
 
         /// <inheritdoc />
@@ -363,10 +316,13 @@ namespace ExpressVoitures.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "ReparationTypes");
+                name: "Dates");
 
             migrationBuilder.DropTable(
-                name: "Voitures");
+                name: "Prixs");
+
+            migrationBuilder.DropTable(
+                name: "Reparations");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -375,16 +331,7 @@ namespace ExpressVoitures.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Types");
-
-            migrationBuilder.DropTable(
-                name: "Dates");
-
-            migrationBuilder.DropTable(
-                name: "Prixs");
-
-            migrationBuilder.DropTable(
-                name: "Reparations");
+                name: "Voitures");
         }
     }
 }

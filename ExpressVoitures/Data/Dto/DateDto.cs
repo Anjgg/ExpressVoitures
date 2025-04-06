@@ -12,6 +12,8 @@ namespace ExpressVoitures.Data.Dto
         public DateTimeOffset DateMiseEnVente { get; set; }
         public DateTimeOffset? DateVente { get; set; }
 
-        public virtual VoitureDto Voiture { get; set; } = null!;
+        [ForeignKey("Voiture")]
+        public string? CodeVin { get; set; }
+        public virtual VoitureDto? Voiture { get; set; } 
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ExpressVoitures.Data.Dto;
 using ExpressVoitures.Data.Models;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.EntityFrameworkCore;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -30,7 +31,7 @@ namespace ExpressVoitures.Services
         {
             List<VoitureDto> listAllCars = await _context.Voitures.Include(v => v.Date)
                                                                   .Include(v => v.Prix)
-                                                                  .Include(v => v.Reparation)
+                                                                  .Include(v => v.Reparations)
                                                                   .ToListAsync();
             return _mapper.Map<List<VoitureModel>>(listAllCars);
         }
@@ -40,13 +41,15 @@ namespace ExpressVoitures.Services
             var voitureContext = await _context.Voitures.Where(a => a.CodeVin == codeVin)
                                                         .Include(v => v.Date)
                                                         .Include(v => v.Prix)
-                                                        .Include(v => v.Reparation)
+                                                        .Include(v => v.Reparations)
                                                         .FirstOrDefaultAsync();
+
             if (voitureContext == null)
             {
                 return null;
             }
-            return _mapper.Map<VoitureModel>(voitureContext);
+            var voiture = _mapper.Map(voitureContext, new VoitureModel());
+            return voiture;
         }
 
         public async Task<VoitureModel> CreateVoitureAsync(VoitureModel model)
@@ -71,9 +74,12 @@ namespace ExpressVoitures.Services
                     DateMiseEnVente = model.Date.DateMiseEnVente,
                     DateVente = model.Date.DateVente
                 },
-                Reparation = new ReparationDto
+                Reparations = model.Reparations.Select(r => new ReparationDto
                 {
-                }
+                    Description = r.Description,
+                    Prix = r.Prix,
+                    Duree = r.Duree
+                }).ToList()
             };
             await _context.Voitures.AddAsync(voiture);
             await _context.SaveChangesAsync();
@@ -83,8 +89,42 @@ namespace ExpressVoitures.Services
 
         public async Task<VoitureModel> UpdateCarAsync(VoitureModel model)
         {
-            var voiture = await _context.Voitures.FindAsync(model.CodeVin) ?? throw new Exception($"Voiture with CodeVin {model.CodeVin} not found.");
-            _context.Entry(voiture).CurrentValues.SetValues(model);
+            var voiture = await _context.Voitures.Where(v => v.CodeVin == model.CodeVin)
+                                                 .Include(v => v.Date)
+                                                 .Include(v => v.Prix)
+                                                 .Include(v => v.Reparations)
+                                                 .FirstOrDefaultAsync();
+
+            if (voiture == null)
+            {
+                throw new Exception($"Voiture with CodeVin {model.CodeVin} not found.");
+            }
+
+            voiture.CodeVin = model.CodeVin;
+            voiture.Marque = model.Marque;
+            voiture.Modele = model.Modele;
+            voiture.Finition = model.Finition;
+            voiture.Annee = model.Annee;
+            voiture.ImagePath = model.ImagePath;
+            voiture.Prix!.PrixAchat = model.Prix!.PrixAchat;
+            voiture.Date!.DateAchat = model.Date!.DateAchat;
+            voiture.Date.DateMiseEnVente = model.Date.DateMiseEnVente;
+            voiture.Date.DateVente = model.Date.DateVente;
+            if (model.Reparations != null)
+            {
+                if (voiture.Reparations != null)
+                    voiture.Reparations.Clear();
+                foreach (var reparation in model.Reparations)
+                {
+                    voiture.Reparations!.Add(new ReparationDto
+                    {
+                        Description = reparation.Description,
+                        Prix = reparation.Prix,
+                        Duree = reparation.Duree
+                    });
+                }
+            }
+            await UpdatePrix(voiture);
             await _context.SaveChangesAsync();
             return _mapper.Map<VoitureModel>(voiture);
         }
@@ -97,5 +137,13 @@ namespace ExpressVoitures.Services
             return _mapper.Map<VoitureModel>(voiture);
         }
 
+        public async Task UpdatePrix(VoitureDto voiture)
+        {
+            voiture.Prix!.PrixReparation = voiture.Reparations.Sum(r => r.Prix);
+            voiture.Prix!.PrixVente = voiture.Prix.PrixAchat + voiture.Prix.PrixReparation + 500;
+            await _context.SaveChangesAsync();
+
+        }
     }
 }
+

@@ -1,4 +1,6 @@
-﻿namespace ExpressVoitures.Data.Models
+﻿using ExpressVoitures.Data.Dto;
+
+namespace ExpressVoitures.Data.Models
 {
     public class PrixModel
     {
@@ -8,5 +10,9 @@
         public decimal PrixReparation { get; set; }
         public decimal PrixVente { get; set; }
 
+        public void SetPrixVente(VoitureModel voiture)
+        {
+            PrixVente = voiture.Reparations.Sum(r => r.Prix) + PrixAchat + 500;
+        }
     }
 }

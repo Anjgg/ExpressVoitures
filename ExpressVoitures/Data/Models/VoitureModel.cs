@@ -1,6 +1,4 @@
-﻿using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace ExpressVoitures.Data.Models
+﻿namespace ExpressVoitures.Data.Models
 {
     public class VoitureModel
     {
@@ -11,7 +9,7 @@ namespace ExpressVoitures.Data.Models
         public int? Annee { get; set; }
         public string? ImagePath { get; set; }
 
-        public ReparationModel Reparation { get; set; } = new ReparationModel();
+        public IList<ReparationModel> Reparations { get; set; } = new List<ReparationModel>();
         public PrixModel Prix { get; set; } = new PrixModel();
         public DateModel Date { get; set; } = new DateModel();
     }
