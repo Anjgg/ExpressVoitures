@@ -1,4 +1,5 @@
-﻿using ExpressVoitures.Services;
+﻿using ExpressVoitures.Data.Models;
+using ExpressVoitures.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExpressVoitures.Controllers
@@ -12,20 +13,16 @@ namespace ExpressVoitures.Controllers
             _service = service;
         }
 
-        //    [HttpGet]
-        //    public async Task<IActionResult> Index(string codeVin)
-        //    {
-        //        if (codeVin.IsNullOrEmpty())
-        //        {
-        //            return RedirectToAction("Index");
-        //        }
-        //        var voiture = await _service.GetCarAsync(codeVin);
-        //        if (voiture == null)
-        //        {
-        //            return RedirectToAction("Index");
-        //        }
-        //        return View(voiture);
-        //    }
+        [HttpGet]
+        public async Task<IActionResult> Index(int id)
+        {
+            var voiture = await _service.GetCarAsync(id);
+            if (voiture == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            return View(voiture);
+        }
 
         //    [HttpGet]
         //    public IActionResult Create()
@@ -50,23 +47,24 @@ namespace ExpressVoitures.Controllers
         //        return View(model);
         //    }
 
-        //    [HttpGet]
-        //    public async Task<IActionResult> Update(string codeVin)
-        //    {
-        //        var voiture = await _service.GetCarAsync(codeVin);
-        //        return View(voiture);
-        //    }
+        [HttpGet]
+        public async Task<IActionResult> Update(int id)
+        {
+            var voiture = await _service.GetCarAsync(id);
+            return View(voiture);
+        }
 
-        //    [HttpPost]
-        //    public async Task<IActionResult> Update(VoitureModel model)
-        //    {
-        //        if (!ModelState.IsValid)
-        //        {
-        //            return View(model);
-        //        }
-        //        var voiture = await _service.UpdateCarAsync(model);
-        //        return RedirectToAction("CarUpdated", voiture);
-        //    }
+        [HttpPost]
+        public async Task<IActionResult> Update(VoitureProfileModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var voiture = await _service.UpdateCarAsync(model);
+            
+            return RedirectToAction("CarUpdated", voiture);
+        }
 
         //    [HttpGet]
         //    public IActionResult CarUpdated(VoitureModel model)

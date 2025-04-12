@@ -14,7 +14,7 @@
     <div class="row row-cols-1 row-cols-md-2 g-4">
         @foreach (var item in Model)
         {
-            <a asp-controller="Car" asp-action="Index" asp-route-codeVin="@item.Id" class="text-decoration-none" style="color: #2C1810;">
+            <a asp-controller="Car" asp-action="Index" asp-route-id="@item.Id" class="text-decoration-none" style="color: #2C1810;">
                 <div class="col">
                     <div class="card p-3 shadow">
                         <div class="row g-0">
@@ -27,6 +27,14 @@
                                     <p class="card-text"><strong>Marque : </strong>@item.Marque</p>
                                     <p class="card-text"><strong>Modèle : </strong>@item.Modele</p>
                                     <p class="card-text"><strong>Année : </strong>@item.DateFabrication.ToString("yyyy")</p>
+                                    @if (item.IsAvailable)
+                                    {
+                                        <p class="card-text"><strong>Disponible : </strong>Oui</p>
+                                    } 
+                                    else 
+                                    {
+                                        <p class="card-text"><strong>Disponible : </strong>Non</p>
+                                    }
                                 </div>
                             </div>
                         </div>

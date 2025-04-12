@@ -1,7 +1,6 @@
-﻿@model VoitureModel
+﻿@model VoitureProfileModel
 @{
     ViewData["Title"] = "Modifier";
-    // var index = Model.Reparations.Count;
 }
 
 <div class="my-5 text-center">
@@ -13,49 +12,50 @@
     <div class="row justify-content-center ">
         <div class="col-md-6">
 
-            <form asp-controller="Car" asp-action="Update" method="post">
+            <form method="post">
                 <h4>Véhicule</h4>
-                @* <div class="hidden">
+                <div class="hidden">
+                    <input asp-for="Voiture.Id" type="hidden">
                     <input asp-for="Prix.Id" type="hidden">
                     <input asp-for="Prix.PrixReparation" type="hidden">
                     <input asp-for="Prix.PrixVente" type="hidden">
                     <input asp-for="Date.Id" type="hidden">
                     <input asp-for="Date.DateMiseEnVente" type="hidden">
-                </div> *@
-                @* <div class="mb-2">
-                    <label asp-for="CodeVin" class="form-label">Code VIN</label>
-                    <input asp-for="CodeVin" type="text" class="form-control">
-                    <span asp-validation-for="CodeVin" class="text-danger"></span>
+                </div> 
+                <div class="mb-2">
+                    <label asp-for="Voiture.CodeVin" class="form-label">Code VIN</label>
+                    <input asp-for="Voiture.CodeVin" type="text" class="form-control">
+                    <span asp-validation-for="Voiture.CodeVin" class="text-danger"></span>
                 </div>
                 <div class="row mb-2">
                     <div class="col-md-6">
-                        <label asp-for="Marque" class="form-label">Marque</label>
-                        <input asp-for="Marque" type="text" class="form-control">
-                        <span asp-validation-for="Marque" class="text-danger"></span>
+                        <label asp-for="Voiture.Marque" class="form-label">Marque</label>
+                        <input asp-for="Voiture.Marque" type="text" class="form-control">
+                        <span asp-validation-for="Voiture.Marque" class="text-danger"></span>
                     </div>
                     <div class="col-md-6">
-                        <label asp-for="Modele" class="form-label">Modèle</label>
-                        <input asp-for="Modele" type="text" class="form-control">
-                        <span asp-validation-for="Modele" class="text-danger"></span>
+                        <label asp-for="Voiture.Modele" class="form-label">Modèle</label>
+                        <input asp-for="Voiture.Modele" type="text" class="form-control">
+                        <span asp-validation-for="Voiture.Modele" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="row mb-2">
                     <div class="col-md-6">
-                        <label asp-for="Finition" class="form-label">Finition</label>
-                        <input asp-for="Finition" type="text" class="form-control">
-                        <span asp-validation-for="Finition" class="text-danger"></span>
+                        <label asp-for="Voiture.Finition" class="form-label">Finition</label>
+                        <input asp-for="Voiture.Finition" type="text" class="form-control">
+                        <span asp-validation-for="Voiture.Finition" class="text-danger"></span>
                     </div>
                     <div class="col-md-6">
-                        <label asp-for="Annee" class="form-label">Année</label>
-                        <input asp-for="Annee" type="number" class="form-control">
-                        <span asp-validation-for="Annee" class="text-danger"></span>
+                        <label asp-for="Voiture.DateFabrication" class="form-label">Année</label>
+                        <input asp-for="Voiture.DateFabrication" type="month" class="form-control">
+                        <span asp-validation-for="Voiture.DateFabrication" class="text-danger"></span>
                     </div>
                 </div>
                 
                 <div class="mb-2">
-                    <label asp-for="ImagePath" class="form-label">Image</label>
-                    <input asp-for="ImagePath" type="text" class="form-control">
-                    <span asp-validation-for="ImagePath" class="text-danger"></span>
+                    <label asp-for="Voiture.ImagePath" class="form-label">Image</label>
+                    <input asp-for="Voiture.ImagePath" type="text" class="form-control">
+                    <span asp-validation-for="Voiture.ImagePath" class="text-danger"></span>
                 </div>
 
                 <hr />
@@ -91,26 +91,26 @@
 
                 <h4>Réparations</h4>
                 <div id="reparations-container" class="mb-2">
-                    @for (int i =0; i < index; i++) {
+                    @foreach (var type in Model.Reparation.Types) {
                         <div class="reparation-group">
                             <div>
-                                <input asp-for="Reparations[i].Id" type="hidden">
+                                <input asp-for="@type.Id" type="hidden">
                             </div>
                             <div class="mb-2">
-                                <label asp-for="Reparations[i].Description" class="form-label">Description</label>
-                                <input asp-for="Reparations[i].Description" type="text" class="form-control">
-                                <span asp-validation-for="Reparations[i].Description" class="text-danger"></span>
+                                <label asp-for="@type.Description" class="form-label">Description</label>
+                                <input asp-for="@type.Description" type="text" class="form-control">
+                                <span asp-validation-for="@type.Description" class="text-danger"></span>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label asp-for="Reparations[i].Prix" class="form-label">Prix</label>
-                                    <input asp-for="Reparations[i].Prix" type="text" class="form-control">
-                                    <span asp-validation-for="Reparations[i].Prix" class="text-danger"></span>
+                                    <label asp-for="@type.Prix" class="form-label">Prix</label>
+                                    <input asp-for="@type.Prix" type="text" class="form-control">
+                                    <span asp-validation-for="@type.Prix" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-6">
-                                    <label asp-for="Reparations[i].Duree" class="form-label">Durée</label>
-                                    <input asp-for="Reparations[i].Duree" type="text" class="form-control">
-                                    <span asp-validation-for="Reparations[i].Duree" class="text-danger"></span>
+                                    <label asp-for="@type.Duree" class="form-label">Durée</label>
+                                    <input asp-for="@type.Duree" type="text" class="form-control">
+                                    <span asp-validation-for="@type.Duree" class="text-danger"></span>
                                 </div>
                             </div>
                             <hr />
@@ -124,9 +124,9 @@
                 <button type="button" class="btn btn-outline-danger mb-2" onclick="DeleteReparation()">Supprimer</button>
 
                 <div class="text-center">
-                    <button asp-controller="Car" asp-action="Update" class="btn-primary btn">Enregistrer la voiture</button>
-                    <a asp-controller="Car" asp-action="Delete" asp-route-codeVin="@Model.CodeVin" class="btn btn-danger">Supprimer la voiture</a>
-                </div> *@
+                    <button asp-controller="Car" asp-action="Update" formmethod="post" class="btn-primary btn">Enregistrer la voiture</button>
+                    <button asp-controller="Car" asp-action="Delete" asp-route-id="@Model.Voiture.Id" formmethod="post" class="btn btn-danger">Supprimer la voiture</button>
+                </div>
             </form>
         </div>
     </div>
@@ -171,5 +171,4 @@
             }
         }
 
-</script>
- *@
+</script> *@

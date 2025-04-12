@@ -8,9 +8,9 @@ namespace ExpressVoitures.Services
     public interface IExpressVoituresService
     {
         Task<List<HomeCarModel>> GetAllHomeCars();
-        //Task<VoitureModel?> GetCarAsync(string codeVin);
+        Task<VoitureProfileModel?> GetCarAsync(int id);
         //Task<VoitureModel> CreateVoitureAsync(VoitureModel model);
-        //Task<VoitureModel> UpdateCarAsync(VoitureModel model);
+        Task<VoitureProfileModel> UpdateCarAsync(VoitureProfileModel model);
         //Task<VoitureModel> DeleteCarAsync(string codeVin);
     }
 
@@ -25,45 +25,41 @@ namespace ExpressVoitures.Services
             _mapper = mapper;
         }
 
-        private async Task<List<VoitureDto>> GetAllCars()
+        public async Task<List<HomeCarModel>> GetAllHomeCars()
         {
             List<VoitureDto> listAllCars = await _context.Voitures.Include(v => v.Date)
                                                                   .Include(v => v.Prix)
-                                                                  .Include(v => v.Reparation)
-                                                                  .Include(v => v.Reparation.Types)
                                                                   .ToListAsync();
-            return listAllCars;
-        }
 
-        public async Task<List<HomeCarModel>> GetAllHomeCars()
-        {
-            var listAllCars = await GetAllCars();
-            var listHomeCars = listAllCars.Select(v => new HomeCarModel
+            List<HomeCarModel> listHomeCars = listAllCars.Select(v => new HomeCarModel
             {
                 Id = v.Id,
                 Marque = v.Marque,
                 Modele = v.Modele,
                 DateFabrication = v.DateFabrication,
-                PrixVente = v.Prix.PrixVente
+                ImagePath = v.ImagePath,
+                PrixVente = v.Prix.PrixVente,
+                IsAvailable = v.Date.DateVente == null 
             }).ToList();
 
             return listHomeCars;
         }
 
-        public async Task<VoitureModel?> GetCarAsync(string codeVin)
+        public async Task<VoitureProfileModel?> GetCarAsync(int id)
         {
-            var voitureContext = await _context.Voitures.Where(a => a.CodeVin == codeVin)
+            var voitureDto = await _context.Voitures.Where(a => a.Id == id)
                                                         .Include(v => v.Date)
                                                         .Include(v => v.Prix)
                                                         .Include(v => v.Reparation)
+                                                        .ThenInclude(r => r.Types)
                                                         .FirstOrDefaultAsync();
 
-            if (voitureContext == null)
+            if (voitureDto == null)
             {
                 return null;
             }
-            var voiture = _mapper.Map(voitureContext, new VoitureModel());
-            return voiture;
+            
+            return MapVoitureDtoToVoitureProfileModel(voitureDto);
         }
 
         //        public async Task<VoitureModel> CreateVoitureAsync(VoitureModel model)
@@ -101,47 +97,26 @@ namespace ExpressVoitures.Services
         //            return _mapper.Map<VoitureModel>(voiture);
         //        }
 
-        //        public async Task<VoitureModel> UpdateCarAsync(VoitureModel model)
-        //        {
-        //            var voiture = await _context.Voitures.Where(v => v.CodeVin == model.CodeVin)
-        //                                                 .Include(v => v.Date)
-        //                                                 .Include(v => v.Prix)
-        //                                                 .Include(v => v.Reparations)
-        //                                                 .FirstOrDefaultAsync();
+        public async Task<VoitureProfileModel> UpdateCarAsync(VoitureProfileModel model)
+        {
+            var voitureDto = await _context.Voitures.Where(v => v.Id == model.Voiture.Id)
+                                                 .Include(v => v.Date)
+                                                 .Include(v => v.Prix)
+                                                 .Include(v => v.Reparation)
+                                                 .ThenInclude(r => r.Types)
+                                                 .FirstOrDefaultAsync();
 
-        //            if (voiture == null)
-        //            {
-        //                throw new Exception($"Voiture with CodeVin {model.CodeVin} not found.");
-        //            }
+            if (voitureDto == null)
+            {
+                throw new Exception($"Voiture with Id {model.Voiture.Id} not found.");
+            }
 
-        //            voiture.CodeVin = model.CodeVin;
-        //            voiture.Marque = model.Marque;
-        //            voiture.Modele = model.Modele;
-        //            voiture.Finition = model.Finition;
-        //            voiture.Annee = model.Annee;
-        //            voiture.ImagePath = model.ImagePath;
-        //            voiture.Prix!.PrixAchat = model.Prix!.PrixAchat;
-        //            voiture.Date!.DateAchat = model.Date!.DateAchat;
-        //            voiture.Date.DateMiseEnVente = model.Date.DateMiseEnVente;
-        //            voiture.Date.DateVente = model.Date.DateVente;
-        //            if (model.Reparations != null)
-        //            {
-        //                if (voiture.Reparations != null)
-        //                    voiture.Reparations.Clear();
-        //                foreach (var reparation in model.Reparations)
-        //                {
-        //                    voiture.Reparations!.Add(new ReparationDto
-        //                    {
-        //                        Description = reparation.Description,
-        //                        Prix = reparation.Prix,
-        //                        Duree = reparation.Duree
-        //                    });
-        //                }
-        //            }
-        //            await UpdatePrix(voiture);
-        //            await _context.SaveChangesAsync();
-        //            return _mapper.Map<VoitureModel>(voiture);
-        //        }
+            UpdateDtoFromProfileModel(voitureDto, model);
+
+            await _context.SaveChangesAsync();
+            
+            return MapVoitureDtoToVoitureProfileModel(voitureDto);
+        }
 
         //        public async Task<VoitureModel> DeleteCarAsync(string codeVin)
         //        {
@@ -151,14 +126,83 @@ namespace ExpressVoitures.Services
         //            return _mapper.Map<VoitureModel>(voiture);
         //        }
 
-        //        public async Task UpdatePrix(VoitureDto voiture)
-        //        {
-        //            voiture.Prix!.PrixReparation = voiture.Reparations.Sum(r => r.Prix);
-        //            voiture.Prix!.PrixVente = voiture.Prix.PrixAchat + voiture.Prix.PrixReparation + 500;
-        //            await _context.SaveChangesAsync();
+        private static void UpdateDtoFromProfileModel(VoitureDto voitureDto, VoitureProfileModel model)
+        {
+            voitureDto.CodeVin = model.Voiture.CodeVin;
+            voitureDto.Marque = model.Voiture.Marque;
+            voitureDto.Modele = model.Voiture.Modele;
+            voitureDto.Finition = model.Voiture.Finition;
+            voitureDto.DateFabrication = model.Voiture.DateFabrication;
+            voitureDto.ImagePath = model.Voiture.ImagePath;
+            voitureDto.Date.DateAchat = model.Date.DateAchat;
+            voitureDto.Date.DateMiseEnVente = model.Date.DateMiseEnVente;
+            voitureDto.Date.DateVente = model.Date.DateVente;
+            if (model.Reparation.Types != null)
+            {
+                voitureDto.Reparation.Types = model.Reparation.Types.Select(r => new TypeDto
+                {
+                    Id = r.Id,
+                    Description = r.Description,
+                    Prix = r.Prix,
+                    Duree = r.Duree
+                }).ToList();
+            }
+            else
+            {
+                voitureDto.Reparation.Types.Clear();
+            }
+            // Update Prix after Reparation
+            voitureDto.Prix.PrixAchat = model.Prix.PrixAchat;
+            voitureDto.Reparation.PrixTotal = voitureDto.Reparation.Types.Sum(r => r.Prix);
+            voitureDto.Prix.PrixReparation = voitureDto.Reparation.PrixTotal;
+            voitureDto.Prix.PrixVente = voitureDto.Prix.PrixAchat + voitureDto.Prix.PrixReparation + 500;
+        }
 
-        //        }
-        //    }
+
+        private static VoitureProfileModel MapVoitureDtoToVoitureProfileModel(VoitureDto voitureDto)
+        {
+            return new VoitureProfileModel
+            {
+                Voiture = new VoitureModel
+                {
+                    Id = voitureDto.Id,
+                    CodeVin = voitureDto.CodeVin,
+                    Marque = voitureDto.Marque,
+                    Modele = voitureDto.Modele,
+                    Finition = voitureDto.Finition,
+                    DateFabrication = voitureDto.DateFabrication,
+                    ImagePath = voitureDto.ImagePath
+                },
+                Date = new DateModel
+                {
+                    Id = voitureDto.Date.Id,
+                    DateAchat = voitureDto.Date.DateAchat,
+                    DateMiseEnVente = voitureDto.Date.DateMiseEnVente,
+                    DateVente = voitureDto.Date.DateVente
+                },
+                Prix = new PrixModel
+                {
+                    Id = voitureDto.Prix.Id,
+                    PrixAchat = voitureDto.Prix.PrixAchat,
+                    PrixReparation = voitureDto.Prix.PrixReparation,
+                    PrixVente = voitureDto.Prix.PrixVente
+                },
+                Reparation = new ReparationModel
+                {
+                    Id = voitureDto.Reparation.Id,
+                    PrixTotal = voitureDto.Reparation.PrixTotal,
+                    DureeTotal = voitureDto.Reparation.DureeTotal,
+                    Types = voitureDto.Reparation.Types.Select(r => new TypeModel
+                    {
+                        Id = r.Id,
+                        Description = r.Description,
+                        Prix = r.Prix,
+                        Duree = r.Duree
+                    }).ToList()
+                }
+            };
+        }
+
     }
 }
 
