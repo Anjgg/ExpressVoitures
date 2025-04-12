@@ -1,4 +1,4 @@
-﻿@model List<VoitureModel>
+﻿@model List<HomeCarModel>
 @{
     ViewData["Title"] = "Acceuil";
     
@@ -14,7 +14,7 @@
     <div class="row row-cols-1 row-cols-md-2 g-4">
         @foreach (var item in Model)
         {
-            <a asp-controller="Car" asp-action="Index" asp-route-codeVin="@item.CodeVin" class="text-decoration-none" style="color: #2C1810;">
+            <a asp-controller="Car" asp-action="Index" asp-route-codeVin="@item.Id" class="text-decoration-none" style="color: #2C1810;">
                 <div class="col">
                     <div class="card p-3 shadow">
                         <div class="row g-0">
@@ -23,10 +23,10 @@
                             </div>
                             <div class="col-md-8">
                                 <div class="card-body">
-                                    <h5 class="card-title">@item.Prix.PrixVente €</h5>
-                                    <p class="card-text"><strong>VIN : </strong>@item.CodeVin</p>
+                                    <h5 class="card-title">@item.PrixVente €</h5>
                                     <p class="card-text"><strong>Marque : </strong>@item.Marque</p>
                                     <p class="card-text"><strong>Modèle : </strong>@item.Modele</p>
+                                    <p class="card-text"><strong>Année : </strong>@item.Annee.ToString("yyyy")</p>
                                 </div>
                             </div>
                         </div>

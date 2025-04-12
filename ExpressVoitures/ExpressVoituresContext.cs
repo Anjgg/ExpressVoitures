@@ -4,17 +4,16 @@
 //using ExpressVoitures.Database.TableDeLiaison;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Emit;
 
 namespace ExpressVoitures
 {
     public class ExpressVoituresContext : IdentityDbContext
     {
-        public DbSet<VoitureDto> Voitures { get; set; }
-        public DbSet<DateDto> Dates { get; set; }
-        public DbSet<ReparationDto> Reparations { get; set; }
-        public DbSet<PrixDto> Prixs { get; set; }
-       
+        public virtual DbSet<VoitureDto> Voitures { get; set; } = null!;
+        public virtual DbSet<DateDto> Dates { get; set; } = null!;
+        public virtual DbSet<ReparationDto> Reparations { get; set; } = null!;
+        public virtual DbSet<PrixDto> Prixs { get; set; } = null!;
+
 
         public ExpressVoituresContext()
         {
@@ -41,18 +40,22 @@ namespace ExpressVoitures
             builder.Entity<VoitureDto>()
                 .HasOne(v => v.Prix)
                 .WithOne(p => p.Voiture)
-                .HasForeignKey<PrixDto>(p => p.CodeVin)
+                .HasForeignKey<PrixDto>(p => p.VoitureId)
                 .OnDelete(DeleteBehavior.Cascade);
             builder.Entity<VoitureDto>()
                 .HasOne(v => v.Date)
                 .WithOne(d => d.Voiture)
-                .HasForeignKey<DateDto>(d => d.CodeVin)
+                .HasForeignKey<DateDto>(d => d.VoitureId)
                 .OnDelete(DeleteBehavior.Cascade);
             builder.Entity<VoitureDto>()
-                .HasMany(v => v.Reparations)
+                .HasOne(v => v.Reparation)
                 .WithOne(r => r.Voiture)
-                .HasForeignKey(r => r.CodeVin)
+                .HasForeignKey<ReparationDto>(r => r.VoitureId)
                 .OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<ReparationDto>()
+                .HasMany(r => r.Types)
+                .WithMany(t => t.Reparations)
+                .UsingEntity(j => j.ToTable("ReparationType"));
         }
     }
 }

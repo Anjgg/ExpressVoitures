@@ -1,9 +1,6 @@
-using System.Diagnostics;
-using ExpressVoitures.Data.Dto;
 using ExpressVoitures.Data.Models;
 using ExpressVoitures.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 
 namespace ExpressVoitures.Controllers
 {
@@ -20,8 +17,8 @@ namespace ExpressVoitures.Controllers
 
         public async Task<IActionResult> Index()
         {
-            List<VoitureModel> listAllCars = await _service.GetAllCars();
-            return View(listAllCars);
+            List<HomeCarModel> listAllHomeCars = await _service.GetAllHomeCars();
+            return View(listAllHomeCars);
         }
 
         public IActionResult Contact()

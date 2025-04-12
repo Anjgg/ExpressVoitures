@@ -1,21 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Security.Cryptography;
-
-namespace ExpressVoitures.Data.Dto
+﻿namespace ExpressVoitures.Data.Dto
 {
     public class ReparationDto
     {
-        [Key]
         public int Id { get; set; }
 
-        public required string Description { get; set; }
-        public decimal Prix { get; set; }
-        public decimal Duree { get; set; }
+        public int PrixTotal { get; set; }
+        public double DureeTotal { get; set; }
 
-        [Required]
-        [ForeignKey("Voiture")]
-        public string? CodeVin { get; set; }
-        public virtual VoitureDto? Voiture { get; set; } 
+        public int? VoitureId { get; set; }
+        public virtual VoitureDto? Voiture { get; set; }
+
+        public virtual IEnumerable<TypeDto> Types { get; set; } = new List<TypeDto>();
     }
 }

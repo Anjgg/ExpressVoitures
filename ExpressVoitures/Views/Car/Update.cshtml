@@ -1,7 +1,7 @@
 ﻿@model VoitureModel
 @{
     ViewData["Title"] = "Modifier";
-    var index = Model.Reparations.Count;
+    // var index = Model.Reparations.Count;
 }
 
 <div class="my-5 text-center">
@@ -15,14 +15,14 @@
 
             <form asp-controller="Car" asp-action="Update" method="post">
                 <h4>Véhicule</h4>
-                <div class="hidden">
+                @* <div class="hidden">
                     <input asp-for="Prix.Id" type="hidden">
                     <input asp-for="Prix.PrixReparation" type="hidden">
                     <input asp-for="Prix.PrixVente" type="hidden">
                     <input asp-for="Date.Id" type="hidden">
                     <input asp-for="Date.DateMiseEnVente" type="hidden">
-                </div>
-                <div class="mb-2">
+                </div> *@
+                @* <div class="mb-2">
                     <label asp-for="CodeVin" class="form-label">Code VIN</label>
                     <input asp-for="CodeVin" type="text" class="form-control">
                     <span asp-validation-for="CodeVin" class="text-danger"></span>
@@ -126,13 +126,13 @@
                 <div class="text-center">
                     <button asp-controller="Car" asp-action="Update" class="btn-primary btn">Enregistrer la voiture</button>
                     <a asp-controller="Car" asp-action="Delete" asp-route-codeVin="@Model.CodeVin" class="btn btn-danger">Supprimer la voiture</a>
-                </div>
+                </div> *@
             </form>
         </div>
     </div>
 </div>
 
-<script>
+@* <script>
     let index = @index;
     function AddReparation() {
         const container = document.getElementById("reparations-container");
@@ -172,3 +172,4 @@
         }
 
 </script>
+ *@
