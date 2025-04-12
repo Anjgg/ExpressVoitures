@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExpressVoitures.Migrations
 {
     [DbContext(typeof(ExpressVoituresContext))]
-    [Migration("20250406202824_Initial")]
-    partial class Initial
+    [Migration("20250407202233_MAJ1")]
+    partial class MAJ1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace ExpressVoitures.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ExpressVoitures.Data.Dto.DateDto", b =>
+            modelBuilder.Entity("ExpressVoitures.Data.Entities.Car", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -33,111 +33,115 @@ namespace ExpressVoitures.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CodeVin")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTimeOffset>("DateAchat")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset>("DateMiseEnVente")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset?>("DateVente")
-                        .HasColumnType("datetimeoffset");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CodeVin")
-                        .IsUnique()
-                        .HasFilter("[CodeVin] IS NOT NULL");
-
-                    b.ToTable("Dates");
-                });
-
-            modelBuilder.Entity("ExpressVoitures.Data.Dto.PrixDto", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CodeVin")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<decimal>("PrixAchat")
-                        .HasColumnType("decimal(8,2)");
-
-                    b.Property<decimal>("PrixReparation")
-                        .HasColumnType("decimal(8,2)");
-
-                    b.Property<decimal>("PrixVente")
-                        .HasColumnType("decimal(8,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CodeVin")
-                        .IsUnique()
-                        .HasFilter("[CodeVin] IS NOT NULL");
-
-                    b.ToTable("Prixs");
-                });
-
-            modelBuilder.Entity("ExpressVoitures.Data.Dto.ReparationDto", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CodeVin")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Duree")
-                        .HasColumnType("decimal(8,2)");
-
-                    b.Property<decimal>("Prix")
-                        .HasColumnType("decimal(8,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CodeVin");
-
-                    b.ToTable("Reparations");
-                });
-
-            modelBuilder.Entity("ExpressVoitures.Data.Dto.VoitureDto", b =>
-                {
-                    b.Property<string>("CodeVin")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int?>("Annee")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Finition")
+                    b.Property<string>("Brand")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImagePath")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Marque")
+                    b.Property<DateTime>("ManufactureDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Model")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Modele")
+                    b.Property<string>("Version")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("CodeVin");
+                    b.Property<string>("VinCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("Voitures");
+                    b.HasKey("Id");
+
+                    b.ToTable("Cars");
+                });
+
+            modelBuilder.Entity("ExpressVoitures.Data.Entities.EventHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CarId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("Purchase")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("ReadyToSell")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("Selling")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CarId")
+                        .IsUnique();
+
+                    b.ToTable("EventHistorys");
+                });
+
+            modelBuilder.Entity("ExpressVoitures.Data.Entities.Price", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CarId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Purchase")
+                        .HasColumnType("decimal(8,2)");
+
+                    b.Property<decimal>("Repair")
+                        .HasColumnType("decimal(8,2)");
+
+                    b.Property<decimal>("Selling")
+                        .HasColumnType("decimal(8,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CarId")
+                        .IsUnique();
+
+                    b.ToTable("Prices");
+                });
+
+            modelBuilder.Entity("ExpressVoitures.Data.Entities.Repair", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CarId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("DaysOfWork")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(8,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CarId");
+
+                    b.ToTable("Repairs");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -342,35 +346,37 @@ namespace ExpressVoitures.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ExpressVoitures.Data.Dto.DateDto", b =>
+            modelBuilder.Entity("ExpressVoitures.Data.Entities.EventHistory", b =>
                 {
-                    b.HasOne("ExpressVoitures.Data.Dto.VoitureDto", "Voiture")
-                        .WithOne("Date")
-                        .HasForeignKey("ExpressVoitures.Data.Dto.DateDto", "CodeVin")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("Voiture");
-                });
-
-            modelBuilder.Entity("ExpressVoitures.Data.Dto.PrixDto", b =>
-                {
-                    b.HasOne("ExpressVoitures.Data.Dto.VoitureDto", "Voiture")
-                        .WithOne("Prix")
-                        .HasForeignKey("ExpressVoitures.Data.Dto.PrixDto", "CodeVin")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("Voiture");
-                });
-
-            modelBuilder.Entity("ExpressVoitures.Data.Dto.ReparationDto", b =>
-                {
-                    b.HasOne("ExpressVoitures.Data.Dto.VoitureDto", "Voiture")
-                        .WithMany("Reparations")
-                        .HasForeignKey("CodeVin")
+                    b.HasOne("ExpressVoitures.Data.Entities.Car", "Car")
+                        .WithOne("EventHistory")
+                        .HasForeignKey("ExpressVoitures.Data.Entities.EventHistory", "CarId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Voiture");
+                    b.Navigation("Car");
+                });
+
+            modelBuilder.Entity("ExpressVoitures.Data.Entities.Price", b =>
+                {
+                    b.HasOne("ExpressVoitures.Data.Entities.Car", "Car")
+                        .WithOne("Price")
+                        .HasForeignKey("ExpressVoitures.Data.Entities.Price", "CarId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Car");
+                });
+
+            modelBuilder.Entity("ExpressVoitures.Data.Entities.Repair", b =>
+                {
+                    b.HasOne("ExpressVoitures.Data.Entities.Car", "Car")
+                        .WithMany("Repairs")
+                        .HasForeignKey("CarId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Car");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -424,15 +430,15 @@ namespace ExpressVoitures.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ExpressVoitures.Data.Dto.VoitureDto", b =>
+            modelBuilder.Entity("ExpressVoitures.Data.Entities.Car", b =>
                 {
-                    b.Navigation("Date")
+                    b.Navigation("EventHistory")
                         .IsRequired();
 
-                    b.Navigation("Prix")
+                    b.Navigation("Price")
                         .IsRequired();
 
-                    b.Navigation("Reparations");
+                    b.Navigation("Repairs");
                 });
 #pragma warning restore 612, 618
         }

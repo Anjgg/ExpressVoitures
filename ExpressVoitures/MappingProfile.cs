@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ExpressVoitures.Data.Entities;
 using ExpressVoitures.Data.Dto;
 using ExpressVoitures.Data.Models;
 
@@ -8,11 +9,11 @@ namespace ExpressVoitures
     {
         public MappingProfile()
         {
-            CreateMap<VoitureDto, VoitureModel>().ReverseMap();
-            CreateMap<DateDto, DateModel>().ReverseMap();
-            CreateMap<PrixDto, PrixModel>().ReverseMap();
-            CreateMap<ReparationDto, ReparationModel>().ReverseMap();
-            
+            CreateMap<Car, CarDto>().ReverseMap();
+            CreateMap<List<Car>, List<CarDto>>().ReverseMap();
+            CreateMap<EventHistory, EventHistoryDto>().ReverseMap();
+            CreateMap<Price, PriceDto>().ReverseMap();
+            CreateMap<Repair, RepairDto>().ReverseMap();
         }
     }
 }

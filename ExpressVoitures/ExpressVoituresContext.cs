@@ -1,4 +1,4 @@
-﻿using ExpressVoitures.Data.Dto;
+﻿using ExpressVoitures.Data.Entities;
 
 
 //using ExpressVoitures.Database.TableDeLiaison;
@@ -10,10 +10,10 @@ namespace ExpressVoitures
 {
     public class ExpressVoituresContext : IdentityDbContext
     {
-        public DbSet<VoitureDto> Voitures { get; set; }
-        public DbSet<DateDto> Dates { get; set; }
-        public DbSet<ReparationDto> Reparations { get; set; }
-        public DbSet<PrixDto> Prixs { get; set; }
+        public DbSet<Car> Cars { get; set; }
+        public DbSet<EventHistory> EventHistorys { get; set; }
+        public DbSet<Repair> Repairs { get; set; }
+        public DbSet<Price> Prices { get; set; }
        
 
         public ExpressVoituresContext()
@@ -29,7 +29,7 @@ namespace ExpressVoitures
         {
             base.OnModelCreating(builder);
 
-            // Configuration des propriétés décimales
+            // Setting decimal properties
             foreach (var property in builder.Model.GetEntityTypes()
                      .SelectMany(t => t.GetProperties())
                      .Where(p => p.ClrType == typeof(decimal) || p.ClrType == typeof(decimal?)))
@@ -37,21 +37,21 @@ namespace ExpressVoitures
                 property.SetColumnType("decimal(8,2)");
             }
 
-            // Configuration des relations
-            builder.Entity<VoitureDto>()
-                .HasOne(v => v.Prix)
-                .WithOne(p => p.Voiture)
-                .HasForeignKey<PrixDto>(p => p.CodeVin)
+            // Relationship configuration
+            builder.Entity<Car>()
+                .HasOne(v => v.Price)
+                .WithOne(p => p.Car)
+                .HasForeignKey<Price>(p => p.CarId)
                 .OnDelete(DeleteBehavior.Cascade);
-            builder.Entity<VoitureDto>()
-                .HasOne(v => v.Date)
-                .WithOne(d => d.Voiture)
-                .HasForeignKey<DateDto>(d => d.CodeVin)
+            builder.Entity<Car>()
+                .HasOne(v => v.EventHistory)
+                .WithOne(d => d.Car)
+                .HasForeignKey<EventHistory>(d => d.CarId)
                 .OnDelete(DeleteBehavior.Cascade);
-            builder.Entity<VoitureDto>()
-                .HasMany(v => v.Reparations)
-                .WithOne(r => r.Voiture)
-                .HasForeignKey(r => r.CodeVin)
+            builder.Entity<Car>()
+                .HasMany(v => v.Repairs)
+                .WithOne(r => r.Car)
+                .HasForeignKey(r => r.CarId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

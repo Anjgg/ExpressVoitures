@@ -51,19 +51,21 @@ namespace ExpressVoitures.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Voitures",
+                name: "Cars",
                 columns: table => new
                 {
-                    CodeVin = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Marque = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Modele = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Finition = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Annee = table.Column<int>(type: "int", nullable: true),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    VinCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Brand = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Model = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Version = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ManufactureDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Voitures", x => x.CodeVin);
+                    table.PrimaryKey("PK_Cars", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -173,68 +175,68 @@ namespace ExpressVoitures.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Dates",
+                name: "EventHistorys",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DateAchat = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    DateMiseEnVente = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    DateVente = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    CodeVin = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    Purchase = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    ReadyToSell = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    Selling = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    CarId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Dates", x => x.Id);
+                    table.PrimaryKey("PK_EventHistorys", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Dates_Voitures_CodeVin",
-                        column: x => x.CodeVin,
-                        principalTable: "Voitures",
-                        principalColumn: "CodeVin",
+                        name: "FK_EventHistorys_Cars_CarId",
+                        column: x => x.CarId,
+                        principalTable: "Cars",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Prixs",
+                name: "Prices",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PrixAchat = table.Column<decimal>(type: "decimal(8,2)", nullable: false),
-                    PrixReparation = table.Column<decimal>(type: "decimal(8,2)", nullable: false),
-                    PrixVente = table.Column<decimal>(type: "decimal(8,2)", nullable: false),
-                    CodeVin = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    Purchase = table.Column<decimal>(type: "decimal(8,2)", nullable: false),
+                    Repair = table.Column<decimal>(type: "decimal(8,2)", nullable: false),
+                    Selling = table.Column<decimal>(type: "decimal(8,2)", nullable: false),
+                    CarId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Prixs", x => x.Id);
+                    table.PrimaryKey("PK_Prices", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Prixs_Voitures_CodeVin",
-                        column: x => x.CodeVin,
-                        principalTable: "Voitures",
-                        principalColumn: "CodeVin",
+                        name: "FK_Prices_Cars_CarId",
+                        column: x => x.CarId,
+                        principalTable: "Cars",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Reparations",
+                name: "Repairs",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Prix = table.Column<decimal>(type: "decimal(8,2)", nullable: false),
-                    Duree = table.Column<decimal>(type: "decimal(8,2)", nullable: false),
-                    CodeVin = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    Price = table.Column<decimal>(type: "decimal(8,2)", nullable: false),
+                    DaysOfWork = table.Column<double>(type: "float", nullable: false),
+                    CarId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reparations", x => x.Id);
+                    table.PrimaryKey("PK_Repairs", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reparations_Voitures_CodeVin",
-                        column: x => x.CodeVin,
-                        principalTable: "Voitures",
-                        principalColumn: "CodeVin",
+                        name: "FK_Repairs_Cars_CarId",
+                        column: x => x.CarId,
+                        principalTable: "Cars",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -278,23 +280,21 @@ namespace ExpressVoitures.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Dates_CodeVin",
-                table: "Dates",
-                column: "CodeVin",
-                unique: true,
-                filter: "[CodeVin] IS NOT NULL");
+                name: "IX_EventHistorys_CarId",
+                table: "EventHistorys",
+                column: "CarId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Prixs_CodeVin",
-                table: "Prixs",
-                column: "CodeVin",
-                unique: true,
-                filter: "[CodeVin] IS NOT NULL");
+                name: "IX_Prices_CarId",
+                table: "Prices",
+                column: "CarId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reparations_CodeVin",
-                table: "Reparations",
-                column: "CodeVin");
+                name: "IX_Repairs_CarId",
+                table: "Repairs",
+                column: "CarId");
         }
 
         /// <inheritdoc />
@@ -316,13 +316,13 @@ namespace ExpressVoitures.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Dates");
+                name: "EventHistorys");
 
             migrationBuilder.DropTable(
-                name: "Prixs");
+                name: "Prices");
 
             migrationBuilder.DropTable(
-                name: "Reparations");
+                name: "Repairs");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -331,7 +331,7 @@ namespace ExpressVoitures.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Voitures");
+                name: "Cars");
         }
     }
 }

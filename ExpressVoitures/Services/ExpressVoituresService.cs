@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ExpressVoitures.Data.Dto;
+using ExpressVoitures.Data.Entities;
 using ExpressVoitures.Data.Models;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.EntityFrameworkCore;
@@ -9,11 +10,11 @@ namespace ExpressVoitures.Services
 {
     public interface IExpressVoituresService
     {
-        Task<List<VoitureModel>> GetAllCars();
-        Task<VoitureModel?> GetCarAsync(string codeVin);
-        Task<VoitureModel> CreateVoitureAsync(VoitureModel model);
-        Task<VoitureModel> UpdateCarAsync(VoitureModel model);
-        Task<VoitureModel> DeleteCarAsync(string codeVin);
+        Task<List<HomeCarModel>> GetAllHomeCarsAsync();
+        Task<VoitureModel?> GetCarAsync(int id);
+        //Task<VoitureModel> CreateVoitureAsync(VoitureModel model);
+        //Task<VoitureModel> UpdateCarAsync(VoitureModel model);
+        //Task<VoitureModel> DeleteCarAsync(string codeVin);
     }
 
     public class ExpressVoituresService : IExpressVoituresService
@@ -27,21 +28,29 @@ namespace ExpressVoitures.Services
             _mapper = mapper;
         }
 
-        public async Task<List<VoitureModel>> GetAllCars()
+        public async Task<List<HomeCarModel>> GetAllHomeCarsAsync()
         {
-            List<VoitureDto> listAllCars = await _context.Voitures.Include(v => v.Date)
-                                                                  .Include(v => v.Prix)
-                                                                  .Include(v => v.Reparations)
-                                                                  .ToListAsync();
-            return _mapper.Map<List<VoitureModel>>(listAllCars);
+            var listAllCars = _mapper.Map<List<CarDto>>(await _context.Cars.ToListAsync());
+            var listAllPrices = _mapper.Map<List<PriceDto>>(await _context.Prices.ToListAsync());
+            
+            var listAllHomeCars = listAllCars.Select(car => new HomeCarModel
+            {
+                Id = car.Id,
+                Brand = car.Brand,
+                Model = car.Model,
+                ManufactureDate = car.ManufactureDate,
+                SellingPrice = listAllPrices.FirstOrDefault(p => p.CarId == car.Id).Selling,
+            }).ToList();
+            
+            return listAllHomeCars;
         }
 
-        public async Task<VoitureModel?> GetCarAsync(string codeVin)
+        public async Task<VoitureModel?> GetCarAsync(int id)
         {
-            var voitureContext = await _context.Voitures.Where(a => a.CodeVin == codeVin)
-                                                        .Include(v => v.Date)
-                                                        .Include(v => v.Prix)
-                                                        .Include(v => v.Reparations)
+            var voitureContext = await _context.Cars.Where(a => a.VinCode == codeVin)
+                                                        .Include(v => v.EventHistory)
+                                                        .Include(v => v.Price)
+                                                        .Include(v => v.Repairs)
                                                         .FirstOrDefaultAsync();
 
             if (voitureContext == null)
@@ -52,98 +61,103 @@ namespace ExpressVoitures.Services
             return voiture;
         }
 
-        public async Task<VoitureModel> CreateVoitureAsync(VoitureModel model)
-        {
-            var voiture = new VoitureDto
-            {
-                CodeVin = model.CodeVin,
-                Marque = model.Marque,
-                Modele = model.Modele,
-                Finition = model.Finition,
-                Annee = model.Annee,
-                ImagePath = model.ImagePath,
-                Prix = new PrixDto
-                {
-                    PrixAchat = model.Prix.PrixAchat,
-                    PrixReparation = model.Prix.PrixReparation,
-                    PrixVente = model.Prix.PrixVente
-                },
-                Date = new DateDto
-                {
-                    DateAchat = model.Date.DateAchat,
-                    DateMiseEnVente = model.Date.DateMiseEnVente,
-                    DateVente = model.Date.DateVente
-                },
-                Reparations = model.Reparations.Select(r => new ReparationDto
-                {
-                    Description = r.Description,
-                    Prix = r.Prix,
-                    Duree = r.Duree
-                }).ToList()
-            };
-            await _context.Voitures.AddAsync(voiture);
-            await _context.SaveChangesAsync();
+        //public async Task<VoitureModel> CreateVoitureAsync(VoitureModel model)
+        //{
+        //    var voiture = new CarDto
+        //    {
+        //        VinCode = model.CodeVin,
+        //        Brand = model.Marque,
+        //        Model = model.Modele,
+        //        Version = model.Finition,
+        //        ManufactureDate = model.Annee,
+        //        ImagePath = model.ImagePath,
+        //        Price = new PriceDto
+        //        {
+        //            Purchase = model.Prix.PrixAchat,
+        //        },
+        //        EventHistory = new EventHistoryDto
+        //        {
+        //            Purchase = model.Date.DateAchat,
+        //            Selling = model.Date.DateVente
+        //        },
+        //        Repairs = model.Reparations.Select(r => new RepairDto
+        //        {
+        //            Description = r.Description,
+        //            Price = r.Prix,
+        //            DaysOfWork = r.Duree
+        //        }).ToList()
+        //    };
+        //    await UpdatePrix(voiture);
+        //    await _context.Cars.AddAsync(voiture);
+        //    await _context.SaveChangesAsync();
 
-            return _mapper.Map<VoitureModel>(voiture);
-        }
+        //    return _mapper.Map<VoitureModel>(voiture);
+        //}
 
-        public async Task<VoitureModel> UpdateCarAsync(VoitureModel model)
-        {
-            var voiture = await _context.Voitures.Where(v => v.CodeVin == model.CodeVin)
-                                                 .Include(v => v.Date)
-                                                 .Include(v => v.Prix)
-                                                 .Include(v => v.Reparations)
-                                                 .FirstOrDefaultAsync();
+        //public async Task<VoitureModel> UpdateCarAsync(VoitureModel model)
+        //{
+        //    var voiture = await _context.Cars.Where(v => v.VinCode == model.CodeVin)
+        //                                         .Include(v => v.EventHistory)
+        //                                         .Include(v => v.Price)
+        //                                         .Include(v => v.Repair)
+        //                                         .FirstOrDefaultAsync();
 
-            if (voiture == null)
-            {
-                throw new Exception($"Voiture with CodeVin {model.CodeVin} not found.");
-            }
+        //    if (voiture == null)
+        //    {
+        //        throw new Exception($"Car with VinCode {model.CodeVin} not found.");
+        //    }
 
-            voiture.CodeVin = model.CodeVin;
-            voiture.Marque = model.Marque;
-            voiture.Modele = model.Modele;
-            voiture.Finition = model.Finition;
-            voiture.Annee = model.Annee;
-            voiture.ImagePath = model.ImagePath;
-            voiture.Prix!.PrixAchat = model.Prix!.PrixAchat;
-            voiture.Date!.DateAchat = model.Date!.DateAchat;
-            voiture.Date.DateMiseEnVente = model.Date.DateMiseEnVente;
-            voiture.Date.DateVente = model.Date.DateVente;
-            if (model.Reparations != null)
-            {
-                if (voiture.Reparations != null)
-                    voiture.Reparations.Clear();
-                foreach (var reparation in model.Reparations)
-                {
-                    voiture.Reparations!.Add(new ReparationDto
-                    {
-                        Description = reparation.Description,
-                        Prix = reparation.Prix,
-                        Duree = reparation.Duree
-                    });
-                }
-            }
-            await UpdatePrix(voiture);
-            await _context.SaveChangesAsync();
-            return _mapper.Map<VoitureModel>(voiture);
-        }
+        //    voiture.VinCode = model.CodeVin;
+        //    voiture.Brand = model.Marque;
+        //    voiture.Modele = model.Modele;
+        //    voiture.Version = model.Finition;
+        //    voiture.Year = model.Annee;
+        //    voiture.ImagePath = model.ImagePath;
+        //    voiture.Price!.Purchase = model.Prix!.PrixAchat;
+        //    voiture.EventHistory!.DateAchat = model.Date!.DateAchat;
+        //    voiture.EventHistory.DateMiseEnVente = model.Date.DateMiseEnVente;
+        //    voiture.EventHistory.DateVente = model.Date.DateVente;
+        //    if (model.Reparations != null)
+        //    {
+        //        if (voiture.Repair != null)
+        //            voiture.Repair.Clear();
+        //        foreach (var reparation in model.Reparations)
+        //        {
+        //            voiture.Repair!.Add(new RepairDto
+        //            {
+        //                Description = reparation.Description,
+        //                Price = reparation.Prix,
+        //                DaysOfWork = reparation.Duree
+        //            });
+        //        }
+        //    }
+        //    await UpdatePrix(voiture);
+        //    await _context.SaveChangesAsync();
+        //    return _mapper.Map<VoitureModel>(voiture);
+        //}
 
-        public async Task<VoitureModel> DeleteCarAsync(string codeVin)
-        {
-            var voiture = await _context.Voitures.FindAsync(codeVin) ?? throw new Exception($"Voiture with CodeVin {codeVin} not found.");
-            _context.Voitures.Remove(voiture);
-            await _context.SaveChangesAsync();
-            return _mapper.Map<VoitureModel>(voiture);
-        }
+        //public async Task<VoitureModel> DeleteCarAsync(string codeVin)
+        //{
+        //    var voiture = await _context.Cars.FindAsync(codeVin) ?? throw new Exception($"Car with VinCode {codeVin} not found.");
+        //    _context.Cars.Remove(voiture);
+        //    await _context.SaveChangesAsync();
+        //    return _mapper.Map<VoitureModel>(voiture);
+        //}
 
-        public async Task UpdatePrix(VoitureDto voiture)
-        {
-            voiture.Prix!.PrixReparation = voiture.Reparations.Sum(r => r.Prix);
-            voiture.Prix!.PrixVente = voiture.Prix.PrixAchat + voiture.Prix.PrixReparation + 500;
-            await _context.SaveChangesAsync();
+        //public async Task UpdatePrix(CarDto voiture)
+        //{
+        //    voiture.Price!.PrixReparation = voiture.Repairs.Sum(r => r.Prix);
+        //    voiture.Price!.PrixVente = voiture.Price.PrixAchat + voiture.Price.PrixReparation + 500;
+        //    await _context.SaveChangesAsync();
 
-        }
+        //}
+
+        //public async Task UpdateDate(CarDto voiture)
+        //{
+        //    var daysOfReparation = voiture.Repairs.Sum(r => r.Duree);
+        //    voiture.EventHistory!.DateMiseEnVente = DateTime.Now.AddDays(daysOfReparation);
+        //    await _context.SaveChangesAsync();
+        //}
     }
 }
 

@@ -20,8 +20,8 @@ namespace ExpressVoitures.Controllers
 
         public async Task<IActionResult> Index()
         {
-            List<VoitureModel> listAllCars = await _service.GetAllCars();
-            return View(listAllCars);
+            var listAllHomeCars = await _service.GetAllHomeCarsAsync();
+            return View(listAllHomeCars);
         }
 
         public IActionResult Contact()

@@ -28,6 +28,7 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 // Setup Services Scope
 builder.Services.AddScoped<IExpressVoituresService, ExpressVoituresService>();
+//builder.Services.AddScoped<ICarRepository, CarRepository>();
 
 
 
@@ -63,7 +64,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{codeVin?}");
+    pattern: "{controller=Home}/{action=Index}/{vinCode?}");
 app.MapRazorPages();
 
 app.Run();
