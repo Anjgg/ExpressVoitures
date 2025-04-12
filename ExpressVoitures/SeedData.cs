@@ -23,7 +23,7 @@ namespace ExpressVoitures
                         Marque = "Toyota",
                         Modele = "Corolla",
                         Finition = "LE",
-                        AnneeFabrication = new DateTimeOffset(1990, 5, 19, 0, 0, 0, new TimeSpan()),
+                        DateFabrication = new DateTimeOffset(1990, 5, 19, 0, 0, 0, new TimeSpan()),
                         ImagePath = "https://example.com/images/toyota_corolla.jpg",
                         Date = new DateDto
                         {
@@ -48,7 +48,7 @@ namespace ExpressVoitures
                         Marque = "Honda",
                         Modele = "Civic",
                         Finition = "LX",
-                        AnneeFabrication = new DateTimeOffset(1999, 5, 12, 0, 0, 0, new TimeSpan()),
+                        DateFabrication = new DateTimeOffset(1999, 5, 12, 0, 0, 0, new TimeSpan()),
                         ImagePath = "https://example.com/images/honda_civic.jpg",
                         Date = new DateDto
                         {
@@ -73,7 +73,7 @@ namespace ExpressVoitures
                         Marque = "Ford",
                         Modele = "Fusion",
                         Finition = "SE",
-                        AnneeFabrication = new DateTimeOffset(1985, 6, 23, 0, 0, 0, new TimeSpan()),
+                        DateFabrication = new DateTimeOffset(1985, 6, 23, 0, 0, 0, new TimeSpan()),
                         ImagePath = "https://example.com/images/ford_fusion.jpg",
                         Date = new DateDto
                         {
@@ -98,7 +98,7 @@ namespace ExpressVoitures
                         Marque = "Chevrolet",
                         Modele = "Malibu",
                         Finition = "LT",
-                        AnneeFabrication = new DateTimeOffset(1967, 2, 4, 0, 0, 0, new TimeSpan()),
+                        DateFabrication = new DateTimeOffset(1967, 2, 4, 0, 0, 0, new TimeSpan()),
                         ImagePath = "https://example.com/images/chevrolet_malibu.jpg",
                         Date = new DateDto
                         {

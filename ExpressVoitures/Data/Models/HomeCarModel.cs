@@ -6,7 +6,7 @@
 
         public string Marque { get; set; } = null!;
         public string Modele { get; set; } = null!;
-        public DateTime Annee { get; set; }
+        public DateTimeOffset DateFabrication { get; set; }
 
         public int PrixVente { get; set; }
     }

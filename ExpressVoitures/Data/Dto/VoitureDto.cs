@@ -8,7 +8,7 @@
         public string Marque { get; set; } = string.Empty;
         public string Modele { get; set; } = string.Empty;
         public string Finition { get; set; } = string.Empty;
-        public DateTimeOffset AnneeFabrication { get; set; }
+        public DateTimeOffset DateFabrication { get; set; }
         public string? ImagePath { get; set; }
 
         public virtual ReparationDto Reparation { get; set; } = new ReparationDto();
