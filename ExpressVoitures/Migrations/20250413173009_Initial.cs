@@ -51,7 +51,7 @@ namespace ExpressVoitures.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TypeDto",
+                name: "Types",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -62,7 +62,7 @@ namespace ExpressVoitures.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TypeDto", x => x.Id);
+                    table.PrimaryKey("PK_Types", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -75,7 +75,7 @@ namespace ExpressVoitures.Migrations
                     Marque = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Modele = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Finition = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DateFabrication = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    AnneeFabrication = table.Column<int>(type: "int", nullable: false),
                     ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -271,9 +271,9 @@ namespace ExpressVoitures.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ReparationType_TypeDto_TypesId",
+                        name: "FK_ReparationType_Types_TypesId",
                         column: x => x.TypesId,
-                        principalTable: "TypeDto",
+                        principalTable: "Types",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -381,7 +381,7 @@ namespace ExpressVoitures.Migrations
                 name: "Reparations");
 
             migrationBuilder.DropTable(
-                name: "TypeDto");
+                name: "Types");
 
             migrationBuilder.DropTable(
                 name: "Voitures");

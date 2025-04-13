@@ -1,9 +1,9 @@
-﻿@model VoitureModel
+﻿@model VoitureProfileModel
 @{
     ViewData["Title"] = "Supprimer une voiture";
 }
 
 
 <div>
-    <h1 class="text-center">La voiture @Model.CodeVin a été supprimée</h1>
+    <h1 class="text-center">La voiture @Model.Voiture.Marque @Model.Voiture.Modele a été supprimée</h1>
 </div>

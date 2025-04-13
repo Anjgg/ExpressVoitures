@@ -1,6 +1,8 @@
 ﻿using ExpressVoitures.Data.Models;
 using ExpressVoitures.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExpressVoitures.Controllers
 {
@@ -24,33 +26,39 @@ namespace ExpressVoitures.Controllers
             return View(voiture);
         }
 
-        //    [HttpGet]
-        //    public IActionResult Create()
-        //    {
-        //        return View();
-        //    }
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View(new VoitureProfileModel());
+        }
 
-        //    [HttpPost]
-        //    public async Task<IActionResult> Create(VoitureModel model)
-        //    {
-        //        if (!ModelState.IsValid)
-        //        {
-        //            return View(model);
-        //        }
-        //        var voiture = await _service.CreateVoitureAsync(model);
-        //        return RedirectToAction("CarCreated", voiture);
-        //    }
+        [HttpPost]
+        public async Task<IActionResult> Create(VoitureProfileModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var voiture = await _service.CreateVoitureAsync(model);
+            return RedirectToAction("CarCreated", new { marque = voiture.Voiture.Marque, modele = voiture.Voiture.Modele});
+        }
 
-        //    [HttpGet]
-        //    public IActionResult CarCreated(VoitureModel model)
-        //    {
-        //        return View(model);
-        //    }
+        [HttpGet]
+        public IActionResult CarCreated(string marque, string modele)
+        {
+            ViewBag.Marque = marque;
+            ViewBag.Modele = modele;
+            return View();
+        }
 
         [HttpGet]
         public async Task<IActionResult> Update(int id)
         {
             var voiture = await _service.GetCarAsync(id);
+
+            var listTypeModel = await _service.GetListTypeModel();
+            ViewBag.Types = new SelectList(listTypeModel, "Id", "Description");
+
             return View(voiture);
         }
 
@@ -62,21 +70,25 @@ namespace ExpressVoitures.Controllers
                 return View(model);
             }
             var voiture = await _service.UpdateCarAsync(model);
+
             
-            return RedirectToAction("CarUpdated", voiture);
+
+            return RedirectToAction("CarUpdated", new { marque = voiture.Voiture.Marque, modele = voiture.Voiture.Modele });
         }
 
-        //    [HttpGet]
-        //    public IActionResult CarUpdated(VoitureModel model)
-        //    {
-        //        return View(model);
-        //    }
+        [HttpGet]
+        public IActionResult CarUpdated(string marque, string modele)
+        {
+            ViewBag.Marque = marque;
+            ViewBag.Modele = modele;
+            return View();
+        }
 
-        //    [HttpGet]
-        //    public async Task<IActionResult> Delete(string codeVin)
-        //    {
-        //        var voiture = await _service.DeleteCarAsync(codeVin);
-        //        return View(voiture);
-        //    }
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var voiture = await _service.DeleteCarAsync(id);
+            return View(voiture);
+        }
     }
 }

@@ -1,6 +1,4 @@
-﻿using Microsoft.Identity.Client;
-
-namespace ExpressVoitures.Data.Models
+﻿namespace ExpressVoitures.Data.Models
 {
     public class VoitureProfileModel
     {
@@ -8,6 +6,7 @@ namespace ExpressVoitures.Data.Models
         public DateModel Date { get; set; } = new DateModel();
         public PrixModel Prix { get; set; } = new PrixModel();
         public ReparationModel Reparation { get; set; } = new ReparationModel();
+        public ICollection<TypeModel> Types { get; set; } = new List<TypeModel>();
     }
 
     public class VoitureModel
@@ -18,7 +17,7 @@ namespace ExpressVoitures.Data.Models
         public string Marque { get; set; } = null!;
         public string Modele { get; set; } = null!;
         public string Finition { get; set; } = null!;
-        public DateTimeOffset DateFabrication { get; set; }
+        public int AnneeFabrication { get; set; }
         public string? ImagePath { get; set; }
     }
 
@@ -29,7 +28,6 @@ namespace ExpressVoitures.Data.Models
         public DateTimeOffset DateAchat { get; set; }
         public DateTimeOffset DateMiseEnVente { get; set; }
         public DateTimeOffset? DateVente { get; set; }
-
     }
 
     public class PrixModel
@@ -47,8 +45,6 @@ namespace ExpressVoitures.Data.Models
 
         public int PrixTotal { get; set; }
         public double DureeTotal { get; set; }
-
-        public virtual ICollection<TypeModel> Types { get; set; } = new List<TypeModel>();
     }
 
     public class TypeModel

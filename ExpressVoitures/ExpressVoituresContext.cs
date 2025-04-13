@@ -13,6 +13,7 @@ namespace ExpressVoitures
         public virtual DbSet<DateDto> Dates { get; set; } = null!;
         public virtual DbSet<ReparationDto> Reparations { get; set; } = null!;
         public virtual DbSet<PrixDto> Prixs { get; set; } = null!;
+        public virtual DbSet<TypeDto> Types { get; set; } = null!;
 
 
         public ExpressVoituresContext()

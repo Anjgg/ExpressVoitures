@@ -1,10 +1,11 @@
 ﻿@model VoitureProfileModel
 @{
     ViewData["Title"] = "Modifier";
+    var typesList = Model.Types.ToList();
 }
 
 <div class="my-5 text-center">
-    <h1 class=" titre-homepage ">Ajouter une voiture</h1>
+    <h1 class=" titre-homepage ">Modifier une voiture</h1>
     <p class="onglet-menu-skinny">tous les champs sont obligatoires</p>
 </div>
 
@@ -46,9 +47,9 @@
                         <span asp-validation-for="Voiture.Finition" class="text-danger"></span>
                     </div>
                     <div class="col-md-6">
-                        <label asp-for="Voiture.DateFabrication" class="form-label">Année</label>
-                        <input asp-for="Voiture.DateFabrication" type="month" class="form-control">
-                        <span asp-validation-for="Voiture.DateFabrication" class="text-danger"></span>
+                        <label asp-for="Voiture.AnneeFabrication" class="form-label">Année</label>
+                        <input asp-for="Voiture.AnneeFabrication" type="number" class="form-control">
+                        <span asp-validation-for="Voiture.AnneeFabrication" class="text-danger"></span>
                     </div>
                 </div>
                 
@@ -59,8 +60,48 @@
                 </div>
 
                 <hr />
-                
+
+                <h4>Réparations</h4>
+
+                <div id="reparations-container" class="mb-2">
+                    @for (int i = 0; i < typesList.Count; i++)
+                    {
+                        <div class="reparation-group mb-2">
+                            <input name="Types[@i].Id" value="@typesList[i].Id" type="hidden">
+                            <div class="form-group">
+                                <label>Type de réparation:</label>
+                                <input name="Types[@i].Description" value="@typesList[i].Description" type="text" class="form-control" readonly>
+                                <span class="text-danger"></span>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label>Prix:</label>
+                                    <input name="Types[@i].Prix" value="@typesList[i].Prix" type="text" class="form-control" readonly>
+                                    <span class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label>Durée:</label>
+                                    <input name="Types[@i].Duree" value="@typesList[i].Duree" type="text" class="form-control" readonly>
+                                    <span class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4 align-self-end text-center">
+                                    <button type="button" class="btn btn-outline-danger mb-2 btn" onclick="DeleteReparation(this)">Supprimer</button>
+                                </div>
+                            </div>
+                            
+                            <hr />
+                        </div>
+                    }
+                </div>
+                <button type="button" class="btn btn-outline-primary mb-2" onclick="AddReparation()">
+                    <i class="bi bi-plus-circle"></i> Ajouter une réparation
+                </button>
+
+                <hr />
+
                 <h4>Comptabilité</h4>
+
                 <div class="row">
                     <div class="col-md-6">
                         <label asp-for="Prix.PrixAchat" class="form-label">Prix d'Achat</label>
@@ -73,10 +114,22 @@
                         <span asp-validation-for="Date.DateAchat" class="text-danger"></span>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mb-2">
                     <div class="col-md-6">
-                        <label asp-for="Prix.PrixVente" class="form-label" >Prix de Vente</label>
-                        <input asp-for="Prix.PrixVente" type="number" class="form-control">
+                        <label asp-for="Prix.PrixReparation" class="form-label">Prix de Reparation</label>
+                        <input asp-for="Prix.PrixReparation" type="number" class="form-control prixReparation">
+                        <span asp-validation-for="Prix.PrixReparation" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Date.DateMiseEnVente" class="form-label">Date de Vente</label>
+                        <input asp-for="Date.DateMiseEnVente" type="date" class="form-control">
+                        <span asp-validation-for="Date.DateMiseEnVente" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <label asp-for="Prix.PrixVente" class="form-label">Prix de Vente</label>
+                        <input asp-for="Prix.PrixVente" type="number" class="form-control-plaintext">
                         <span asp-validation-for="Prix.PrixVente" class="text-danger"></span>
                     </div>
                     <div class="col-md-6">
@@ -85,44 +138,9 @@
                         <span asp-validation-for="Date.DateVente" class="text-danger"></span>
                     </div>
                 </div>
-                
 
                 <hr />
-
-                <h4>Réparations</h4>
-                <div id="reparations-container" class="mb-2">
-                    @foreach (var type in Model.Reparation.Types) {
-                        <div class="reparation-group">
-                            <div>
-                                <input asp-for="@type.Id" type="hidden">
-                            </div>
-                            <div class="mb-2">
-                                <label asp-for="@type.Description" class="form-label">Description</label>
-                                <input asp-for="@type.Description" type="text" class="form-control">
-                                <span asp-validation-for="@type.Description" class="text-danger"></span>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label asp-for="@type.Prix" class="form-label">Prix</label>
-                                    <input asp-for="@type.Prix" type="text" class="form-control">
-                                    <span asp-validation-for="@type.Prix" class="text-danger"></span>
-                                </div>
-                                <div class="col-md-6">
-                                    <label asp-for="@type.Duree" class="form-label">Durée</label>
-                                    <input asp-for="@type.Duree" type="text" class="form-control">
-                                    <span asp-validation-for="@type.Duree" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <hr />
-                        </div>
-                    }
-                </div>
-
-                <button type="button" class="btn btn-outline-primary mb-2" onclick="AddReparation()">
-                    <i class="bi bi-plus-circle"></i> Ajouter une réparation
-                </button>
-                <button type="button" class="btn btn-outline-danger mb-2" onclick="DeleteReparation()">Supprimer</button>
-
+                
                 <div class="text-center">
                     <button asp-controller="Car" asp-action="Update" formmethod="post" class="btn-primary btn">Enregistrer la voiture</button>
                     <button asp-controller="Car" asp-action="Delete" asp-route-id="@Model.Voiture.Id" formmethod="post" class="btn btn-danger">Supprimer la voiture</button>
@@ -132,43 +150,136 @@
     </div>
 </div>
 
-@* <script>
-    let index = @index;
-    function AddReparation() {
-        const container = document.getElementById("reparations-container");
-        const html = `
-             <div class="reparation-group">
-                <div class="mb-2">
-                    <label for="Reparations_${index}__Description" class="form-label">Description</label>
-                    <input name="Reparations[${index}].Description" id="Reparations_${index}__Description" class="form-control" type="text" >
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <label for="Reparations_${index}__Prix" class="form-label">Prix</label>
-                        <input name="Reparations[${index}].Prix" id="Reparations_${index}__Prix" class="form-control" type="number">
-                    </div>
-                    <div class="col-md-6">
-                        <label for="Reparations_${index}__Duree" class="form-label">Durée</label>
-                        <input name="Reparations[${index}].Duree" id="Reparations_${index}__Duree" class="form-control" type="number">
-                    </div>
-                </div>
-                <hr />
-            </div>`;
-        container.insertAdjacentHTML('beforeend', html);
-        index++;
-    }
-    function DeleteReparation() {
-            const parent = document.getElementById('reparations-container');
-            const cibles = parent.getElementsByClassName('reparation-group');
-            if (cibles.length > 0) {
-                const lastOne = cibles[cibles.length - 1];
-                lastOne.remove();
-                if (index = 0) {
-                    return;
-                }
-                else
-                index--;
-            }
-        }
+<form asp-action="VotreAction" method="post">
+    <div class="form-group">
+        <label>Type de réparation:</label>
+        <select id="typeId" name="typeId" class="form-control" asp-items="ViewBag.Types"></select>
+    </div>
 
-</script> *@
+    <div class="form-group">
+        <label>Prix:</label>
+        <span id="typeReparationPrix"></span> €
+    </div>
+
+    <div class="form-group">
+        <label>Durée:</label>
+        <span id="dureeReparation"></span> heure(s)
+    </div>
+
+    <!-- Autres champs du formulaire -->
+
+    <button type="submit" class="btn btn-primary">Soumettre</button>
+</form>
+
+
+
+<script>
+    
+    function AddReparation() {
+        let index = document.querySelectorAll('.reparation-group').length;
+        const container = document.getElementById('reparations-container');
+        const html = `
+            <form  method="post">
+                <div class="form-group">
+                    <label>Type de réparation:</label>
+                    <select id="reparationId" name="ReparationId" class="form-control" asp-items="@ViewBag.Types"></select>
+                </div>
+
+                <div class="form-group">
+                    <label>Prix:</label>
+                    <span id="prixReparation"></span> €
+                </div>
+
+                <div class="form-group">
+                    <label>Durée:</label>
+                    <span id="dureeReparation"></span> heure(s)
+                </div>
+                <button asp-action="AddReparation" type="submit" class="btn btn-primary">Soumettre</button>
+            </form>
+        `;
+        container.insertAdjacentHTML('beforeend', html);
+    }
+    function DeleteReparation(button) {
+        const elementToRemove = button.closest('.reparation-group');
+        elementToRemove.remove();
+
+        const groups = document.querySelectorAll('.reparation-group');
+        groups.forEach((group, index) => {
+            const inputs = group.querySelectorAll('input');
+
+            inputs.forEach(input => {
+                const name = input.getAttribute('name');
+                if (name) {
+                    const newName = name.replace(/Types\[\d+\]/, `Types[${index}]`);
+                    input.setAttribute('name', newName);
+                }
+            });
+        });
+    }
+
+    function UpdatePrixReparation() {
+        let prixReparation = 0;
+        document.querySelectorAll('input.typePrix').forEach(input => {
+            const prix = parseInt(input.value);
+            if (!isNaN(prix)) {
+                prixReparation += prix;
+            }
+        });
+        document.querySelector('input.prixReparation').value = prixReparation;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('input.typePrix').forEach(input => {
+            input.addEventListener('input', UpdatePrixReparation);
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelector('#typeId').addEventListener('change', UpdateInformationReaparation);
+        
+    });
+    
+
+    function UpdateInformationReaparation() {
+            var selectedId = this.value;
+            var typeReparationPrix = document.querySelector('#typeReparationPrix');
+            var dureeReparation = document.querySelector('#dureeReparation');
+            if (selectedId) {
+                fetch(`/api/Type/${selectedId}`)
+                    .then(response => response.json()
+                    .then(data => {
+                        typeReparationPrix.textContent = data.prix,
+                        dureeReparation.textContent = data.duree
+                    }))
+            } else {
+                typeReparationPrix.textContent = "";
+                dureeReparation.textContent = "";
+            }
+        };
+
+</script>
+
+@* <div class="reparation-group mb-2">
+    <div>
+        <input name="Types[@i].Id" value="@typesList[i].Id" type="hidden">
+    </div>
+    <div class="mb-2">
+        <label class="form-label">Description</label>
+        <input name="Types[@i].Description" value="@typesList[i].Description" type="text" class="form-control">
+        <span class="text-danger"></span>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label class="form-label">Prix</label>
+            <input name="Types[@i].Prix" value="@typesList[i].Prix" type="number" class="form-control typePrix">
+            <span class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Durée</label>
+            <input name="Types[@i].Duree" value="@typesList[i].Duree" type="number" class="form-control">
+            <span class="text-danger"></span>
+        </div>
+    </div>
+    
+    <hr />
+</div> *@

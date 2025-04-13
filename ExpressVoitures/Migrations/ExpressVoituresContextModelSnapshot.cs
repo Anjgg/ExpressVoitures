@@ -126,7 +126,7 @@ namespace ExpressVoitures.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TypeDto");
+                    b.ToTable("Types");
                 });
 
             modelBuilder.Entity("ExpressVoitures.Data.Dto.VoitureDto", b =>
@@ -137,12 +137,12 @@ namespace ExpressVoitures.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AnneeFabrication")
+                        .HasColumnType("int");
+
                     b.Property<string>("CodeVin")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("DateFabrication")
-                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Finition")
                         .IsRequired()

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExpressVoitures.Migrations
 {
     [DbContext(typeof(ExpressVoituresContext))]
-    [Migration("20250412144120_MAJ1")]
-    partial class MAJ1
+    [Migration("20250413173009_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -129,7 +129,7 @@ namespace ExpressVoitures.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TypeDto");
+                    b.ToTable("Types");
                 });
 
             modelBuilder.Entity("ExpressVoitures.Data.Dto.VoitureDto", b =>
@@ -140,12 +140,12 @@ namespace ExpressVoitures.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AnneeFabrication")
+                        .HasColumnType("int");
+
                     b.Property<string>("CodeVin")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("DateFabrication")
-                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Finition")
                         .IsRequired()

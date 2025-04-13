@@ -1,138 +1,155 @@
-﻿
-@model VoitureModel
+﻿@model VoitureProfileModel
 @{
     ViewData["Title"] = "Create";
+    // var typesList = Model.Types.ToList();
 }
 
-<div>
-    <a asp-controller="Home" asp-action="Index">Retour</a>
+<div class="my-5 text-center">
+    <h1 class=" titre-homepage ">Ajouter une voiture</h1>
+    <p class="onglet-menu-skinny">tous les champs sont obligatoires</p>
 </div>
 
-<div class="container-fluid shadow py-5">
-    <div class="row justify-content-center">
+<div class="container-fluid shadow  py-5">
+    <div class="row justify-content-center ">
         <div class="col-md-6">
-            <form asp-controller="Car" asp-action="Create" method="post">
-                <div class="mb-3">
-                    <label asp-for="CodeVin" class="form-label">Code VIN</label>
-                    <input asp-for="CodeVin" type="text" class="form-control">
-                    <span asp-validation-for="CodeVin" class="text-danger"></span>
+
+            <form method="post">
+                <h4>Véhicule</h4>
+                <div class="hidden">
+                    <input asp-for="Voiture.Id" type="hidden">
+                    <input asp-for="Prix.Id" type="hidden">
+                    <input asp-for="Prix.PrixReparation" type="hidden">
+                    <input asp-for="Prix.PrixVente" type="hidden">
+                    <input asp-for="Date.Id" type="hidden">
+                    <input asp-for="Date.DateMiseEnVente" type="hidden">
+                </div>
+                <div class="mb-2">
+                    <label asp-for="Voiture.CodeVin" class="form-label">Code VIN</label>
+                    <input asp-for="Voiture.CodeVin" type="text" class="form-control">
+                    <span asp-validation-for="Voiture.CodeVin" class="text-danger"></span>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <label asp-for="Voiture.Marque" class="form-label">Marque</label>
+                        <input asp-for="Voiture.Marque" type="text" class="form-control">
+                        <span asp-validation-for="Voiture.Marque" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Voiture.Modele" class="form-label">Modèle</label>
+                        <input asp-for="Voiture.Modele" type="text" class="form-control">
+                        <span asp-validation-for="Voiture.Modele" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <label asp-for="Voiture.Finition" class="form-label">Finition</label>
+                        <input asp-for="Voiture.Finition" type="text" class="form-control">
+                        <span asp-validation-for="Voiture.Finition" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Voiture.AnneeFabrication" class="form-label">Année</label>
+                        <input asp-for="Voiture.AnneeFabrication" type="month" class="form-control">
+                        <span asp-validation-for="Voiture.AnneeFabrication" class="text-danger"></span>
+                    </div>
                 </div>
 
-                <div class="mb-3">
-                    <label asp-for="DateFabrication" class="form-label">Année</label>
-                    <input asp-for="DateFabrication" type="number" class="form-control">
-                    <span asp-validation-for="DateFabrication" class="text-danger"></span>
+                <div class="mb-2">
+                    <label asp-for="Voiture.ImagePath" class="form-label">Image</label>
+                    <input asp-for="Voiture.ImagePath" type="text" class="form-control">
+                    <span asp-validation-for="Voiture.ImagePath" class="text-danger"></span>
                 </div>
-
-                <div class="mb-3">
-                    <label asp-for="Marque" class="form-label">Marque</label>
-                    <input asp-for="Marque" type="text" class="form-control">
-                    <span asp-validation-for="Marque" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="Modele" class="form-label">Modèle</label>
-                    <input asp-for="Modele" type="text" class="form-control">
-                    <span asp-validation-for="Modele" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="Finition" class="form-label">Finition</label>
-                    <input asp-for="Finition" type="text" class="form-control">
-                    <span asp-validation-for="Finition" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="ImagePath" class="form-label">ImagePath</label>
-                    <input asp-for="ImagePath" type="text" class="form-control">
-                    <span asp-validation-for="ImagePath" class="text-danger"></span>
-                </div>
-                @* <div class="mb-3">
-                    <label asp-for="Prix.PrixAchat" class="form-label">Prix d'Achat</label>
-                    <input asp-for="Prix.PrixAchat" type="number" class="form-control">
-                    <span asp-validation-for="Prix.PrixAchat" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="Prix.PrixReparation" class="form-label">Prix de Reparation</label>
-                    <input asp-for="Prix.PrixReparation" type="number" class="form-control">
-                    <span asp-validation-for="Prix.PrixReparation" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="Prix.PrixVente" class="form-label">Prix de Vente</label>
-                    <input asp-for="Prix.PrixVente" type="number" class="form-control">
-                    <span asp-validation-for="Prix.PrixVente" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="Date.DateAchat" class="form-label">Date d'Achat</label>
-                    <input asp-for="Date.DateAchat" type="date" class="form-control">
-                    <span asp-validation-for="Date.DateAchat" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="Date.DateMiseEnVente" class="form-label">Date de Mise en Vente</label>
-                    <input asp-for="Date.DateMiseEnVente" type="date" class="form-control">
-                    <span asp-validation-for="Date.DateMiseEnVente" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="Date.DateVente" class="form-label">Date de Vente</label>
-                    <input asp-for="Date.DateVente" type="date" class="form-control">
-                    <span asp-validation-for="Date.DateVente" class="text-danger"></span>
-                </div> *@
 
                 <hr />
 
                 <h4>Réparations</h4>
-                <div id="reparations-container" class="mb-3">
-                   <!-- The JS code for AddReparation() will appear here -->
-                </div>
 
-                <button type="button" class="btn btn-outline-primary mb-3" onclick="AddReparation()">
+                <div id="reparations-container" class="mb-2">
+                    @* Add reparations here *@
+                </div>
+                <button type="button" class="btn btn-outline-primary mb-2" onclick="AddReparation()">
                     <i class="bi bi-plus-circle"></i> Ajouter une réparation
                 </button>
-                <button type="button" class="btn btn-outline-danger mb-3" onclick="DeleteReparation()">Supprimer</button>
-                
+
+                <hr />
+
+                <h4>Comptabilité</h4>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label asp-for="Prix.PrixAchat" class="form-label">Prix d'Achat</label>
+                        <input asp-for="Prix.PrixAchat" type="number" class="form-control">
+                        <span asp-validation-for="Prix.PrixAchat" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Date.DateAchat" class="form-label">Date d'Achat</label>
+                        <input asp-for="Date.DateAchat" type="date" class="form-control">
+                        <span asp-validation-for="Date.DateAchat" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <hr />
 
                 <div class="text-center">
-                    <button type="submit" class="btn-primary btn">Enregistrer la voiture</button>
+                    <button asp-controller="Car" asp-action="Create" type="submit" class="btn-primary btn">Enregistrer la voiture</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-
 <script>
-    let index = 0;
-    function AddReparation() {
-        const container = document.getElementById("reparations-container");
-        const html = `
-             <div class="reparation-group">
-                <div class="mb-3">
-                    <label for="Reparations_${index}__Description" class="form-label">Description</label>
-                    <input name="Reparations[${index}].Description" id="Reparations_${index}__Description" class="form-control" type="text" >
-                </div>
-                <div class="mb-3">
-                    <label for="Reparations_${index}__Prix" class="form-label">Prix</label>
-                    <input name="Reparations[${index}].Prix" id="Reparations_${index}__Prix" class="form-control" type="number">
-                </div>
-                <div class="mb-3">
-                    <label for="Reparations_${index}__Duree" class="form-label">Durée</label>
-                    <input name="Reparations[${index}].Duree" id="Reparations_${index}__Duree" class="form-control" type="number">
-                </div>
-                
-                <hr />
-            </div>`;
-        container.insertAdjacentHTML('beforeend', html);
-        index++;
-    }
-    function DeleteReparation() {
-            const parent = document.getElementById('reparations-container');
-            const cibles = parent.getElementsByClassName('reparation-group');
-            if (cibles.length > 0) {
-                const lastOne = cibles[cibles.length - 1];
-                lastOne.remove();
-                index--;
-            }
-        }
     
+    function AddReparation() {
+        let index = document.querySelectorAll('.reparation-group').length;
+        const container = document.getElementById('reparations-container');
+        const html = `
+            <div class="reparation-group mb-2">
+                <div>
+                    <input name="Types[${index}].Id" value="0" type="hidden">
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">Description</label>
+                    <input name="Types[${index}].Description" type="text" class="form-control">
+                    <span class="text-danger"></span>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Prix</label>
+                        <input name="Types[${index}].Prix" type="text" class="form-control">
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Durée</label>
+                        <input name="Types[${index}].Duree" type="text" class="form-control">
+                        <span class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="text-end">
+                    <button type="button" class="btn btn-outline-danger mb-2 btn-sm" onclick="DeleteReparation(this)">Supprimer</button>
+                </div>
+                <hr />
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', html);
+    }
+        function DeleteReparation(button) {
+        const elementToRemove = button.closest('.reparation-group');
+        elementToRemove.remove();
+
+        const groups = document.querySelectorAll('.reparation-group');
+        groups.forEach((group, index) => {
+            const inputs = group.querySelectorAll('input');
+
+            inputs.forEach(input => {
+                const name = input.getAttribute('name');
+                if (name) {
+                    const newName = name.replace(/Types\[\d+\]/, `Types[${index}]`);
+                    input.setAttribute('name', newName);
+                }
+            });
+        });
+    }
+
 </script>
 
                                         

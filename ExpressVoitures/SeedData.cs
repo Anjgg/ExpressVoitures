@@ -23,7 +23,7 @@ namespace ExpressVoitures
                         Marque = "Toyota",
                         Modele = "Corolla",
                         Finition = "LE",
-                        DateFabrication = new DateTimeOffset(1990, 5, 19, 0, 0, 0, new TimeSpan()),
+                        AnneeFabrication = 2000,
                         ImagePath = "https://example.com/images/toyota_corolla.jpg",
                         Date = new DateDto
                         {
@@ -32,6 +32,8 @@ namespace ExpressVoitures
                         Prix = new PrixDto
                         {
                             PrixAchat = 15000,
+                            PrixReparation = 300,
+                            PrixVente = 15800
                         },
                         Reparation = new ReparationDto
                         {
@@ -48,7 +50,7 @@ namespace ExpressVoitures
                         Marque = "Honda",
                         Modele = "Civic",
                         Finition = "LX",
-                        DateFabrication = new DateTimeOffset(1999, 5, 12, 0, 0, 0, new TimeSpan()),
+                        AnneeFabrication = 2005,
                         ImagePath = "https://example.com/images/honda_civic.jpg",
                         Date = new DateDto
                         {
@@ -57,6 +59,8 @@ namespace ExpressVoitures
                         Prix = new PrixDto
                         {
                             PrixAchat = 16000,
+                            PrixReparation = 800,
+                            PrixVente = 17300
                         },
                         Reparation = new ReparationDto
                         {
@@ -73,7 +77,7 @@ namespace ExpressVoitures
                         Marque = "Ford",
                         Modele = "Fusion",
                         Finition = "SE",
-                        DateFabrication = new DateTimeOffset(1985, 6, 23, 0, 0, 0, new TimeSpan()),
+                        AnneeFabrication = 2010,
                         ImagePath = "https://example.com/images/ford_fusion.jpg",
                         Date = new DateDto
                         {
@@ -82,6 +86,8 @@ namespace ExpressVoitures
                         Prix = new PrixDto
                         {
                             PrixAchat = 17000,
+                            PrixReparation = 600,
+                            PrixVente = 18100
                         },
                         Reparation = new ReparationDto
                         {
@@ -98,7 +104,7 @@ namespace ExpressVoitures
                         Marque = "Chevrolet",
                         Modele = "Malibu",
                         Finition = "LT",
-                        DateFabrication = new DateTimeOffset(1967, 2, 4, 0, 0, 0, new TimeSpan()),
+                        AnneeFabrication = 1990,
                         ImagePath = "https://example.com/images/chevrolet_malibu.jpg",
                         Date = new DateDto
                         {
@@ -107,6 +113,8 @@ namespace ExpressVoitures
                         Prix = new PrixDto
                         {
                             PrixAchat = 18000,
+                            PrixReparation = 850,
+                            PrixVente = 19350
                         },
                         Reparation = new ReparationDto
                         {
