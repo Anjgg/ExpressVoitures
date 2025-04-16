@@ -10,6 +10,6 @@
         public int? VoitureId { get; set; }
         public virtual VoitureDto? Voiture { get; set; }
 
-        public virtual ICollection<TypeDto> Types { get; set; } = new List<TypeDto>();
+        public virtual IEnumerable<TypeDto> Types { get; set; } = new List<TypeDto>();
     }
 }

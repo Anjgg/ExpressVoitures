@@ -55,10 +55,6 @@ namespace ExpressVoitures.Controllers
         public async Task<IActionResult> Update(int id)
         {
             var voiture = await _service.GetCarAsync(id);
-
-            var listTypeModel = await _service.GetListTypeModel();
-            ViewBag.Types = new SelectList(listTypeModel, "Id", "Description");
-
             return View(voiture);
         }
 

@@ -21,6 +21,11 @@ body {
   margin-bottom: 60px;
 }
 
+select {
+    height: auto; /* ou une hauteur fixe */
+    overflow: hidden;
+}
+
 .titre-homepage {
     font-family: "Libre Baskerville", serif;
     font-weight: 400;

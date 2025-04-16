@@ -1,7 +1,6 @@
 ﻿@model VoitureProfileModel
 @{
     ViewData["Title"] = "Modifier";
-    var typesList = Model.Types.ToList();
 }
 
 <div class="my-5 text-center">
@@ -62,41 +61,23 @@
                 <hr />
 
                 <h4>Réparations</h4>
-
-                <div id="reparations-container" class="mb-2">
-                    @for (int i = 0; i < typesList.Count; i++)
+                <div class="mb-2">
+                    @for (int i = 0; i < Model.Types.Count(); i++)
                     {
-                        <div class="reparation-group mb-2">
-                            <input name="Types[@i].Id" value="@typesList[i].Id" type="hidden">
-                            <div class="form-group">
-                                <label>Type de réparation:</label>
-                                <input name="Types[@i].Description" value="@typesList[i].Description" type="text" class="form-control" readonly>
-                                <span class="text-danger"></span>
+                        <div class="col-md-6 mb-2">
+                            <div class="form-check">
+                                <input type="hidden" asp-for="Types[i].Id" />
+                                <input type="hidden" asp-for="Types[i].Description" />
+                                <input type="hidden" asp-for="Types[i].Prix" />
+                                <input type="hidden" asp-for="Types[i].Duree" />
+                                <input class="form-check-input" type="checkbox" asp-for="Types[i].IsSelected" />
+                                <label class="form-check-label">@Model.Types[i].Description </label>
                             </div>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label>Prix:</label>
-                                    <input name="Types[@i].Prix" value="@typesList[i].Prix" type="text" class="form-control" readonly>
-                                    <span class="text-danger"></span>
-                                </div>
-
-                                <div class="col-md-4">
-                                    <label>Durée:</label>
-                                    <input name="Types[@i].Duree" value="@typesList[i].Duree" type="text" class="form-control" readonly>
-                                    <span class="text-danger"></span>
-                                </div>
-                                <div class="col-md-4 align-self-end text-center">
-                                    <button type="button" class="btn btn-outline-danger mb-2 btn" onclick="DeleteReparation(this)">Supprimer</button>
-                                </div>
-                            </div>
-                            
-                            <hr />
                         </div>
                     }
+
+
                 </div>
-                <button type="button" class="btn btn-outline-primary mb-2" onclick="AddReparation()">
-                    <i class="bi bi-plus-circle"></i> Ajouter une réparation
-                </button>
 
                 <hr />
 
@@ -150,7 +131,7 @@
     </div>
 </div>
 
-<form asp-action="VotreAction" method="post">
+@* <form asp-action="VotreAction" method="post">
     <div class="form-group">
         <label>Type de réparation:</label>
         <select id="typeId" name="typeId" class="form-control" asp-items="ViewBag.Types"></select>
@@ -169,36 +150,49 @@
     <!-- Autres champs du formulaire -->
 
     <button type="submit" class="btn btn-primary">Soumettre</button>
-</form>
+</form> *@
 
 
 
-<script>
+@* <script>
     
     function AddReparation() {
         let index = document.querySelectorAll('.reparation-group').length;
         const container = document.getElementById('reparations-container');
         const html = `
-            <form  method="post">
+            <div class="reparation-group mb-2">
                 <div class="form-group">
-                    <label>Type de réparation:</label>
-                    <select id="reparationId" name="ReparationId" class="form-control" asp-items="@ViewBag.Types"></select>
+                    <label for="Types_${index}__Description">Type de réparation:</label>
+                    <input name="Types[${index}].Description" id="Types_${index}__Description" type="text" class="form-control">
+                    <span class="text-danger"></span>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="Types_${index}__Prix">Prix:</label>
+                        <input name="Types[${index}].Prix" id="Types_${index}__Prix" type="text" class="form-control">
+                        <span class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="Types_${index}__Duree">Durée:</label>
+                        <input name="Types[${index}].Duree" id="Types_${index}__Duree" type="text" class="form-control">
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 align-self-end text-center">
+                        <button type="button" class="btn btn-outline-danger mb-2 btn" onclick="DeleteReparation(this)">Supprimer</button>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label>Prix:</label>
-                    <span id="prixReparation"></span> €
-                </div>
-
-                <div class="form-group">
-                    <label>Durée:</label>
-                    <span id="dureeReparation"></span> heure(s)
-                </div>
-                <button asp-action="AddReparation" type="submit" class="btn btn-primary">Soumettre</button>
-            </form>
+                <hr />
+            </div>
         `;
         container.insertAdjacentHTML('beforeend', html);
     }
+    function AddReparation() {
+        document.getElementById('formReparation').classList.remove('d-none');
+        document.getElementById('buttonHideForm').classList.add('d-none');
+    }
+
     function DeleteReparation(button) {
         const elementToRemove = button.closest('.reparation-group');
         elementToRemove.remove();
@@ -248,8 +242,8 @@
                 fetch(`/api/Type/${selectedId}`)
                     .then(response => response.json()
                     .then(data => {
-                        typeReparationPrix.textContent = data.prix,
-                        dureeReparation.textContent = data.duree
+                        typeReparationPrix.value = data.prix,
+                        dureeReparation.value = data.duree
                     }))
             } else {
                 typeReparationPrix.textContent = "";
@@ -257,7 +251,7 @@
             }
         };
 
-</script>
+</script> *@
 
 @* <div class="reparation-group mb-2">
     <div>
@@ -283,3 +277,63 @@
     
     <hr />
 </div> *@
+@* 
+<h4>Réparations</h4>
+
+<div id="reparations-container" class="mb-2">
+    @for (int i = 0; i < typesList.Count; i++)
+    {
+        <div class="reparation-group mb-2">
+            <input name="Types[@i].Id" value="@typesList[i].Id" type="hidden">
+            <div class="form-group">
+                <label for="Types[@i].Description">@typesList[i].Description</label>
+                <input id="Types[@i].Description" name="Types[@i].Description" value="@typesList[i].Description" type="checkbox">
+                <span class="text-danger"></span>
+            </div>
+            @* <div class="row">
+                                <div class="col-md-4">
+                                    <label>Prix:</label>
+                                    <input name="Types[@i].Prix" value="@typesList[i].Prix" type="text" class="form-control">
+                                    <span class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label>Durée:</label>
+                                    <input name="Types[@i].Duree" value="@typesList[i].Duree" type="text" class="form-control">
+                                    <span class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4 align-self-end text-center">
+                                    <button type="button" class="btn btn-outline-danger mb-2 btn" onclick="DeleteReparation(this)">Supprimer</button>
+                                </div>
+                            </div> *@
+
+        @*     @* <hr />
+        </div>
+    }
+ *@
+@* </div>
+<div id="buttonHideForm" class="">
+    <button type="button" class="btn btn-outline-primary mb-2" onclick="AddReparation()">
+        <i class="bi bi-plus-circle"></i> Ajouter une réparation
+    </button>
+</div>
+<div id="formReparation" class="d-none">
+    <form method="post">
+        <div class="form-group">
+            <label>Type de réparation:</label>
+            <select id="typeId" name="ReparationId" type="text" class="form-control" asp-items="@ViewBag.Types" multiple="multiple"></select>
+        </div>
+
+        <div class="form-group">
+            <label>Prix:</label>
+            <input id="typeReparationPrix" class="form-control" readonly></input>
+        </div>
+
+        <div class="form-group">
+            <label>Durée:</label>
+            <input id="dureeReparation" class="form-control" readonly></input>
+        </div>
+        <button asp-action="AddReparation()" type="submit" class="btn btn-primary">Soumettre</button>
+    </form>
+</div>
+<hr /> *@

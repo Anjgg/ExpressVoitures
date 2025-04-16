@@ -8,6 +8,6 @@
         public int Prix { get; set; }
         public double Duree { get; set; }
 
-        public virtual ICollection<ReparationDto> Reparations { get; set; } = new List<ReparationDto>();
+        public virtual IEnumerable<ReparationDto> Reparations { get; set; } = new List<ReparationDto>();
     }
 }

@@ -23,7 +23,7 @@ namespace ExpressVoitures
                         Marque = "Toyota",
                         Modele = "Corolla",
                         Finition = "LE",
-                        AnneeFabrication = 2000,
+                        AnneeFabrication = new DateTimeOffset(1985, 5, 12, 0,0,0, new TimeSpan()),
                         ImagePath = "https://example.com/images/toyota_corolla.jpg",
                         Date = new DateDto
                         {
@@ -50,7 +50,7 @@ namespace ExpressVoitures
                         Marque = "Honda",
                         Modele = "Civic",
                         Finition = "LX",
-                        AnneeFabrication = 2005,
+                        AnneeFabrication = new DateTimeOffset(1995, 7, 20, 0, 0, 0, new TimeSpan()),
                         ImagePath = "https://example.com/images/honda_civic.jpg",
                         Date = new DateDto
                         {
@@ -77,7 +77,7 @@ namespace ExpressVoitures
                         Marque = "Ford",
                         Modele = "Fusion",
                         Finition = "SE",
-                        AnneeFabrication = 2010,
+                        AnneeFabrication = new DateTimeOffset(2005, 3, 15, 0, 0, 0, new TimeSpan()),
                         ImagePath = "https://example.com/images/ford_fusion.jpg",
                         Date = new DateDto
                         {
@@ -104,7 +104,7 @@ namespace ExpressVoitures
                         Marque = "Chevrolet",
                         Modele = "Malibu",
                         Finition = "LT",
-                        AnneeFabrication = 1990,
+                        AnneeFabrication = new DateTimeOffset(2010, 8, 25, 0, 0, 0, new TimeSpan()),
                         ImagePath = "https://example.com/images/chevrolet_malibu.jpg",
                         Date = new DateDto
                         {

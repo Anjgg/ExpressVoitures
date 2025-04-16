@@ -7,7 +7,7 @@
         public string Marque { get; set; } = null!;
         public string Modele { get; set; } = null!;
         public string? ImagePath { get; set; }
-        public int AnneeFabrication { get; set; }
+        public DateTimeOffset AnneeFabrication { get; set; }
         public bool IsAvailable { get; set; } = true;
 
 

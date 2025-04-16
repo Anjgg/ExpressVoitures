@@ -6,7 +6,7 @@
         public DateModel Date { get; set; } = new DateModel();
         public PrixModel Prix { get; set; } = new PrixModel();
         public ReparationModel Reparation { get; set; } = new ReparationModel();
-        public ICollection<TypeModel> Types { get; set; } = new List<TypeModel>();
+        public List<TypeModel> Types { get; set; } = new List<TypeModel>();
     }
 
     public class VoitureModel
@@ -17,7 +17,7 @@
         public string Marque { get; set; } = null!;
         public string Modele { get; set; } = null!;
         public string Finition { get; set; } = null!;
-        public int AnneeFabrication { get; set; }
+        public DateTimeOffset AnneeFabrication { get; set; }
         public string? ImagePath { get; set; }
     }
 
@@ -54,5 +54,6 @@
         public string Description { get; set; } = null!;
         public int Prix { get; set; }
         public double Duree { get; set; }
+        public bool IsSelected { get; set; } = false;
     }
 }
