@@ -1,5 +1,6 @@
 ﻿using ExpressVoitures.Data.Models;
 using ExpressVoitures.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -27,12 +28,15 @@ namespace ExpressVoitures.Controllers
         }
 
         [HttpGet]
-        public IActionResult Create()
+        [Authorize]
+        public async Task<IActionResult> Create()
         {
-            return View(new VoitureProfileModel());
+            var newVoitureProfileModel = await _service.GetNewVoitureProfileModel();
+            return View(newVoitureProfileModel);
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Create(VoitureProfileModel model)
         {
             if (!ModelState.IsValid)

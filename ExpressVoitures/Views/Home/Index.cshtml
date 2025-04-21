@@ -15,25 +15,25 @@
         @foreach (var item in Model)
         {
             <a asp-controller="Car" asp-action="Index" asp-route-id="@item.Id" class="text-decoration-none" style="color: #2C1810;">
-                <div class="col">
+                <div id="carCard" class="col">
                     <div class="card p-3 shadow">
                         <div class="row g-0">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <img src="~/images/Voiture.jpg" class="img-fluid img-thumbnail" alt="Voiture">
                             </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
+                            <div class="col-md-6">
+                                <div class="card-body" >
                                     <h5 class="card-title">@item.PrixVente €</h5>
                                     <p class="card-text"><strong>Marque : </strong>@item.Marque</p>
                                     <p class="card-text"><strong>Modèle : </strong>@item.Modele</p>
-                                    <p class="card-text"><strong>Année : </strong>@item.AnneeFabrication</p>
+                                    <p class="card-text"><strong>Année : </strong>@item.AnneeFabrication.ToString("yyyy")</p>
                                     @if (item.IsAvailable)
                                     {
                                         <p class="card-text"><strong>Disponible : </strong>Oui</p>
                                     } 
                                     else 
                                     {
-                                        <p class="card-text"><strong>Disponible : </strong>Non</p>
+                                        <p id="notAvailable" class="card-text"><strong>Disponible : </strong>Non</p>
                                     }
                                 </div>
                             </div>
@@ -44,3 +44,14 @@
         }
     </div>
 </div>
+
+<script>
+    function updatedCard() {
+        document.querySelectorAll('#notAvailable').forEach(a => {
+            const parent = a.parentElement.parentElement.parentElement.parentElement;
+            parent.classList.add('not-available');
+        })
+    }
+
+    document.addEventListener('DOMContentLoaded', updatedCard)
+</script>

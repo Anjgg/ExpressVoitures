@@ -137,8 +137,8 @@ namespace ExpressVoitures.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AnneeFabrication")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset>("AnneeFabrication")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("CodeVin")
                         .IsRequired()

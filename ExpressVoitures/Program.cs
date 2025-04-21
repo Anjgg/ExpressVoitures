@@ -1,7 +1,9 @@
 using ExpressVoitures;
+using ExpressVoitures.Identity;
 using ExpressVoitures.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,27 +12,22 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ExpressVoituresContext>(options =>
     options.UseSqlServer(connectionString));
 
-
-
+// Setup Error Page from DB <--> EFCore
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ExpressVoituresContext>();
+builder.Services.AddAuthentication().AddCookie("AdminCookie", options =>
+{
+    options.Cookie.Name = "AdminCookie";
+});    
+
+// Setup Razor Pages
 builder.Services.AddControllersWithViews();
 
 // Setup AutoMapper
-
-
-
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 // Setup Services Scope
 builder.Services.AddScoped<IExpressVoituresService, ExpressVoituresService>();
-
-
-
-
-
 
 var app = builder.Build();
 
@@ -49,14 +46,21 @@ else
 
 
 }
+
+// Seed the database with initial data
 app.SeedDataBase();
 
+// Seed the admin user
+await app.SeedAdmin();
 
+// Setup HTTPS redirection and static files
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

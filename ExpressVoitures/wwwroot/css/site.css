@@ -87,3 +87,7 @@ select {
     height: 316px;
     border-radius: 5px; 
 }
+
+.not-available {
+    background-color: lightgray;
+}

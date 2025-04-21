@@ -47,7 +47,7 @@
                     </div>
                     <div class="col-md-6">
                         <label asp-for="Voiture.AnneeFabrication" class="form-label">Année</label>
-                        <input asp-for="Voiture.AnneeFabrication" type="number" class="form-control">
+                        <input asp-for="Voiture.AnneeFabrication" type="date" class="form-control">
                         <span asp-validation-for="Voiture.AnneeFabrication" class="text-danger"></span>
                     </div>
                 </div>
@@ -61,21 +61,31 @@
                 <hr />
 
                 <h4>Réparations</h4>
-                <div class="mb-2">
+                <div class="mb-2 row">
                     @for (int i = 0; i < Model.Types.Count(); i++)
                     {
                         <div class="col-md-6 mb-2">
                             <div class="form-check">
                                 <input type="hidden" asp-for="Types[i].Id" />
                                 <input type="hidden" asp-for="Types[i].Description" />
-                                <input type="hidden" asp-for="Types[i].Prix" />
-                                <input type="hidden" asp-for="Types[i].Duree" />
+                                <input id="PrixReparation" type="hidden" asp-for="Types[i].Prix" />
+                                <input id="DureeReparation" type="hidden" asp-for="Types[i].Duree" />
                                 <input class="form-check-input" type="checkbox" asp-for="Types[i].IsSelected" />
                                 <label class="form-check-label">@Model.Types[i].Description </label>
                             </div>
                         </div>
                     }
+                    <div class="row mb-2">
+                        <div class="col-md-6 ">
+                            <label class="form-label">Prix total</label>
+                            <input id="SumPrixReparations" type="number" class="form-control" readonly />
 
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Durée totale</label>
+                            <input id="SumDureeReparations" type="number" class="form-control" readonly />
+                        </div>
+                    </div>
 
                 </div>
 
@@ -86,7 +96,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <label asp-for="Prix.PrixAchat" class="form-label">Prix d'Achat</label>
-                        <input asp-for="Prix.PrixAchat" type="number" class="form-control">
+                        <input id="PrixAchat" asp-for="Prix.PrixAchat" type="number" class="form-control">
                         <span asp-validation-for="Prix.PrixAchat" class="text-danger"></span>
                     </div>
                     <div class="col-md-6">
@@ -97,20 +107,8 @@
                 </div>
                 <div class="row mb-2">
                     <div class="col-md-6">
-                        <label asp-for="Prix.PrixReparation" class="form-label">Prix de Reparation</label>
-                        <input asp-for="Prix.PrixReparation" type="number" class="form-control prixReparation">
-                        <span asp-validation-for="Prix.PrixReparation" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-6">
-                        <label asp-for="Date.DateMiseEnVente" class="form-label">Date de Vente</label>
-                        <input asp-for="Date.DateMiseEnVente" type="date" class="form-control">
-                        <span asp-validation-for="Date.DateMiseEnVente" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-md-6">
                         <label asp-for="Prix.PrixVente" class="form-label">Prix de Vente</label>
-                        <input asp-for="Prix.PrixVente" type="number" class="form-control-plaintext">
+                        <input id="PrixVente" asp-for="Prix.PrixVente" type="number" class="form-control" readonly>
                         <span asp-validation-for="Prix.PrixVente" class="text-danger"></span>
                     </div>
                     <div class="col-md-6">
@@ -130,6 +128,53 @@
         </div>
     </div>
 </div>
+
+<script>
+    function UpdatePrixReparation() {
+        let prixReparation = 0;
+        document.querySelectorAll('input[type="checkbox"]:checked').forEach(input => {
+            const prix = parseInt(input.closest('.form-check').querySelector('input[id="PrixReparation"]').value);
+            if (!isNaN(prix)) {
+                prixReparation += prix;
+            }
+        });
+        document.querySelector('#SumPrixReparations').value = prixReparation;
+        const prixAchat = parseInt(document.querySelector('#PrixAchat').value)
+        let sumTotal = prixAchat + prixReparation + 500;
+        document.querySelector('#PrixVente').value = sumTotal;
+    }
+    function UpdateDureeReparation() {
+        let dureeReparation = 0;
+        document.querySelectorAll('input[type="checkbox"]:checked').forEach(input => {
+            const duree = parseInt(input.closest('.form-check').querySelector('input[id="DureeReparation"]').value);
+            if (!isNaN(duree)) {
+                dureeReparation += duree;
+            }
+        });
+        document.querySelector('#SumDureeReparations').value = dureeReparation;
+    }
+    function UpdatePrixVente() {
+        const prixAchat = parseInt(document.querySelector('#PrixAchat').value);
+        const prixReparation = parseInt(document.querySelector('#SumPrixReparations').value);
+        let updatedPrixVente = prixAchat + prixReparation + 500;
+        document.querySelector('#PrixVente').value = updatedPrixVente;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('input[type="checkbox"]').forEach(input => {
+            input.addEventListener('change', UpdatePrixReparation);
+            input.addEventListener('change', UpdateDureeReparation);
+        });
+        UpdatePrixReparation();
+        UpdateDureeReparation();
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelector('#PrixAchat').addEventListener('change', UpdatePrixVente)
+    });
+
+    
+</script>
 
 @* <form asp-action="VotreAction" method="post">
     <div class="form-group">

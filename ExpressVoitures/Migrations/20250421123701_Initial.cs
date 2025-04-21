@@ -75,7 +75,7 @@ namespace ExpressVoitures.Migrations
                     Marque = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Modele = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Finition = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AnneeFabrication = table.Column<int>(type: "int", nullable: false),
+                    AnneeFabrication = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>

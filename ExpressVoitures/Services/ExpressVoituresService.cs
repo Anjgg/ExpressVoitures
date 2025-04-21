@@ -13,7 +13,7 @@ namespace ExpressVoitures.Services
         Task<VoitureProfileModel> CreateVoitureAsync(VoitureProfileModel model);
         Task<VoitureProfileModel> UpdateCarAsync(VoitureProfileModel model);
         Task<VoitureProfileModel> DeleteCarAsync(int id);
-        Task<List<TypeModel>> GetListTypeModel();
+        Task<VoitureProfileModel> GetNewVoitureProfileModel();
     }
 
     public class ExpressVoituresService : IExpressVoituresService
@@ -201,10 +201,14 @@ namespace ExpressVoitures.Services
         {
             var selectedTypesId = model.Types.Where(t => t.IsSelected).Select(t => t.Id).ToList();
             var selectedTypes = _context.Types.Where(t => selectedTypesId.Contains(t.Id)).ToList();
-            voitureDto.Reparation.Types.ToList().Clear();
-            foreach (var type in selectedTypes)
+            if (voitureDto.Reparation.Types is List<TypeDto> typeList)
             {
-                voitureDto.Reparation.Types.Append(type);
+                typeList.Clear();
+                foreach (var type in selectedTypes)
+                {
+                    typeList.Add(type);
+                }
+                voitureDto.Reparation.Types = typeList;
             }
             voitureDto.Reparation.PrixTotal = selectedTypes.Sum(t => t.Prix);
             voitureDto.Reparation.DureeTotal = selectedTypes.Sum(t => t.Duree);
@@ -251,28 +255,32 @@ namespace ExpressVoitures.Services
                     Description = r.Description,
                     Prix = r.Prix,
                     Duree = r.Duree,
-                    IsSelected = false
+                    IsSelected = voitureDto.Reparation.Types.Any(t => t.Id == r.Id)
                 }).ToList()
             };
         }
 
-
-
-        public async Task<List<TypeModel>> GetListTypeModel()
+        public async Task<VoitureProfileModel> GetNewVoitureProfileModel()
         {
-            List<TypeDto> listTypeDto = await _context.Types.ToListAsync();
-            List<TypeModel> listTypeModel = listTypeDto.Select(r => new TypeModel
+            var listTypesDto = await _context.Types.ToListAsync();
+            var listTypesModel = listTypesDto.Select(t => new TypeModel
             {
-                Id = r.Id,
-                Description = r.Description,
-                Prix = r.Prix,
-                Duree = r.Duree,
+                Id = t.Id,
+                Description = t.Description,
+                Prix = t.Prix,
+                Duree = t.Duree,
                 IsSelected = false
             }).ToList();
-            return listTypeModel;
-            
+            var newVoitureProfileModel = new VoitureProfileModel
+            {
+                Voiture = new VoitureModel(),
+                Date = new DateModel(),
+                Prix = new PrixModel(),
+                Reparation = new ReparationModel(),
+                Types = listTypesModel
+            };
+            return newVoitureProfileModel;
         }
-
     }
 }
 

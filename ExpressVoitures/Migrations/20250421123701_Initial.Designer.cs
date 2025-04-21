@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExpressVoitures.Migrations
 {
     [DbContext(typeof(ExpressVoituresContext))]
-    [Migration("20250413173009_Initial")]
+    [Migration("20250421123701_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -140,8 +140,8 @@ namespace ExpressVoitures.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AnneeFabrication")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset>("AnneeFabrication")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("CodeVin")
                         .IsRequired()

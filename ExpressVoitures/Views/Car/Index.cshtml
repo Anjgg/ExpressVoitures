@@ -18,7 +18,7 @@
                     <p class="card-text"><strong>Marque : </strong>@Model.Voiture.Marque</p>
                     <p class="card-text"><strong>Modèle : </strong>@Model.Voiture.Modele</p>
                     <p class="card-text"><strong>Finition : </strong>@Model.Voiture.Finition</p>
-                    <p class="card-text"><strong>Année : </strong>@Model.Voiture.AnneeFabrication</p>
+                    <p class="card-text"><strong>Année : </strong>@Model.Voiture.AnneeFabrication.ToString("yyyy")</p>
                     <p class="card-text"><strong>Date de disponibilité : </strong>@Model.Date.DateMiseEnVente.ToString("d")</p>
                 </div>
                 <div class="text-center mt-3">
