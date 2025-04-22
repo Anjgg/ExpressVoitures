@@ -246,7 +246,7 @@ namespace ExpressVoitures.Services
         {
             if (model.Voiture.ImageVoiture != null && model.Voiture.ImageVoiture.Length > 0)
             {
-                string nameFile = model.Voiture.CodeVin + Path.GetExtension(model.Voiture.ImageVoiture.FileName);
+                string nameFile = model.Voiture.CodeVin + ".jpg";
                 var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", nameFile);
                 if (File.Exists(filePath))
                 {
