@@ -2,13 +2,13 @@
     var actionName = ViewContext.RouteData.Values["Action"]?.ToString();
 }
 
-
-@if (actionName == "Create")
-{
-    <a class="nav-link onglet-menu-bold" asp-area="" asp-controller="Car" asp-action="Create">Ajouter une voiture</a>
+@if (User.IsInRole("Admin")){
+    @if (actionName == "Create")
+    {
+        <a class="nav-link onglet-menu-bold" asp-area="" asp-controller="Car" asp-action="Create">Ajouter une voiture</a>
+    }
+    else
+    {
+        <a class="nav-link onglet-menu-skinny" asp-area="" asp-controller="Car" asp-action="Create">Ajouter une voiture</a>
+    }
 }
-else
-{
-    <a class="nav-link onglet-menu-skinny" asp-area="" asp-controller="Car" asp-action="Create">Ajouter une voiture</a>
-}
-

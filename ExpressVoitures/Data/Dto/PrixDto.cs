@@ -1,19 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace ExpressVoitures.Data.Dto
+﻿namespace ExpressVoitures.Data.Dto
 {
     public class PrixDto
     {
-        [Key]
-        public int Id { get; init; }
+        public int Id { get; set; }
 
-        public decimal PrixAchat { get; set; }
+        public int PrixAchat { get; set; }
+        public int PrixReparation { get; set; }
+        public int PrixVente { get; set; }
 
-        public decimal PrixReparation { get; set; }
-
-        public decimal PrixVente { get; set; }
-
-        public virtual VoitureDto Voiture { get; set; }
+        public int? VoitureId { get; set; }
+        public virtual VoitureDto? Voiture { get; set; }
     }
 }

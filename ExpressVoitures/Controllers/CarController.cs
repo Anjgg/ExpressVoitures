@@ -1,13 +1,13 @@
 ﻿using ExpressVoitures.Data.Models;
 using ExpressVoitures.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 
 namespace ExpressVoitures.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class CarController : Controller
     {
         private readonly IExpressVoituresService _service;
@@ -18,72 +18,75 @@ namespace ExpressVoitures.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string codeVin)
+        [AllowAnonymous]
+        public async Task<IActionResult> Index(int id)
         {
-            if (codeVin.IsNullOrEmpty())
+            var voitureProfileModel = await _service.GetCarAsync(id);
+            if (voitureProfileModel == null)
             {
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
             }
-            var voiture = await _service.GetCarAsync(codeVin);
-            if (voiture == null)
-            {
-                return RedirectToAction("Index");
-            }
-            return View(voiture);
+            return View(voitureProfileModel);
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var newVoitureProfileModel = await _service.GetNewVoitureProfileModel();
+            return View(newVoitureProfileModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(VoitureModel model)
+        public async Task<IActionResult> Create(VoitureProfileModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
             var voiture = await _service.CreateVoitureAsync(model);
-            return RedirectToAction("CarCreated", voiture);
+            return RedirectToAction("CarCreated", new { marque = voiture.Voiture.Marque, modele = voiture.Voiture.Modele});
         }
 
         [HttpGet]
-        public IActionResult CarCreated(VoitureModel model)
+        public IActionResult CarCreated(string marque, string modele)
         {
-            return View(model);
+            ViewBag.Marque = marque;
+            ViewBag.Modele = modele;
+            return View();
         }
 
         [HttpGet]
-        public async Task<IActionResult> Update(string codeVin)
+        public async Task<IActionResult> Update(int id)
         {
-            var voiture = await _service.GetCarAsync(codeVin);
+            var voiture = await _service.GetCarAsync(id);
             return View(voiture);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Update(VoitureModel model)
+        public async Task<IActionResult> Update(VoitureProfileModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
             var voiture = await _service.UpdateCarAsync(model);
-            return RedirectToAction("CarUpdated", voiture);
+            
+            return RedirectToAction("CarUpdated", new { marque = voiture.Voiture.Marque, modele = voiture.Voiture.Modele });
         }
 
         [HttpGet]
-        public IActionResult CarUpdated(VoitureModel model)
+        public IActionResult CarUpdated(string marque, string modele)
         {
-            return View(model);
+            ViewBag.Marque = marque;
+            ViewBag.Modele = modele;
+            return View();
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Delete(string codeVin)
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
         {
-            var voiture = await _service.DeleteCarAsync(codeVin);
-            return View(voiture);
+            await _service.DeleteCarAsync(id);
+            return View();
         }
     }
 }

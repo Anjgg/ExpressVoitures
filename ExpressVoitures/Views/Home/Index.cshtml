@@ -1,4 +1,5 @@
-﻿@model List<VoitureModel>
+﻿@using System.Globalization
+@model List<HomeCarModel>
 @{
     ViewData["Title"] = "Acceuil";
     
@@ -6,7 +7,10 @@
 
 <div class="text-center" style="margin-top: 300px; margin-bottom: 200px;">
     <h1 class="titre-homepage">Nos voitures</h1>
-    <a asp-controller="Car" asp-action="Create" class="btn btn-custom dm-sans-400">+ Ajouter une voiture </a>
+    @if (User.IsInRole("Admin")){
+        <a asp-controller="Car" asp-action="Create" class="btn btn-custom dm-sans-400">+ Ajouter une voiture </a>
+    }
+    
 </div>
 
 
@@ -14,18 +18,27 @@
     <div class="row row-cols-1 row-cols-md-2 g-4">
         @foreach (var item in Model)
         {
-            <a asp-controller="Car" asp-action="Index" asp-route-codeVin="@item.CodeVin" class="text-decoration-none" style="color: #2C1810;">
-                <div class="col">
+            <a asp-controller="Car" asp-action="Index" asp-route-id="@item.Id" class="text-decoration-none" style="color: #2C1810;">
+                <div id="carCard" class="col">
                     <div class="card p-3 shadow">
                         <div class="row g-0">
-                            <div class="col-md-4">
-                                <img src="~/images/Voiture.jpg" class="img-fluid img-thumbnail" alt="Voiture">
+                            <div class="col-md-6">
+                                <img src="@item.ImagePath" class="img-fluid img-thumbnail" alt="Voiture">
                             </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <h5 class="card-title">@item.Prix.PrixVente €</h5>
+                            <div class="col-md-6">
+                                <div class="card-body" >
+                                    <h5 class="card-title">@item.PrixVente.ToString("C", CultureInfo.CurrentCulture).Replace(",00", "")</h5>
                                     <p class="card-text"><strong>Marque : </strong>@item.Marque</p>
                                     <p class="card-text"><strong>Modèle : </strong>@item.Modele</p>
+                                    <p class="card-text"><strong>Année : </strong>@item.AnneeFabrication.ToString("yyyy")</p>
+                                    @if (item.IsAvailable)
+                                    {
+                                        <p class="card-text"><strong>Disponible : </strong>Oui</p>
+                                    } 
+                                    else 
+                                    {
+                                        <p id="notAvailable" class="card-text"><strong>Disponible : </strong>Non</p>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -35,3 +48,14 @@
         }
     </div>
 </div>
+
+<script>
+    function updatedCard() {
+        document.querySelectorAll('#notAvailable').forEach(a => {
+            const parent = a.parentElement.parentElement.parentElement.parentElement;
+            parent.classList.add('not-available');
+        })
+    }
+
+    document.addEventListener('DOMContentLoaded', updatedCard)
+</script>

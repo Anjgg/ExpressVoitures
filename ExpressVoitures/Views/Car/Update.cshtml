@@ -1,10 +1,10 @@
-﻿@model VoitureModel
+﻿@model VoitureProfileModel
 @{
     ViewData["Title"] = "Modifier";
 }
 
 <div class="my-5 text-center">
-    <h1 class=" titre-homepage ">Ajouter une voiture</h1>
+    <h1 class=" titre-homepage ">Modifier une voiture</h1>
     <p class="onglet-menu-skinny">tous les champs sont obligatoires</p>
 </div>
 
@@ -12,57 +12,373 @@
     <div class="row justify-content-center ">
         <div class="col-md-6">
 
-            <form asp-controller="Car" asp-action="Update" method="post">
-                <div class="mb-3">
-                    <label asp-for="CodeVin" class="form-label">Code VIN</label>
-                    <input asp-for="CodeVin" type="text" class="form-control">
-                    <span asp-validation-for="CodeVin" class="text-danger"></span>
+            <form method="post" enctype="multipart/form-data">
+                <h4>Véhicule</h4>
+                <div class="hidden">
+                    <input asp-for="Voiture.Id" type="hidden">
+                    <input asp-for="Prix.Id" type="hidden">
+                    <input asp-for="Prix.PrixReparation" type="hidden">
+                    <input asp-for="Prix.PrixVente" type="hidden">
+                    <input asp-for="Date.Id" type="hidden">
+                    <input asp-for="Date.DateMiseEnVente" type="hidden">
+                </div> 
+                <div class="mb-2">
+                    <label asp-for="Voiture.CodeVin" class="form-label">Code VIN</label>
+                    <input asp-for="Voiture.CodeVin" type="text" class="form-control">
+                    <span asp-validation-for="Voiture.CodeVin" class="text-danger"></span>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <label asp-for="Voiture.Marque" class="form-label">Marque</label>
+                        <input asp-for="Voiture.Marque" type="text" class="form-control">
+                        <span asp-validation-for="Voiture.Marque" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Voiture.Modele" class="form-label">Modèle</label>
+                        <input asp-for="Voiture.Modele" type="text" class="form-control">
+                        <span asp-validation-for="Voiture.Modele" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <label asp-for="Voiture.Finition" class="form-label">Finition</label>
+                        <input asp-for="Voiture.Finition" type="text" class="form-control">
+                        <span asp-validation-for="Voiture.Finition" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Voiture.AnneeFabrication" class="form-label">Année</label>
+                        <input asp-for="Voiture.AnneeFabrication" type="date" class="form-control">
+                        <span asp-validation-for="Voiture.AnneeFabrication" class="text-danger"></span>
+                    </div>
+                </div>
+                
+                <div class="mb-2">
+                    <label asp-for="Voiture.ImageVoiture" class="control-label">Image de la voiture</label>
+                    <input asp-for="Voiture.ImageVoiture" class="form-control" accept="image/jpeg" placeholder="@Model.Voiture.ImagePath"/>
+                    <span asp-validation-for="Voiture.ImageVoiture" class="text-danger"></span>
                 </div>
 
-                <div class="mb-3">
-                    <label asp-for="Annee" class="form-label">Année</label>
-                    <input asp-for="Annee" type="number" class="form-control">
-                    <span asp-validation-for="Annee" class="text-danger"></span>
+                <hr />
+
+                <h4>Réparations</h4>
+                <div class="mb-2 row">
+                    @for (int i = 0; i < Model.Types.Count(); i++)
+                    {
+                        <div class="col-md-6 mb-2">
+                            <div class="form-check">
+                                <input type="hidden" asp-for="Types[i].Id" />
+                                <input type="hidden" asp-for="Types[i].Description" />
+                                <input id="PrixReparation" type="hidden" asp-for="Types[i].Prix" />
+                                <input id="DureeReparation" type="hidden" asp-for="Types[i].Duree" />
+                                <input class="form-check-input" type="checkbox" asp-for="Types[i].IsSelected" />
+                                <label class="form-check-label">@Model.Types[i].Description </label>
+                            </div>
+                        </div>
+                    }
+                    <div class="row mb-2">
+                        <div class="col-md-6 ">
+                            <label class="form-label">Prix total</label>
+                            <input id="SumPrixReparations" type="number" class="form-control" readonly />
+
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Durée totale</label>
+                            <input id="SumDureeReparations" type="number" class="form-control" readonly />
+                        </div>
+                    </div>
+
                 </div>
 
-                <div class="mb-3">
-                    <label asp-for="Marque" class="form-label">Marque</label>
-                    <input asp-for="Marque" type="text" class="form-control">
-                    <span asp-validation-for="Marque" class="text-danger"></span>
+                <hr />
+
+                <h4>Comptabilité</h4>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label asp-for="Prix.PrixAchat" class="form-label">Prix d'Achat</label>
+                        <input id="PrixAchat" asp-for="Prix.PrixAchat" type="number" class="form-control">
+                        <span asp-validation-for="Prix.PrixAchat" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Date.DateAchat" class="form-label">Date d'Achat</label>
+                        <input asp-for="Date.DateAchat" type="date" class="form-control">
+                        <span asp-validation-for="Date.DateAchat" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <label asp-for="Prix.PrixVente" class="form-label">Prix de Vente</label>
+                        <input id="PrixVente" asp-for="Prix.PrixVente" type="number" class="form-control" readonly>
+                        <span asp-validation-for="Prix.PrixVente" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Date.DateVente" class="form-label">Date de Vente</label>
+                        <input asp-for="Date.DateVente" type="date" class="form-control">
+                        <span asp-validation-for="Date.DateVente" class="text-danger"></span>
+                    </div>
                 </div>
 
-                <div class="mb-3">
-                    <label asp-for="Modele" class="form-label">Modèle</label>
-                    <input asp-for="Modele" type="text" class="form-control">
-                    <span asp-validation-for="Modele" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="Finition" class="form-label">Finition</label>
-                    <input asp-for="Finition" type="text" class="form-control">
-                    <span asp-validation-for="Finition" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="Prix.PrixAchat" class="form-label">Prix</label>
-                    <input asp-for="Prix.PrixAchat" type="number" class="form-control">
-                    <span asp-validation-for="Prix.PrixAchat" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="Prix.PrixReparation" class="form-label">Prix</label>
-                    <input asp-for="Prix.PrixReparation" type="number" class="form-control">
-                    <span asp-validation-for="Prix.PrixReparation" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="Prix.PrixVente" class="form-label">Prix</label>
-                    <input asp-for="Prix.PrixVente" type="number" class="form-control">
-                    <span asp-validation-for="Prix.PrixVente" class="text-danger"></span>
-                </div>
-
+                <hr />
+                
                 <div class="text-center">
-                    <button asp-controller="Car" asp-action="Update" class="btn-primary btn">Enregistrer la voiture</button>
-                    <a asp-controller="Car" asp-action="Delete" asp-route-codeVin="@Model.CodeVin" class="btn btn-danger">Supprimer la voiture</a>
+                    <button asp-controller="Car" asp-action="Update" formmethod="post" class="btn-primary btn">Enregistrer la voiture</button>
+                    <button asp-controller="Car" asp-action="Delete" asp-route-id="@Model.Voiture.Id" formmethod="post" class="btn btn-danger">Supprimer la voiture</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<script>
+    function UpdatePrixReparation() {
+        let prixReparation = 0;
+        document.querySelectorAll('input[type="checkbox"]:checked').forEach(input => {
+            const prix = parseInt(input.closest('.form-check').querySelector('input[id="PrixReparation"]').value);
+            if (!isNaN(prix)) {
+                prixReparation += prix;
+            }
+        });
+        document.querySelector('#SumPrixReparations').value = prixReparation;
+        const prixAchat = parseInt(document.querySelector('#PrixAchat').value)
+        let sumTotal = prixAchat + prixReparation + 500;
+        document.querySelector('#PrixVente').value = sumTotal;
+    }
+    function UpdateDureeReparation() {
+        let dureeReparation = 0;
+        document.querySelectorAll('input[type="checkbox"]:checked').forEach(input => {
+            const duree = parseInt(input.closest('.form-check').querySelector('input[id="DureeReparation"]').value);
+            if (!isNaN(duree)) {
+                dureeReparation += duree;
+            }
+        });
+        document.querySelector('#SumDureeReparations').value = dureeReparation;
+    }
+    function UpdatePrixVente() {
+        const prixAchat = parseInt(document.querySelector('#PrixAchat').value);
+        const prixReparation = parseInt(document.querySelector('#SumPrixReparations').value);
+        let updatedPrixVente = prixAchat + prixReparation + 500;
+        document.querySelector('#PrixVente').value = updatedPrixVente;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('input[type="checkbox"]').forEach(input => {
+            input.addEventListener('change', UpdatePrixReparation);
+            input.addEventListener('change', UpdateDureeReparation);
+        });
+        UpdatePrixReparation();
+        UpdateDureeReparation();
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelector('#PrixAchat').addEventListener('change', UpdatePrixVente)
+    });
+
+    
+</script>
+
+@* <form asp-action="VotreAction" method="post">
+    <div class="form-group">
+        <label>Type de réparation:</label>
+        <select id="typeId" name="typeId" class="form-control" asp-items="ViewBag.Types"></select>
+    </div>
+
+    <div class="form-group">
+        <label>Prix:</label>
+        <span id="typeReparationPrix"></span> €
+    </div>
+
+    <div class="form-group">
+        <label>Durée:</label>
+        <span id="dureeReparation"></span> heure(s)
+    </div>
+
+    <!-- Autres champs du formulaire -->
+
+    <button type="submit" class="btn btn-primary">Soumettre</button>
+</form> *@
+
+
+
+@* <script>
+    
+    function AddReparation() {
+        let index = document.querySelectorAll('.reparation-group').length;
+        const container = document.getElementById('reparations-container');
+        const html = `
+            <div class="reparation-group mb-2">
+                <div class="form-group">
+                    <label for="Types_${index}__Description">Type de réparation:</label>
+                    <input name="Types[${index}].Description" id="Types_${index}__Description" type="text" class="form-control">
+                    <span class="text-danger"></span>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="Types_${index}__Prix">Prix:</label>
+                        <input name="Types[${index}].Prix" id="Types_${index}__Prix" type="text" class="form-control">
+                        <span class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="Types_${index}__Duree">Durée:</label>
+                        <input name="Types[${index}].Duree" id="Types_${index}__Duree" type="text" class="form-control">
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 align-self-end text-center">
+                        <button type="button" class="btn btn-outline-danger mb-2 btn" onclick="DeleteReparation(this)">Supprimer</button>
+                    </div>
+                </div>
+
+                <hr />
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', html);
+    }
+    function AddReparation() {
+        document.getElementById('formReparation').classList.remove('d-none');
+        document.getElementById('buttonHideForm').classList.add('d-none');
+    }
+
+    function DeleteReparation(button) {
+        const elementToRemove = button.closest('.reparation-group');
+        elementToRemove.remove();
+
+        const groups = document.querySelectorAll('.reparation-group');
+        groups.forEach((group, index) => {
+            const inputs = group.querySelectorAll('input');
+
+            inputs.forEach(input => {
+                const name = input.getAttribute('name');
+                if (name) {
+                    const newName = name.replace(/Types\[\d+\]/, `Types[${index}]`);
+                    input.setAttribute('name', newName);
+                }
+            });
+        });
+    }
+
+    function UpdatePrixReparation() {
+        let prixReparation = 0;
+        document.querySelectorAll('input.typePrix').forEach(input => {
+            const prix = parseInt(input.value);
+            if (!isNaN(prix)) {
+                prixReparation += prix;
+            }
+        });
+        document.querySelector('input.prixReparation').value = prixReparation;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('input.typePrix').forEach(input => {
+            input.addEventListener('input', UpdatePrixReparation);
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelector('#typeId').addEventListener('change', UpdateInformationReaparation);
+        
+    });
+    
+
+    function UpdateInformationReaparation() {
+            var selectedId = this.value;
+            var typeReparationPrix = document.querySelector('#typeReparationPrix');
+            var dureeReparation = document.querySelector('#dureeReparation');
+            if (selectedId) {
+                fetch(`/api/Type/${selectedId}`)
+                    .then(response => response.json()
+                    .then(data => {
+                        typeReparationPrix.value = data.prix,
+                        dureeReparation.value = data.duree
+                    }))
+            } else {
+                typeReparationPrix.textContent = "";
+                dureeReparation.textContent = "";
+            }
+        };
+
+</script> *@
+
+@* <div class="reparation-group mb-2">
+    <div>
+        <input name="Types[@i].Id" value="@typesList[i].Id" type="hidden">
+    </div>
+    <div class="mb-2">
+        <label class="form-label">Description</label>
+        <input name="Types[@i].Description" value="@typesList[i].Description" type="text" class="form-control">
+        <span class="text-danger"></span>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label class="form-label">Prix</label>
+            <input name="Types[@i].Prix" value="@typesList[i].Prix" type="number" class="form-control typePrix">
+            <span class="text-danger"></span>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Durée</label>
+            <input name="Types[@i].Duree" value="@typesList[i].Duree" type="number" class="form-control">
+            <span class="text-danger"></span>
+        </div>
+    </div>
+    
+    <hr />
+</div> *@
+@* 
+<h4>Réparations</h4>
+
+<div id="reparations-container" class="mb-2">
+    @for (int i = 0; i < typesList.Count; i++)
+    {
+        <div class="reparation-group mb-2">
+            <input name="Types[@i].Id" value="@typesList[i].Id" type="hidden">
+            <div class="form-group">
+                <label for="Types[@i].Description">@typesList[i].Description</label>
+                <input id="Types[@i].Description" name="Types[@i].Description" value="@typesList[i].Description" type="checkbox">
+                <span class="text-danger"></span>
+            </div>
+            @* <div class="row">
+                                <div class="col-md-4">
+                                    <label>Prix:</label>
+                                    <input name="Types[@i].Prix" value="@typesList[i].Prix" type="text" class="form-control">
+                                    <span class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label>Durée:</label>
+                                    <input name="Types[@i].Duree" value="@typesList[i].Duree" type="text" class="form-control">
+                                    <span class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4 align-self-end text-center">
+                                    <button type="button" class="btn btn-outline-danger mb-2 btn" onclick="DeleteReparation(this)">Supprimer</button>
+                                </div>
+                            </div> *@
+
+        @*     @* <hr />
+        </div>
+    }
+ *@
+@* </div>
+<div id="buttonHideForm" class="">
+    <button type="button" class="btn btn-outline-primary mb-2" onclick="AddReparation()">
+        <i class="bi bi-plus-circle"></i> Ajouter une réparation
+    </button>
+</div>
+<div id="formReparation" class="d-none">
+    <form method="post">
+        <div class="form-group">
+            <label>Type de réparation:</label>
+            <select id="typeId" name="ReparationId" type="text" class="form-control" asp-items="@ViewBag.Types" multiple="multiple"></select>
+        </div>
+
+        <div class="form-group">
+            <label>Prix:</label>
+            <input id="typeReparationPrix" class="form-control" readonly></input>
+        </div>
+
+        <div class="form-group">
+            <label>Durée:</label>
+            <input id="dureeReparation" class="form-control" readonly></input>
+        </div>
+        <button asp-action="AddReparation()" type="submit" class="btn btn-primary">Soumettre</button>
+    </form>
+</div>
+<hr /> *@

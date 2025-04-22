@@ -1,71 +1,151 @@
-﻿@model VoitureModel
+﻿@model VoitureProfileModel
 @{
     ViewData["Title"] = "Create";
 }
 
-<div>
-    <a asp-controller="Home" asp-action="Index">Retour</a>
+<div class="my-5 text-center">
+    <h1 class=" titre-homepage ">Ajouter une voiture</h1>
+    <p class="onglet-menu-skinny">tous les champs sont obligatoires</p>
 </div>
 
 <div class="container-fluid shadow  py-5">
     <div class="row justify-content-center ">
         <div class="col-md-6">
-            
-            <form asp-controller="Car" asp-action="Create" method="post">
-                <div class="mb-3">
-                    <label asp-for="CodeVin" class="form-label">Code VIN</label>
-                    <input asp-for="CodeVin" type="text" class="form-control">
-                    <span asp-validation-for="CodeVin" class="text-danger"></span>
+
+            <form method="post" enctype="multipart/form-data">
+                <h4>Véhicule</h4>
+                <div class="hidden">
+                    <input asp-for="Voiture.Id" type="hidden">
+                    <input asp-for="Prix.Id" type="hidden">
+                    <input asp-for="Prix.PrixReparation" type="hidden">
+                    <input asp-for="Prix.PrixVente" type="hidden">
+                    <input asp-for="Date.Id" type="hidden">
+                    <input asp-for="Date.DateMiseEnVente" type="hidden">
+                </div>
+                <div class="mb-2">
+                    <label asp-for="Voiture.CodeVin" class="form-label">Code VIN</label>
+                    <input asp-for="Voiture.CodeVin" type="text" class="form-control" placeholder="ex : 1HGBH41JXMN109186">
+                    <span asp-validation-for="Voiture.CodeVin" class="text-danger"></span>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <label asp-for="Voiture.Marque" class="form-label">Marque</label>
+                        <input asp-for="Voiture.Marque" type="text" class="form-control" placeholder="ex : Audi">
+                        <span asp-validation-for="Voiture.Marque" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Voiture.Modele" class="form-label">Modèle</label>
+                        <input asp-for="Voiture.Modele" type="text" class="form-control" placeholder="ex : A3">
+                        <span asp-validation-for="Voiture.Modele" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <label asp-for="Voiture.Finition" class="form-label">Finition</label>
+                        <input asp-for="Voiture.Finition" type="text" class="form-control" placeholder="ex : S-Line">
+                        <span asp-validation-for="Voiture.Finition" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Voiture.AnneeFabrication" class="form-label">Date de Fabrication</label>
+                        <input asp-for="Voiture.AnneeFabrication" type="date" class="form-control">
+                        <span asp-validation-for="Voiture.AnneeFabrication" class="text-danger"></span>
+                    </div>
                 </div>
 
-                <div class="mb-3">
-                    <label asp-for="Annee" class="form-label">Année</label>
-                    <input asp-for="Annee"  type="number" class="form-control">
-                    <span asp-validation-for="Annee" class="text-danger"></span>
+                <div class="mb-2">
+                    <label asp-for="Voiture.ImageVoiture" class="control-label">Image de la voiture</label>
+                    <input asp-for="Voiture.ImageVoiture" class="form-control" accept="image/jpeg" />
+                    <span asp-validation-for="Voiture.ImageVoiture" class="text-danger"></span>
                 </div>
 
-                <div class="mb-3">
-                    <label asp-for="Marque" class="form-label">Marque</label>
-                    <input asp-for="Marque" type="text" class="form-control">
-                    <span asp-validation-for="Marque" class="text-danger"></span>
+                <hr />
+
+                <h4>Réparations</h4>
+
+                <div class="mb-2 row">
+                    @for (int i = 0; i < Model.Types.Count(); i++)
+                    {
+                        <div class="col-md-6 mb-2">
+                            <div class="form-check">
+                                <input type="hidden" asp-for="Types[i].Id" />
+                                <input type="hidden" asp-for="Types[i].Description" />
+                                <input id="PrixReparation" type="hidden" asp-for="Types[i].Prix" />
+                                <input id="DureeReparation" type="hidden" asp-for="Types[i].Duree" />
+                                <input class="form-check-input" type="checkbox" asp-for="Types[i].IsSelected" />
+                                <label class="form-check-label">@Model.Types[i].Description </label>
+                            </div>
+                        </div>
+                    }
+                    <div class="row mb-2">
+                        <div class="col-md-6 ">
+                            <label class="form-label">Prix total</label>
+                            <input id="SumPrixReparations" type="number" class="form-control" readonly />
+
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Durée totale</label>
+                            <input id="SumDureeReparations" type="number" class="form-control" readonly />
+                        </div>
+                    </div>
                 </div>
 
-                <div class="mb-3">
-                    <label asp-for="Modele" class="form-label">Modèle</label>
-                    <input asp-for="Modele" type="text" class="form-control">
-                    <span asp-validation-for="Modele" class="text-danger"></span>
+                <hr />
+
+                <h4>Comptabilité</h4>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label asp-for="Prix.PrixAchat" class="form-label">Prix d'Achat</label>
+                        <input asp-for="Prix.PrixAchat" type="number" class="form-control currency-input" placeholder="10 000 €">
+                        <span asp-validation-for="Prix.PrixAchat" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Date.DateAchat" class="form-label">Date d'Achat</label>
+                        <input asp-for="Date.DateAchat" type="date" class="form-control">
+                        <span asp-validation-for="Date.DateAchat" class="text-danger"></span>
+                    </div>
                 </div>
 
-                <div class="mb-3">
-                    <label asp-for="Finition" class="form-label">Finition</label>
-                    <input asp-for="Finition" type="text" class="form-control">
-                    <span asp-validation-for="Finition" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="Prix.PrixAchat" class="form-label">Prix d'Achat</label>
-                    <input asp-for="Prix.PrixAchat" type="number" class="form-control">
-                    <span asp-validation-for="Prix.PrixAchat" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="Reparations.Types" class="form-label">Types de Réparations</label>
-                    <input asp-for="Reparations.Types" type="text" class="form-control">
-                    <span asp-validation-for="Reparations.Types" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="Prix" class="form-label">Prix</label>
-                    <input asp-for="Prix" type="number" class="form-control">
-                    <span asp-validation-for="Prix" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="Prix" class="form-label">Prix</label>
-                    <input asp-for="Prix" type="number" class="form-control">
-                    <span asp-validation-for="Prix" class="text-danger"></span>
-                </div>
-                
+                <hr />
+
                 <div class="text-center">
-                    <button asp-controller="Car" asp-action="Create" class="btn-primary btn">Enregistrer la voiture</button>
+                    <button asp-controller="Car" asp-action="Create" type="submit" class="btn-primary btn">Enregistrer la voiture</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<script>
+    function UpdatePrixReparation() {
+        let prixReparation = 0;
+        document.querySelectorAll('input[type="checkbox"]:checked').forEach(input => {
+            const prix = parseInt(input.closest('.form-check').querySelector('input[id="PrixReparation"]').value);
+            if (!isNaN(prix)) {
+                prixReparation += prix;
+            }
+        });
+        document.querySelector('#SumPrixReparations').value = prixReparation;
+    }
+    function UpdateDureeReparation() {
+        let dureeReparation = 0;
+        document.querySelectorAll('input[type="checkbox"]:checked').forEach(input => {
+            const duree = parseInt(input.closest('.form-check').querySelector('input[id="DureeReparation"]').value);
+            if (!isNaN(duree)) {
+                dureeReparation += duree;
+            }
+        });
+        document.querySelector('#SumDureeReparations').value = dureeReparation;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('input[type="checkbox"]').forEach(input => {
+            input.addEventListener('change', UpdatePrixReparation);
+            input.addEventListener('change', UpdateDureeReparation);
+        });
+        UpdatePrixReparation();
+        UpdateDureeReparation();
+    });
+</script>
+
+                                        

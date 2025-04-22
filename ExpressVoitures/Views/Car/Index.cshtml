@@ -1,4 +1,5 @@
-﻿@model VoitureModel
+﻿@using System.Globalization
+@model VoitureProfileModel
 @{
     ViewData["Title"] = "Afficher une voiture";
 }
@@ -10,20 +11,22 @@
     <div class="card p-3 shadow">
         <div class="row g-0">
             <div class="col-md-4">
-                <img src="~/images/Voiture.jpg" class="img-fluid img-thumbnail" alt="Voiture">
+                <img src="@Model.Voiture.ImagePath" class="img-fluid img-thumbnail" alt="Voiture">
             </div>
             <div class="col-md-8">
                 <div class="ms-5 mt-3">
-                    <h5 class="card-title">@Model.Prix.PrixVente €</h5>
-                    <p class="card-text"><strong>Marque : </strong>@Model.Marque</p>
-                    <p class="card-text"><strong>Modèle : </strong>@Model.Modele</p>
-                    <p class="card-text"><strong>Finition : </strong>@Model.Finition</p>
-                    <p class="card-text"><strong>Année : </strong>@Model.Annee</p>
+                    <h5 class="card-title">@Model.Prix.PrixVente.ToString("C", CultureInfo.CurrentCulture).Replace(",00", "")</h5>
+                    <p class="card-text"><strong>Marque : </strong>@Model.Voiture.Marque</p>
+                    <p class="card-text"><strong>Modèle : </strong>@Model.Voiture.Modele</p>
+                    <p class="card-text"><strong>Finition : </strong>@Model.Voiture.Finition</p>
+                    <p class="card-text"><strong>Année : </strong>@Model.Voiture.AnneeFabrication.ToString("yyyy")</p>
                     <p class="card-text"><strong>Date de disponibilité : </strong>@Model.Date.DateMiseEnVente.ToString("d")</p>
                 </div>
                 <div class="text-center mt-3">
                     <a asp-controller="Home" asp-action="Contact" class="btn btn-success">Nous contacter</a>
-                    <a asp-controller="Car" asp-action="Update" asp-route-codeVin="@Model.CodeVin" class="btn btn-success">Modifier les informations</a>
+                    @if (User.IsInRole("Admin")){
+                        <a asp-controller="Car" asp-action="Update" asp-route-id="@Model.Voiture.Id" class="btn btn-success">Modifier les informations</a>
+                    }
                 </div>
             </div>
         </div>

@@ -1,15 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace ExpressVoitures.Data.Dto
+﻿namespace ExpressVoitures.Data.Dto
 {
     public class ReparationDto
     {
-        [Key]
-        public int Id { get; init; }
+        public int Id { get; set; }
 
-        public virtual ICollection<TypeDto> Types { get; set; } = new List<TypeDto>();
+        public int PrixTotal { get; set; }
+        public double DureeTotal { get; set; }
 
-        public string CodeVin { get; set; }
-        public virtual ICollection<VoitureDto> Voitures { get; set; }
+        public int? VoitureId { get; set; }
+        public virtual VoitureDto? Voiture { get; set; }
+
+        public virtual IEnumerable<TypeDto> Types { get; set; } = new List<TypeDto>();
     }
 }
