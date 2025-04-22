@@ -11,9 +11,9 @@ namespace ExpressVoitures.DbInitializer
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
 
-            if (!await roleManager.RoleExistsAsync("SeedAdmin"))
+            if (!await roleManager.RoleExistsAsync("Admin"))
             {
-                await roleManager.CreateAsync(new IdentityRole("SeedAdmin"));
+                await roleManager.CreateAsync(new IdentityRole("Admin"));
             }
 
             var adminEmail = "admin@example.com";
@@ -32,7 +32,7 @@ namespace ExpressVoitures.DbInitializer
 
                 if (result.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(adminUser, "SeedAdmin");
+                    await userManager.AddToRoleAsync(adminUser, "Admin");
                 }
 
             }

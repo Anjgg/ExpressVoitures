@@ -1,4 +1,5 @@
-﻿using ExpressVoitures.Data.Dto;
+﻿using ExpressVoitures.Context;
+using ExpressVoitures.Data.Dto;
 using Microsoft.EntityFrameworkCore;
 
 namespace ExpressVoitures.DbInitializer
@@ -19,7 +20,7 @@ namespace ExpressVoitures.DbInitializer
                 context.Voitures.AddRange(
                     new VoitureDto
                     {
-                        CodeVin = "1HGBH41JXMN109186",
+                        CodeVin = "1HGH41JXMN109156",
                         Marque = "Toyota",
                         Modele = "Corolla",
                         Finition = "LE",
@@ -46,11 +47,11 @@ namespace ExpressVoitures.DbInitializer
                     },
                     new VoitureDto
                     {
-                        CodeVin = "1HGBH41JXMN109187",
+                        CodeVin = "1HBH41JXMN109167",
                         Marque = "Honda",
                         Modele = "Civic",
                         Finition = "LX",
-                        AnneeFabrication = new DateTimeOffset(1995, 7, 20, 0, 0, 0, new TimeSpan()),
+                        AnneeFabrication = new DateTimeOffset(1989, 7, 20, 0, 0, 0, new TimeSpan()),
                         ImagePath = "/images/imagedefault.jpg",
                         Date = new DateDto
                         {
@@ -73,11 +74,11 @@ namespace ExpressVoitures.DbInitializer
                     },
                     new VoitureDto
                     {
-                        CodeVin = "1HGBH41JXMN109188",
+                        CodeVin = "1HGBH1JXMN109178",
                         Marque = "Ford",
                         Modele = "Fusion",
                         Finition = "SE",
-                        AnneeFabrication = new DateTimeOffset(2005, 3, 15, 0, 0, 0, new TimeSpan()),
+                        AnneeFabrication = new DateTimeOffset(1977, 3, 15, 0, 0, 0, new TimeSpan()),
                         ImagePath = "/images/imagedefault.jpg",
                         Date = new DateDto
                         {
@@ -100,11 +101,11 @@ namespace ExpressVoitures.DbInitializer
                     },
                     new VoitureDto
                     {
-                        CodeVin = "1HGBH41JXMN109189",
+                        CodeVin = "1HGBH4JXMN199189",
                         Marque = "Chevrolet",
                         Modele = "Malibu",
                         Finition = "LT",
-                        AnneeFabrication = new DateTimeOffset(2010, 8, 25, 0, 0, 0, new TimeSpan()),
+                        AnneeFabrication = new DateTimeOffset(1968, 8, 25, 0, 0, 0, new TimeSpan()),
                         ImagePath = "/images/imagedefault.jpg",
                         Date = new DateDto
                         {

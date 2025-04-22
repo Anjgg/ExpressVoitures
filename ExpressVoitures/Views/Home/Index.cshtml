@@ -1,4 +1,5 @@
-﻿@model List<HomeCarModel>
+﻿@using System.Globalization
+@model List<HomeCarModel>
 @{
     ViewData["Title"] = "Acceuil";
     
@@ -26,7 +27,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="card-body" >
-                                    <h5 class="card-title">@item.PrixVente €</h5>
+                                    <h5 class="card-title">@item.PrixVente.ToString("C", CultureInfo.CurrentCulture).Replace(",00", "")</h5>
                                     <p class="card-text"><strong>Marque : </strong>@item.Marque</p>
                                     <p class="card-text"><strong>Modèle : </strong>@item.Modele</p>
                                     <p class="card-text"><strong>Année : </strong>@item.AnneeFabrication.ToString("yyyy")</p>

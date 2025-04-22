@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ExpressVoitures.Context;
 using ExpressVoitures.Data.Dto;
 using ExpressVoitures.Data.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -249,6 +250,10 @@ namespace ExpressVoitures.Services
             {
                 string nameFile = model.Voiture.CodeVin + Path.GetExtension(model.Voiture.ImageVoiture.FileName);
                 var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", nameFile);
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     await model.Voiture.ImageVoiture.CopyToAsync(stream);
