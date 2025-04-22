@@ -1,7 +1,7 @@
 ﻿using ExpressVoitures.Data.Dto;
 using Microsoft.EntityFrameworkCore;
 
-namespace ExpressVoitures
+namespace ExpressVoitures.DbInitializer
 {
     public class SeedData
     {
@@ -23,7 +23,7 @@ namespace ExpressVoitures
                         Marque = "Toyota",
                         Modele = "Corolla",
                         Finition = "LE",
-                        AnneeFabrication = new DateTimeOffset(1985, 5, 12, 0,0,0, new TimeSpan()),
+                        AnneeFabrication = new DateTimeOffset(1985, 5, 12, 0, 0, 0, new TimeSpan()),
                         ImagePath = "https://example.com/images/toyota_corolla.jpg",
                         Date = new DateDto
                         {

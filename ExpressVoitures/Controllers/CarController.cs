@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ExpressVoitures.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class CarController : Controller
     {
         private readonly IExpressVoituresService _service;
@@ -17,18 +18,18 @@ namespace ExpressVoitures.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Index(int id)
         {
-            var voiture = await _service.GetCarAsync(id);
-            if (voiture == null)
+            var voitureProfileModel = await _service.GetCarAsync(id);
+            if (voitureProfileModel == null)
             {
                 return RedirectToAction("Index", "Home");
             }
-            return View(voiture);
+            return View(voitureProfileModel);
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> Create()
         {
             var newVoitureProfileModel = await _service.GetNewVoitureProfileModel();
@@ -36,7 +37,6 @@ namespace ExpressVoitures.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> Create(VoitureProfileModel model)
         {
             if (!ModelState.IsValid)
@@ -70,8 +70,6 @@ namespace ExpressVoitures.Controllers
                 return View(model);
             }
             var voiture = await _service.UpdateCarAsync(model);
-
-            
 
             return RedirectToAction("CarUpdated", new { marque = voiture.Voiture.Marque, modele = voiture.Voiture.Modele });
         }

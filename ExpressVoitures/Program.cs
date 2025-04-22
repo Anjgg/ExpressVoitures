@@ -1,5 +1,5 @@
 using ExpressVoitures;
-using ExpressVoitures.Identity;
+using ExpressVoitures.DbInitializer;
 using ExpressVoitures.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -15,16 +15,12 @@ builder.Services.AddDbContext<ExpressVoituresContext>(options =>
 // Setup Error Page from DB <--> EFCore
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddAuthentication().AddCookie("AdminCookie", options =>
-{
-    options.Cookie.Name = "AdminCookie";
-});    
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<ExpressVoituresContext>();
 
 // Setup Razor Pages
 builder.Services.AddControllersWithViews();
-
-// Setup AutoMapper
-builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 // Setup Services Scope
 builder.Services.AddScoped<IExpressVoituresService, ExpressVoituresService>();
@@ -43,8 +39,6 @@ else
     app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
-
-
 }
 
 // Seed the database with initial data

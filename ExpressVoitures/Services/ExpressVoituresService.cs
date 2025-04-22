@@ -19,12 +19,10 @@ namespace ExpressVoitures.Services
     public class ExpressVoituresService : IExpressVoituresService
     {
         private readonly ExpressVoituresContext _context;
-        private readonly IMapper _mapper;
 
-        public ExpressVoituresService(ExpressVoituresContext context, IMapper mapper)
+        public ExpressVoituresService(ExpressVoituresContext context)
         {
             _context = context;
-            _mapper = mapper;
         }
 
         public async Task<List<HomeCarModel>> GetAllHomeCars()

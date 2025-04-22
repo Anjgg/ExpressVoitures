@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace ExpressVoitures
+namespace ExpressVoitures.DbInitializer
 {
     public static class DbInitializerExtension
     {
@@ -17,7 +17,7 @@ namespace ExpressVoitures
         {
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
-                await Admin.Initialize(serviceScope.ServiceProvider);
+                await DbInitializer.SeedAdmin.Initialize(serviceScope.ServiceProvider);
             }
             return app;
         }

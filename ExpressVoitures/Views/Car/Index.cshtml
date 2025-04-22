@@ -23,7 +23,9 @@
                 </div>
                 <div class="text-center mt-3">
                     <a asp-controller="Home" asp-action="Contact" class="btn btn-success">Nous contacter</a>
-                    <a asp-controller="Car" asp-action="Update" asp-route-id="@Model.Voiture.Id" class="btn btn-success">Modifier les informations</a>
+                    @if (User.IsInRole("Admin")){
+                        <a asp-controller="Car" asp-action="Update" asp-route-id="@Model.Voiture.Id" class="btn btn-success">Modifier les informations</a>
+                    }
                 </div>
             </div>
         </div>

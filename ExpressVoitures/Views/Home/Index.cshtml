@@ -6,7 +6,10 @@
 
 <div class="text-center" style="margin-top: 300px; margin-bottom: 200px;">
     <h1 class="titre-homepage">Nos voitures</h1>
-    <a asp-controller="Car" asp-action="Create" class="btn btn-custom dm-sans-400">+ Ajouter une voiture </a>
+    @if (User.IsInRole("Admin")){
+        <a asp-controller="Car" asp-action="Create" class="btn btn-custom dm-sans-400">+ Ajouter une voiture </a>
+    }
+    
 </div>
 
 

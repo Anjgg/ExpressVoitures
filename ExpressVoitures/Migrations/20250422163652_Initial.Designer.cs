@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExpressVoitures.Migrations
 {
     [DbContext(typeof(ExpressVoituresContext))]
-    [Migration("20250421123701_Initial")]
+    [Migration("20250422163652_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
