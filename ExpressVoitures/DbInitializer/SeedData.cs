@@ -24,7 +24,7 @@ namespace ExpressVoitures.DbInitializer
                         Modele = "Corolla",
                         Finition = "LE",
                         AnneeFabrication = new DateTimeOffset(1985, 5, 12, 0, 0, 0, new TimeSpan()),
-                        ImagePath = "https://example.com/images/toyota_corolla.jpg",
+                        ImagePath = "/images/imagedefault.jpg",
                         Date = new DateDto
                         {
                             DateAchat = new DateTimeOffset(2023, 10, 1, 0, 0, 0, new TimeSpan())
@@ -51,7 +51,7 @@ namespace ExpressVoitures.DbInitializer
                         Modele = "Civic",
                         Finition = "LX",
                         AnneeFabrication = new DateTimeOffset(1995, 7, 20, 0, 0, 0, new TimeSpan()),
-                        ImagePath = "https://example.com/images/honda_civic.jpg",
+                        ImagePath = "/images/imagedefault.jpg",
                         Date = new DateDto
                         {
                             DateAchat = new DateTimeOffset(2023, 10, 2, 0, 0, 0, new TimeSpan())
@@ -78,7 +78,7 @@ namespace ExpressVoitures.DbInitializer
                         Modele = "Fusion",
                         Finition = "SE",
                         AnneeFabrication = new DateTimeOffset(2005, 3, 15, 0, 0, 0, new TimeSpan()),
-                        ImagePath = "https://example.com/images/ford_fusion.jpg",
+                        ImagePath = "/images/imagedefault.jpg",
                         Date = new DateDto
                         {
                             DateAchat = new DateTimeOffset(2023, 10, 3, 0, 0, 0, new TimeSpan())
@@ -105,7 +105,7 @@ namespace ExpressVoitures.DbInitializer
                         Modele = "Malibu",
                         Finition = "LT",
                         AnneeFabrication = new DateTimeOffset(2010, 8, 25, 0, 0, 0, new TimeSpan()),
-                        ImagePath = "https://example.com/images/chevrolet_malibu.jpg",
+                        ImagePath = "/images/imagedefault.jpg",
                         Date = new DateDto
                         {
                             DateAchat = new DateTimeOffset(2023, 10, 4, 0, 0, 0, new TimeSpan())

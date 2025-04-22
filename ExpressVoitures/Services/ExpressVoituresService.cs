@@ -12,7 +12,7 @@ namespace ExpressVoitures.Services
         Task<VoitureProfileModel?> GetCarAsync(int id);
         Task<VoitureProfileModel> CreateVoitureAsync(VoitureProfileModel model);
         Task<VoitureProfileModel> UpdateCarAsync(VoitureProfileModel model);
-        Task<VoitureProfileModel> DeleteCarAsync(int id);
+        Task DeleteCarAsync(int id);
         Task<VoitureProfileModel> GetNewVoitureProfileModel();
     }
 
@@ -39,7 +39,7 @@ namespace ExpressVoitures.Services
                 AnneeFabrication = v.AnneeFabrication,
                 ImagePath = v.ImagePath,
                 PrixVente = v.Prix.PrixVente,
-                IsAvailable = v.Date.DateVente == null 
+                IsAvailable = v.Date.DateVente == null
             }).ToList();
 
             return listHomeCars;
@@ -48,11 +48,11 @@ namespace ExpressVoitures.Services
         public async Task<VoitureProfileModel?> GetCarAsync(int id)
         {
             var voitureDto = await _context.Voitures.Where(a => a.Id == id)
-                                                        .Include(v => v.Date)
-                                                        .Include(v => v.Prix)
-                                                        .Include(v => v.Reparation)
-                                                        .ThenInclude(r => r.Types)
-                                                        .FirstOrDefaultAsync();
+                                                    .Include(v => v.Date)
+                                                    .Include(v => v.Prix)
+                                                    .Include(v => v.Reparation)
+                                                    .ThenInclude(r => r.Types)
+                                                    .FirstOrDefaultAsync();
 
             if (voitureDto == null)
             {
@@ -74,7 +74,7 @@ namespace ExpressVoitures.Services
                 Modele = model.Voiture.Modele,
                 Finition = model.Voiture.Finition,
                 AnneeFabrication = model.Voiture.AnneeFabrication,
-                ImagePath = model.Voiture.ImagePath,
+                ImagePath = await UploadImageAsync(model),
                 Reparation = new ReparationDto
                 {
                     Types = typesSelected,
@@ -93,7 +93,7 @@ namespace ExpressVoitures.Services
                     DateMiseEnVente = model.Date.DateAchat.AddDays(model.Reparation.DureeTotal),
                     DateVente = model.Date.DateVente
                 }
-                
+
             };
             await _context.Voitures.AddAsync(voitureDto);
             await _context.SaveChangesAsync();
@@ -104,99 +104,41 @@ namespace ExpressVoitures.Services
         public async Task<VoitureProfileModel> UpdateCarAsync(VoitureProfileModel model)
         {
             var voitureDto = await _context.Voitures.Where(v => v.Id == model.Voiture.Id)
-                                                 .Include(v => v.Date)
-                                                 .Include(v => v.Prix)
-                                                 .Include(v => v.Reparation)
-                                                 .ThenInclude(r => r.Types)
-                                                 .FirstOrDefaultAsync();
+                                                    .Include(v => v.Date)
+                                                    .Include(v => v.Prix)
+                                                    .Include(v => v.Reparation)
+                                                    .ThenInclude(r => r.Types)
+                                                    .FirstOrDefaultAsync();
 
             if (voitureDto == null)
             {
                 throw new Exception($"Voiture with Id {model.Voiture.Id} not found.");
             }
 
-            UpdateDtoFromProfileModel(voitureDto, model);
-            
-            await _context.SaveChangesAsync();
+            await UpdateDtoFromProfileModel(voitureDto, model);
 
             return await MapDtoToProfileModel(voitureDto);
         }
 
-        public async Task<VoitureProfileModel> DeleteCarAsync(int id)
+        public async Task DeleteCarAsync(int id)
         {
             var voiture = await _context.Voitures.FindAsync(id) ?? throw new Exception($"Voiture with id '{id}' not found.");
             _context.Voitures.Remove(voiture);
-            await _context.SaveChangesAsync();
-
-            var voitureProfileModel = new VoitureProfileModel
+            if (voiture.ImagePath != null && voiture.ImagePath != "/images/imagedefault.jpg")
             {
-                Voiture = new VoitureModel
+                var imageVoiturePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot") + voiture.ImagePath;
+                if (File.Exists(imageVoiturePath))
                 {
-                    Id = voiture.Id,
-                    CodeVin = voiture.CodeVin,
-                    Marque = voiture.Marque,
-                    Modele = voiture.Modele,
-                    Finition = voiture.Finition,
-                    AnneeFabrication = voiture.AnneeFabrication,
-                    ImagePath = voiture.ImagePath
-                },
-                Date = new DateModel
-                {
-                    Id = voiture.Date.Id,
-                    DateAchat = voiture.Date.DateAchat,
-                    DateMiseEnVente = voiture.Date.DateMiseEnVente,
-                    DateVente = voiture.Date.DateVente
-                },
-                Prix = new PrixModel
-                {
-                    Id = voiture.Prix.Id,
-                    PrixAchat = voiture.Prix.PrixAchat,
-                    PrixReparation = voiture.Prix.PrixReparation,
-                    PrixVente = voiture.Prix.PrixVente
-                },
-                Reparation = new ReparationModel
-                {
-                    Id = voiture.Reparation.Id,
-                    PrixTotal = voiture.Reparation.PrixTotal,
-                    DureeTotal = voiture.Reparation.DureeTotal,
-                },
-                Types = voiture.Reparation.Types.Select(t => new TypeModel
-                {
-                    Id = t.Id,
-                    Description = t.Description,
-                    Prix = t.Prix,
-                    Duree = t.Duree,
-                    IsSelected = false
-                }).ToList()
-            };
-
-            return voitureProfileModel;
-        }
-
-        private void UpdateDtoFromProfileModel(VoitureDto voitureDto, VoitureProfileModel model)
-        {
-            UpdateReparations(voitureDto, model);
+                    File.Delete(imageVoiturePath);
+                }
+            }
             
-
-
-            voitureDto.CodeVin = model.Voiture.CodeVin;
-            voitureDto.Marque = model.Voiture.Marque;
-            voitureDto.Modele = model.Voiture.Modele;
-            voitureDto.Finition = model.Voiture.Finition;
-            voitureDto.AnneeFabrication = model.Voiture.AnneeFabrication;
-            voitureDto.ImagePath = model.Voiture.ImagePath;
-            voitureDto.Date.DateAchat = model.Date.DateAchat;
-            voitureDto.Date.DateMiseEnVente = model.Date.DateAchat.AddDays(model.Reparation.DureeTotal);
-            voitureDto.Date.DateVente = model.Date.DateVente;
-            voitureDto.Prix.PrixAchat = model.Prix.PrixAchat;
-            voitureDto.Prix.PrixReparation = voitureDto.Reparation.PrixTotal;
-            voitureDto.Prix.PrixVente = voitureDto.Prix.PrixAchat + voitureDto.Prix.PrixReparation + 500;
-
-
+            await _context.SaveChangesAsync();
         }
 
-        private void UpdateReparations(VoitureDto voitureDto, VoitureProfileModel model)
+        private async Task UpdateDtoFromProfileModel(VoitureDto voitureDto, VoitureProfileModel model)
         {
+            // Update Reparations properties first
             var selectedTypesId = model.Types.Where(t => t.IsSelected).Select(t => t.Id).ToList();
             var selectedTypes = _context.Types.Where(t => selectedTypesId.Contains(t.Id)).ToList();
             if (voitureDto.Reparation.Types is List<TypeDto> typeList)
@@ -210,6 +152,27 @@ namespace ExpressVoitures.Services
             }
             voitureDto.Reparation.PrixTotal = selectedTypes.Sum(t => t.Prix);
             voitureDto.Reparation.DureeTotal = selectedTypes.Sum(t => t.Duree);
+
+            // Update Voiture properties
+            voitureDto.CodeVin = model.Voiture.CodeVin;
+            voitureDto.Marque = model.Voiture.Marque;
+            voitureDto.Modele = model.Voiture.Modele;
+            voitureDto.Finition = model.Voiture.Finition;
+            voitureDto.AnneeFabrication = model.Voiture.AnneeFabrication;
+            voitureDto.ImagePath = await UploadImageAsync(model);
+
+            // Update Date properties
+            voitureDto.Date.DateAchat = model.Date.DateAchat;
+            voitureDto.Date.DateMiseEnVente = model.Date.DateAchat.AddDays(model.Reparation.DureeTotal);
+            voitureDto.Date.DateVente = model.Date.DateVente;
+
+            // Update Prix properties
+            voitureDto.Prix.PrixAchat = model.Prix.PrixAchat;
+            voitureDto.Prix.PrixReparation = voitureDto.Reparation.PrixTotal;
+            voitureDto.Prix.PrixVente = voitureDto.Prix.PrixAchat + voitureDto.Prix.PrixReparation + 500;
+
+            await _context.SaveChangesAsync();
+
         }
 
         private async Task<VoitureProfileModel> MapDtoToProfileModel(VoitureDto voitureDto)
@@ -278,6 +241,22 @@ namespace ExpressVoitures.Services
                 Types = listTypesModel
             };
             return newVoitureProfileModel;
+        }
+
+        private static async Task<string> UploadImageAsync(VoitureProfileModel model)
+        {
+            if (model.Voiture.ImageVoiture != null && model.Voiture.ImageVoiture.Length > 0)
+            {
+                string nameFile = model.Voiture.CodeVin + Path.GetExtension(model.Voiture.ImageVoiture.FileName);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", nameFile);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.Voiture.ImageVoiture.CopyToAsync(stream);
+                }
+                return $"/images/{nameFile}";
+            }
+
+            return "/images/imagedefault.jpg";
         }
     }
 }

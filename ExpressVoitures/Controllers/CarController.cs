@@ -70,7 +70,7 @@ namespace ExpressVoitures.Controllers
                 return View(model);
             }
             var voiture = await _service.UpdateCarAsync(model);
-
+            
             return RedirectToAction("CarUpdated", new { marque = voiture.Voiture.Marque, modele = voiture.Voiture.Modele });
         }
 
@@ -85,8 +85,8 @@ namespace ExpressVoitures.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            var voiture = await _service.DeleteCarAsync(id);
-            return View(voiture);
+            await _service.DeleteCarAsync(id);
+            return View();
         }
     }
 }

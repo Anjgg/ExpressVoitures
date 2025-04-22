@@ -1,9 +1,12 @@
-﻿@model VoitureProfileModel
-@{
+﻿@{
     ViewData["Title"] = "Supprimer une voiture";
 }
 
 
 <div>
-    <h1 class="text-center">La voiture @Model.Voiture.Marque @Model.Voiture.Modele a été supprimée</h1>
+    <h1 class="text-center">La voiture a été supprimée avec succès</h1>
+
+    <div class="text-center">
+        <a asp-controller="Car" asp-action="Index" class="btn btn-custom dm-sans-400">Retour à la liste des voitures</a>
+    </div>
 </div>

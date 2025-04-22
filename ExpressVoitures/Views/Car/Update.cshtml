@@ -12,7 +12,7 @@
     <div class="row justify-content-center ">
         <div class="col-md-6">
 
-            <form method="post">
+            <form method="post" enctype="multipart/form-data">
                 <h4>Véhicule</h4>
                 <div class="hidden">
                     <input asp-for="Voiture.Id" type="hidden">
@@ -53,9 +53,9 @@
                 </div>
                 
                 <div class="mb-2">
-                    <label asp-for="Voiture.ImagePath" class="form-label">Image</label>
-                    <input asp-for="Voiture.ImagePath" type="text" class="form-control">
-                    <span asp-validation-for="Voiture.ImagePath" class="text-danger"></span>
+                    <label asp-for="Voiture.ImageVoiture" class="control-label">Image de la voiture</label>
+                    <input asp-for="Voiture.ImageVoiture" class="form-control" accept="image/jpeg" placeholder="@Model.Voiture.ImagePath"/>
+                    <span asp-validation-for="Voiture.ImageVoiture" class="text-danger"></span>
                 </div>
 
                 <hr />
