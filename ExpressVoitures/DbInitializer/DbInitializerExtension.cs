@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-
-namespace ExpressVoitures.DbInitializer
+﻿namespace ExpressVoitures.DbInitializer
 {
     public static class DbInitializerExtension
     {

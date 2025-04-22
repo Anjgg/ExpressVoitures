@@ -1,8 +1,6 @@
-﻿using AutoMapper;
-using ExpressVoitures.Context;
+﻿using ExpressVoitures.Context;
 using ExpressVoitures.Data.Dto;
 using ExpressVoitures.Data.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace ExpressVoitures.Services
@@ -133,7 +131,7 @@ namespace ExpressVoitures.Services
                     File.Delete(imageVoiturePath);
                 }
             }
-            
+
             await _context.SaveChangesAsync();
         }
 

@@ -2,8 +2,6 @@
 using ExpressVoitures.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 
 namespace ExpressVoitures.Controllers
 {
@@ -44,7 +42,7 @@ namespace ExpressVoitures.Controllers
                 return View(model);
             }
             var voiture = await _service.CreateVoitureAsync(model);
-            return RedirectToAction("CarCreated", new { marque = voiture.Voiture.Marque, modele = voiture.Voiture.Modele});
+            return RedirectToAction("CarCreated", new { marque = voiture.Voiture.Marque, modele = voiture.Voiture.Modele });
         }
 
         [HttpGet]
@@ -70,7 +68,7 @@ namespace ExpressVoitures.Controllers
                 return View(model);
             }
             var voiture = await _service.UpdateCarAsync(model);
-            
+
             return RedirectToAction("CarUpdated", new { marque = voiture.Voiture.Marque, modele = voiture.Voiture.Modele });
         }
 
