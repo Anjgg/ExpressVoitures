@@ -176,7 +176,7 @@ namespace ExpressVoitures.Services
 
         private async Task<VoitureProfileModel> MapDtoToProfileModel(VoitureDto voitureDto)
         {
-            var typeList = await _context.Types.ToListAsync();
+            var listAllTypes = await _context.Types.ToListAsync();
             return new VoitureProfileModel
             {
                 Voiture = new VoitureModel
@@ -209,13 +209,13 @@ namespace ExpressVoitures.Services
                     PrixTotal = voitureDto.Reparation.PrixTotal,
                     DureeTotal = voitureDto.Reparation.DureeTotal,
                 },
-                Types = typeList.Select(r => new TypeModel
+                Types = listAllTypes.Select(r => new TypeModel
                 {
                     Id = r.Id,
                     Description = r.Description,
                     Prix = r.Prix,
                     Duree = r.Duree,
-                    IsSelected = voitureDto.Reparation.Types.Any(t => t.Id == r.Id)
+                    IsSelected = voitureDto.Reparation.Types.Any(t => t.Id == r.Id) // Check if the type is selected in the dto
                 }).ToList()
             };
         }
