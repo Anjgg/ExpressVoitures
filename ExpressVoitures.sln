@@ -1,9 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35521.163 d17.12
+VisualStudioVersion = 17.12.35521.163
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpressVoitures", "ExpressVoitures\ExpressVoitures.csproj", "{7770B807-B12C-4BFD-84B9-C4C579B1237E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpressVoitureTests", "ExpressVoitureTests\ExpressVoitureTests.csproj", "{B2A2660E-320B-439B-8BF3-A536D40756F7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7770B807-B12C-4BFD-84B9-C4C579B1237E} = {7770B807-B12C-4BFD-84B9-C4C579B1237E}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{7770B807-B12C-4BFD-84B9-C4C579B1237E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7770B807-B12C-4BFD-84B9-C4C579B1237E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7770B807-B12C-4BFD-84B9-C4C579B1237E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2A2660E-320B-439B-8BF3-A536D40756F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2A2660E-320B-439B-8BF3-A536D40756F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2A2660E-320B-439B-8BF3-A536D40756F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2A2660E-320B-439B-8BF3-A536D40756F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
