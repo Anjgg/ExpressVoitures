@@ -3,7 +3,7 @@ using ExpressVoitures.Data.Dto;
 using ExpressVoitures.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace ExpressVoitures.Services()
+namespace ExpressVoitures.Services
 {
     public interface IExpressVoituresService
     {
@@ -12,7 +12,7 @@ namespace ExpressVoitures.Services()
         Task<VoitureProfileModel> CreateVoitureAsync(VoitureProfileModel model);
         Task<VoitureProfileModel> UpdateCarAsync(VoitureProfileModel model);
         Task DeleteCarAsync(int id);
-        Task<VoitureProfileModel> GetNewVoitureProfileModel();
+        Task<VoitureProfileModel> GetNewVoitureProfileModelAsync();
     }
 
     public class ExpressVoituresService : IExpressVoituresService
@@ -58,7 +58,7 @@ namespace ExpressVoitures.Services()
                 return null;
             }
 
-            return await MapDtoToProfileModel(voitureDto);
+            return await MapDtoToProfileModelAsync(voitureDto);
         }
 
         public async Task<VoitureProfileModel> CreateVoitureAsync(VoitureProfileModel model)
@@ -98,7 +98,7 @@ namespace ExpressVoitures.Services()
             await _context.Voitures.AddAsync(voitureDto);
             await _context.SaveChangesAsync();
 
-            return await MapDtoToProfileModel(voitureDto);
+            return await MapDtoToProfileModelAsync(voitureDto);
         }
 
         public async Task<VoitureProfileModel> UpdateCarAsync(VoitureProfileModel model)
@@ -115,9 +115,9 @@ namespace ExpressVoitures.Services()
                 throw new Exception($"Voiture with Id {model.Voiture.Id} not found.");
             }
 
-            await UpdateDtoFromProfileModel(voitureDto, model);
+            await UpdateDtoFromProfileModelAsync(voitureDto, model);
 
-            return await MapDtoToProfileModel(voitureDto);
+            return await MapDtoToProfileModelAsync(voitureDto);
         }
 
         public async Task DeleteCarAsync(int id)
@@ -136,7 +136,7 @@ namespace ExpressVoitures.Services()
             await _context.SaveChangesAsync();
         }
 
-        private async Task UpdateDtoFromProfileModel(VoitureDto voitureDto, VoitureProfileModel model)
+        private async Task UpdateDtoFromProfileModelAsync(VoitureDto voitureDto, VoitureProfileModel model)
         {
             // Update Reparations properties first
             var selectedTypesId = model.Types.Where(t => t.IsSelected).Select(t => t.Id).ToList();
@@ -177,7 +177,7 @@ namespace ExpressVoitures.Services()
             await _context.SaveChangesAsync();
         }
 
-        private async Task<VoitureProfileModel> MapDtoToProfileModel(VoitureDto voitureDto)
+        private async Task<VoitureProfileModel> MapDtoToProfileModelAsync(VoitureDto voitureDto)
         {
             var listAllTypes = await _context.Types.ToListAsync();
             return new VoitureProfileModel
@@ -223,7 +223,7 @@ namespace ExpressVoitures.Services()
             };
         }
 
-        public async Task<VoitureProfileModel> GetNewVoitureProfileModel()
+        public async Task<VoitureProfileModel> GetNewVoitureProfileModelAsync()
         {
             var listTypesDto = await _context.Types.ToListAsync();
             var listTypesModel = listTypesDto.Select(t => new TypeModel

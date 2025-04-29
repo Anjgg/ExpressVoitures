@@ -30,7 +30,7 @@ namespace ExpressVoitures.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            var newVoitureProfileModel = await _service.GetNewVoitureProfileModel();
+            var newVoitureProfileModel = await _service.GetNewVoitureProfileModelAsync();
             return View(newVoitureProfileModel);
         }
 

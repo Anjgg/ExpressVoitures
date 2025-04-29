@@ -10,6 +10,7 @@ namespace ExpressVoitureTests
     public class VoitureServiceTests
     {
         private DbContextOptions<ExpressVoituresContext>? _contextOptions;
+        private DbContextOptions<ExpressVoituresContext>? _contextEmptyOptions;
         private ExpressVoituresContext? _context;
         private ExpressVoituresService? _service;
         private List<VoitureDto> _listVoitures = new List<VoitureDto>();
@@ -88,6 +89,15 @@ namespace ExpressVoitureTests
                 _context.Voitures.Add(_listVoitures[1]);
                 _context.SaveChangesAsync();
             }
+
+            _contextEmptyOptions = new DbContextOptionsBuilder<ExpressVoituresContext>()
+                .UseInMemoryDatabase("EmptyTestDatabase")
+                .Options;
+            using (_context = new ExpressVoituresContext(_contextEmptyOptions))
+            {
+                _context.Database.EnsureDeleted();
+                _context.Database.EnsureCreated();
+            };
         }
 
         [TestMethod]
@@ -117,6 +127,71 @@ namespace ExpressVoitureTests
                 Assert.AreEqual(voiture.Date.DateVente == null, model.IsAvailable);
             }
         }
+
+        [TestMethod]
+        public async Task GetAllHomeCars_EmptyDatabase_ReturnsEmptyList()
+        {
+            // Arrange
+            List<HomeCarModel> result;
+            using (_context = new ExpressVoituresContext(_contextEmptyOptions!))
+            {
+                _context.Database.EnsureDeleted();
+                _context.Database.EnsureCreated();
+                _service = new ExpressVoituresService(_context);
+                // Act
+                result = await _service.GetAllHomeCars();
+            }
+            // Assert
+            Assert.AreEqual(0, result.Count);
+        }
+
+        [TestMethod]
+        public async Task GetCarAsync_ValidId_ReturnsCar()
+        {
+            // Arrange
+            VoitureProfileModel? result;
+            using (_context = new ExpressVoituresContext(_contextOptions!))
+            {
+                _service = new ExpressVoituresService(_context);
+                // Act
+                result = await _service.GetCarAsync(1);
+            }
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, result.Voiture.Id);
+            Assert.AreEqual("1HGH41JXMN109156", result.Voiture.CodeVin);
+        }
+
+        [TestMethod]
+        public async Task GetCarAsync_InvalidId_ReturnsNull()
+        {
+            // Arrange
+            VoitureProfileModel? result;
+            using (_context = new ExpressVoituresContext(_contextOptions!))
+            {
+                _service = new ExpressVoituresService(_context);
+                // Act
+                result = await _service.GetCarAsync(999);
+            }
+            // Assert
+            Assert.IsNull(result);
+        }
+
+        [TestMethod]
+        public async Task GetCarAsync_EmptyDatabase_ReturnsNull()
+        {
+            // Arrange
+            VoitureProfileModel? result;
+            using (_context = new ExpressVoituresContext(_contextEmptyOptions!))
+            {
+                _service = new ExpressVoituresService(_context);
+                // Act
+                result = await _service.GetCarAsync(1);
+            }
+            // Assert
+            Assert.IsNull(result);
+        }
+
 
     }
 }
