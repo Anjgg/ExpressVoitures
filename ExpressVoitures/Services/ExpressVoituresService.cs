@@ -73,7 +73,7 @@ namespace ExpressVoitures.Services
                 Modele = model.Voiture.Modele,
                 Finition = model.Voiture.Finition,
                 AnneeFabrication = model.Voiture.AnneeFabrication,
-                ImagePath = await UploadImageAsync(model),
+                ImagePath = model.Voiture.ImageVoiture is null ? "/images/default.jpg" : await UploadImageAsync(model),
                 Reparation = new ReparationDto
                 {
                     Types = typesSelected,
@@ -158,7 +158,11 @@ namespace ExpressVoitures.Services
             voitureDto.Modele = model.Voiture.Modele;
             voitureDto.Finition = model.Voiture.Finition;
             voitureDto.AnneeFabrication = model.Voiture.AnneeFabrication;
-            voitureDto.ImagePath = await UploadImageAsync(model);
+            if (model.Voiture.ImageVoiture != null && model.Voiture.ImageVoiture.Length > 0)
+            {
+                voitureDto.ImagePath = await UploadImageAsync(model);
+            }
+            
 
             // Update Date properties
             voitureDto.Date.DateAchat = model.Date.DateAchat;
@@ -244,22 +248,32 @@ namespace ExpressVoitures.Services
 
         private static async Task<string> UploadImageAsync(VoitureProfileModel model)
         {
-            if (model.Voiture.ImageVoiture != null && model.Voiture.ImageVoiture.Length > 0)
+            string index = Guid.NewGuid().ToString().ElementAt(0).ToString();
+            var nameDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", model.Voiture.CodeVin);
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", nameDirectory);
+
+            if (!Directory.Exists(filePath))
             {
-                string nameFile = model.Voiture.CodeVin + ".jpg";
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", nameFile);
-                if (File.Exists(filePath))
+                Directory.CreateDirectory(filePath);
+            }
+            else
+            {
+                var files = Directory.GetFiles(filePath);
+                foreach (var file in files)
                 {
-                    File.Delete(filePath);
+                    File.Delete(file);
                 }
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await model.Voiture.ImageVoiture.CopyToAsync(stream);
-                }
-                return $"/images/{nameFile}";
             }
 
-            return "/images/imagedefault.jpg";
+            string nameFile = $"/{model.Voiture.CodeVin}_{index}.jpg";
+            using (var stream = new FileStream($"{filePath}{nameFile}", FileMode.OpenOrCreate))
+            {
+                
+                await model.Voiture.ImageVoiture!.CopyToAsync(stream);
+            }
+            
+            return $"/images/{model.Voiture.CodeVin}/{nameFile}";
+            
         }
     }
 }
