@@ -65,6 +65,8 @@ namespace ExpressVoitures.Services
         {
             var typesSelectedId = model.Types.Where(t => t.IsSelected == true).Select(a => a.Id).ToList();
             var typesSelected = await _context.Types.Where(t => typesSelectedId.Contains(t.Id)).ToListAsync();
+            var sumPrixReparation = typesSelected.Sum(t => t.Prix);
+            var sumDureeReparation = typesSelected.Sum(t => t.Duree);
 
             var voitureDto = new VoitureDto
             {
@@ -83,14 +85,13 @@ namespace ExpressVoitures.Services
                 Prix = new PrixDto
                 {
                     PrixAchat = model.Prix.PrixAchat,
-                    PrixReparation = model.Reparation.PrixTotal,
-                    PrixVente = model.Prix.PrixAchat + model.Prix.PrixReparation + 500
+                    PrixReparation = sumPrixReparation,
+                    PrixVente = model.Prix.PrixAchat + sumPrixReparation + 500
                 },
                 Date = new DateDto
                 {
                     DateAchat = model.Date.DateAchat,
-                    DateMiseEnVente = model.Date.DateAchat.AddDays(model.Reparation.DureeTotal),
-                    DateVente = model.Date.DateVente
+                    DateMiseEnVente = model.Date.DateAchat.AddDays(sumDureeReparation),
                 }
 
             };
@@ -162,7 +163,6 @@ namespace ExpressVoitures.Services
             {
                 voitureDto.ImagePath = await UploadImageAsync(model);
             }
-            
 
             // Update Date properties
             voitureDto.Date.DateAchat = model.Date.DateAchat;
@@ -175,7 +175,6 @@ namespace ExpressVoitures.Services
             voitureDto.Prix.PrixVente = voitureDto.Prix.PrixAchat + voitureDto.Prix.PrixReparation + 500;
 
             await _context.SaveChangesAsync();
-
         }
 
         private async Task<VoitureProfileModel> MapDtoToProfileModel(VoitureDto voitureDto)
@@ -235,6 +234,7 @@ namespace ExpressVoitures.Services
                 Duree = t.Duree,
                 IsSelected = false
             }).ToList();
+
             var newVoitureProfileModel = new VoitureProfileModel
             {
                 Voiture = new VoitureModel(),

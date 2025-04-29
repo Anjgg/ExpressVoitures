@@ -68,15 +68,13 @@ namespace ExpressVoitures.Controllers
                 return View(model);
             }
             var voiture = await _service.UpdateCarAsync(model);
-
-            return RedirectToAction("CarUpdated", new { marque = voiture.Voiture.Marque, modele = voiture.Voiture.Modele });
+            
+            return RedirectToAction("CarUpdated");
         }
 
         [HttpGet]
-        public IActionResult CarUpdated(string marque, string modele)
+        public IActionResult CarUpdated()
         {
-            ViewBag.Marque = marque;
-            ViewBag.Modele = modele;
             return View();
         }
 
