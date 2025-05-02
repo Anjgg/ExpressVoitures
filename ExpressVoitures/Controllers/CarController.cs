@@ -42,14 +42,12 @@ namespace ExpressVoitures.Controllers
                 return View(model);
             }
             var voiture = await _service.CreateVoitureAsync(model);
-            return RedirectToAction("CarCreated", new { marque = voiture.Voiture.Marque, modele = voiture.Voiture.Modele });
+            return RedirectToAction("CarCreated");
         }
 
         [HttpGet]
-        public IActionResult CarCreated(string marque, string modele)
+        public IActionResult CarCreated()
         {
-            ViewBag.Marque = marque;
-            ViewBag.Modele = modele;
             return View();
         }
 
@@ -81,7 +79,18 @@ namespace ExpressVoitures.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            await _service.DeleteCarAsync(id);
+            try
+            {
+                await _service.DeleteCarAsync(id);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("DeleteError", $"Erreur lors de la suppression de la voiture : {ex.Message}");
+            }
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("Index", id);
+            }
             return View();
         }
     }

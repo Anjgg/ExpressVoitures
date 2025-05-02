@@ -4,7 +4,7 @@ using ExpressVoitures.Data.Models;
 using ExpressVoitures.Services;
 using Microsoft.EntityFrameworkCore;
 
-namespace ExpressVoitureTests
+namespace ExpressVoitureTests.Service
 {
     [TestClass]
     public class VoitureServiceTests
@@ -278,7 +278,7 @@ namespace ExpressVoitureTests
             await _context.SaveChangesAsync();
         }
 
-        private DbContextOptions<ExpressVoituresContext> GetOptionsDb()  => new DbContextOptionsBuilder<ExpressVoituresContext>()
+        private DbContextOptions<ExpressVoituresContext> GetOptionsDb() => new DbContextOptionsBuilder<ExpressVoituresContext>()
                                                                             .UseInMemoryDatabase($"TestDatabase_{Guid.NewGuid()}")
                                                                             .Options;
     }
