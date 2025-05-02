@@ -6,12 +6,10 @@ namespace ExpressVoitures.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly IExpressVoituresService _service;
 
-        public HomeController(ILogger<HomeController> logger, IExpressVoituresService service)
+        public HomeController(IExpressVoituresService service)
         {
-            _logger = logger;
             _service = service;
         }
 
