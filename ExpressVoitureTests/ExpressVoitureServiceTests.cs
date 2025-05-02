@@ -9,122 +9,34 @@ namespace ExpressVoitureTests
     [TestClass]
     public class VoitureServiceTests
     {
-        private DbContextOptions<ExpressVoituresContext>? _contextOptions;
-        private DbContextOptions<ExpressVoituresContext>? _contextEmptyOptions;
         private ExpressVoituresContext? _context;
         private ExpressVoituresService? _service;
-        private List<VoitureDto> _listVoitures = new List<VoitureDto>();
-        
-
-        [TestInitialize]
-        public void Setup()
-        {
-            _contextOptions = new DbContextOptionsBuilder<ExpressVoituresContext>()
-                .UseInMemoryDatabase("TestDatabase")
-                .Options;
-
-            using (_context = new ExpressVoituresContext(_contextOptions))
-            {
-                _context.Database.EnsureDeleted();
-                _context.Database.EnsureCreated();
-
-                _listVoitures = new List<VoitureDto>() {
-                    new VoitureDto {
-                        Id = 1,
-                        CodeVin = "1HGH41JXMN109156",
-                        Marque = "Toyota",
-                        Modele = "Corolla",
-                        Finition = "LE",
-                        AnneeFabrication = new DateTimeOffset(1985, 5, 12, 0, 0, 0, new TimeSpan()),
-                        ImagePath = "/images/imagedefault.jpg",
-                        Date = new DateDto
-                        {
-                            DateAchat = new DateTimeOffset(2023, 10, 1, 0, 0, 0, new TimeSpan())
-                        },
-                        Prix = new PrixDto
-                        {
-                            PrixAchat = 15000,
-                            PrixReparation = 300,
-                            PrixVente = 15800
-                        },
-                        Reparation = new ReparationDto
-                        {
-                            Types = new List<TypeDto>
-                                {
-                                    new TypeDto { Description = "Changement d'huile", Prix = 100, Duree = 3 },
-                                    new TypeDto { Description = "Révision", Prix = 200, Duree = 4 }
-                                }
-                        },
-                    },
-                    new VoitureDto {
-                        Id = 2,
-                        CodeVin = "1HBH41JXMN109167",
-                        Marque = "Honda",
-                        Modele = "Civic",
-                        Finition = "LX",
-                        AnneeFabrication = new DateTimeOffset(1989, 7, 20, 0, 0, 0, new TimeSpan()),
-                        ImagePath = "/images/imagedefault.jpg",
-                        Date = new DateDto
-                        {
-                            DateAchat = new DateTimeOffset(2023, 10, 2, 0, 0, 0, new TimeSpan()),
-                            DateVente = new DateTimeOffset(2025, 5, 1, 0, 0, 0, new TimeSpan())
-                        },
-                        Prix = new PrixDto
-                        {
-                            PrixAchat = 16000,
-                            PrixReparation = 500,
-                            PrixVente = 17000
-                        },
-                        Reparation = new ReparationDto
-                        {
-                            Types = new List<TypeDto>
-                                {
-                                    new TypeDto { Description = "Changement de freins", Prix = 150, Duree = 5 },
-                                    new TypeDto { Description = "Révision", Prix = 350, Duree = 6 }
-                                }
-                        },
-                    }};
-
-                _context.Voitures.Add(_listVoitures[0]);
-                _context.Voitures.Add(_listVoitures[1]);
-                _context.SaveChangesAsync();
-            }
-
-            _contextEmptyOptions = new DbContextOptionsBuilder<ExpressVoituresContext>()
-                .UseInMemoryDatabase("EmptyTestDatabase")
-                .Options;
-            using (_context = new ExpressVoituresContext(_contextEmptyOptions))
-            {
-                _context.Database.EnsureDeleted();
-                _context.Database.EnsureCreated();
-            };
-        }
 
         [TestMethod]
         public async Task GetAllHomeCars_ReturnsTransformedData()
         {
             // Arrange
-            List<HomeCarModel> result;
-            using (_context = new ExpressVoituresContext(_contextOptions!))
+            var options = GetOptionsDb();
+            using (_context = new ExpressVoituresContext(options))
             {
+                _context.Database.EnsureDeleted();
+                _context.Database.EnsureCreated();
+                await SeedDb(1);
+                await SeedDb(2);
                 _service = new ExpressVoituresService(_context);
 
                 // Act
-                result = await _service.GetAllHomeCars();
-            }
+                var listResult = await _service.GetAllHomeCars();
 
-            for (int i = 0; i < result.Count; i++)
-            {
-                var model = result[i];
-                var voiture = _listVoitures[i];
                 // Assert
-                Assert.AreEqual(voiture.Id, model.Id);
-                Assert.AreEqual(voiture.Marque, model.Marque);
-                Assert.AreEqual(voiture.Modele, model.Modele);
-                Assert.AreEqual(voiture.AnneeFabrication, model.AnneeFabrication);
-                Assert.AreEqual(voiture.ImagePath, model.ImagePath);
-                Assert.AreEqual(voiture.Prix.PrixVente, model.PrixVente);
-                Assert.AreEqual(voiture.Date.DateVente == null, model.IsAvailable);
+                Assert.IsNotNull(listResult);
+                Assert.AreEqual(2, listResult.Count);
+                Assert.AreEqual(1, listResult[0].Id);
+                Assert.AreEqual("Marque1", listResult[0].Marque);
+                Assert.AreEqual("Modele1", listResult[0].Modele);
+                Assert.AreEqual(2, listResult[1].Id);
+                Assert.AreEqual("Marque2", listResult[1].Marque);
+                Assert.AreEqual("Modele2", listResult[1].Modele);
             }
         }
 
@@ -132,66 +44,242 @@ namespace ExpressVoitureTests
         public async Task GetAllHomeCars_EmptyDatabase_ReturnsEmptyList()
         {
             // Arrange
-            List<HomeCarModel> result;
-            using (_context = new ExpressVoituresContext(_contextEmptyOptions!))
+            var options = GetOptionsDb();
+            using (_context = new ExpressVoituresContext(options))
             {
                 _context.Database.EnsureDeleted();
                 _context.Database.EnsureCreated();
                 _service = new ExpressVoituresService(_context);
                 // Act
-                result = await _service.GetAllHomeCars();
+                var result = await _service.GetAllHomeCars();
+
+                // Assert
+                Assert.AreEqual(0, result.Count);
             }
-            // Assert
-            Assert.AreEqual(0, result.Count);
         }
 
         [TestMethod]
         public async Task GetCarAsync_ValidId_ReturnsCar()
         {
             // Arrange
-            VoitureProfileModel? result;
-            using (_context = new ExpressVoituresContext(_contextOptions!))
+            var options = GetOptionsDb();
+
+            using (_context = new ExpressVoituresContext(options))
             {
+                _context.Database.EnsureDeleted();
+                _context.Database.EnsureCreated();
+                await SeedDb(1);
                 _service = new ExpressVoituresService(_context);
+
                 // Act
-                result = await _service.GetCarAsync(1);
+                var result = await _service.GetCarAsync(1);
+
+                // Assert
+                Assert.IsNotNull(result);
+                Assert.AreEqual(1, result.Voiture.Id);
+                Assert.AreEqual("TESTCASENUM1", result.Voiture.CodeVin);
             }
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(1, result.Voiture.Id);
-            Assert.AreEqual("1HGH41JXMN109156", result.Voiture.CodeVin);
         }
 
         [TestMethod]
         public async Task GetCarAsync_InvalidId_ReturnsNull()
         {
             // Arrange
-            VoitureProfileModel? result;
-            using (_context = new ExpressVoituresContext(_contextOptions!))
+            var options = GetOptionsDb();
+
+            using (_context = new ExpressVoituresContext(options))
             {
+                _context.Database.EnsureDeleted();
+                _context.Database.EnsureCreated();
+                await SeedDb(1);
                 _service = new ExpressVoituresService(_context);
+
                 // Act
-                result = await _service.GetCarAsync(999);
+                var result = await _service.GetCarAsync(999);
+
+                // Assert
+                Assert.IsNull(result);
             }
-            // Assert
-            Assert.IsNull(result);
         }
 
         [TestMethod]
-        public async Task GetCarAsync_EmptyDatabase_ReturnsNull()
+        public async Task CreateVoitureAsync_Success()
         {
             // Arrange
-            VoitureProfileModel? result;
-            using (_context = new ExpressVoituresContext(_contextEmptyOptions!))
+            VoitureProfileModel voitureProfileModel = new VoitureProfileModel
             {
+                Voiture = new VoitureModel
+                {
+                    CodeVin = "TESTCASECREATE",
+                    Marque = "Toyota",
+                    Modele = "Corolla",
+                    Finition = "LE",
+                    AnneeFabrication = new DateTimeOffset(1985, 5, 12, 0, 0, 0, new TimeSpan()),
+                    ImagePath = "/images/imagedefault.jpg"
+                },
+                Date = new DateModel
+                {
+                    DateAchat = new DateTimeOffset(2023, 10, 1, 0, 0, 0, new TimeSpan())
+                },
+                Prix = new PrixModel
+                {
+                    PrixAchat = 15000,
+                    PrixReparation = 300,
+                    PrixVente = 15800
+                }
+
+            };
+            var options = GetOptionsDb();
+
+            using (_context = new ExpressVoituresContext(options))
+            {
+                _context.Database.EnsureDeleted();
+                _context.Database.EnsureCreated();
                 _service = new ExpressVoituresService(_context);
+
                 // Act
-                result = await _service.GetCarAsync(1);
+                var result = await _service.CreateVoitureAsync(voitureProfileModel);
+
+                // Assert
+                var createdCar = await _context.Voitures.FindAsync(result.Voiture.Id);
+                Assert.IsNotNull(result);
+                Assert.IsNotNull(createdCar);
+                Assert.AreEqual(1, _context.Voitures.Count());
+                Assert.AreEqual(1, result.Voiture.Id);
+                Assert.AreEqual(voitureProfileModel.Voiture.CodeVin, createdCar.CodeVin);
             }
-            // Assert
-            Assert.IsNull(result);
         }
 
+        [TestMethod]
+        public async Task UpdateCarAsync_Success()
+        {
+            // Arrange
+            VoitureProfileModel voitureProfileModel = new VoitureProfileModel
+            {
+                Voiture = new VoitureModel
+                {
+                    Id = 1,
+                    CodeVin = "TESTCASEUPDATE",
+                    Marque = "UPDATE1",
+                    Modele = "UPDATE1",
+                    Finition = "UPDATE1",
+                },
 
+            };
+            var options = GetOptionsDb();
+
+            using (_context = new ExpressVoituresContext(options))
+            {
+                _context.Database.EnsureDeleted();
+                _context.Database.EnsureCreated();
+                await SeedDb(1);
+                _service = new ExpressVoituresService(_context);
+
+                // Act
+                var result = await _service.UpdateCarAsync(voitureProfileModel);
+
+                // Assert
+                var updatedCar = await _context.Voitures.FindAsync(voitureProfileModel.Voiture.Id);
+                Assert.IsNotNull(result);
+                Assert.IsNotNull(updatedCar);
+                Assert.AreEqual(updatedCar.CodeVin, result.Voiture.CodeVin);
+                Assert.AreEqual(updatedCar.Marque, result.Voiture.Marque);
+                Assert.AreEqual(updatedCar.Modele, result.Voiture.Modele);
+                Assert.AreEqual(updatedCar.Finition, result.Voiture.Finition);
+            }
+        }
+
+        [TestMethod]
+        public async Task UpdateCarAsync_InvalidId_ReturnException()
+        {
+            // Arrange
+            VoitureProfileModel voitureProfileModel = new VoitureProfileModel
+            {
+                Voiture = new VoitureModel
+                {
+                    Id = 999,
+                }
+            };
+            var options = GetOptionsDb();
+
+            using (_context = new ExpressVoituresContext(options))
+            {
+                _context.Database.EnsureDeleted();
+                _context.Database.EnsureCreated();
+                await SeedDb(1);
+                _service = new ExpressVoituresService(_context);
+
+                // Act & Assert
+                var resultException = await Assert.ThrowsExceptionAsync<Exception>(async () =>
+                {
+                    await _service.UpdateCarAsync(voitureProfileModel);
+                });
+
+                Assert.AreEqual($"Voiture with Id {voitureProfileModel.Voiture.Id} not found.", resultException.Message);
+            }
+        }
+
+        [TestMethod]
+        public async Task DeleteCarAsync_Success()
+        {
+            // Arrange
+            var options = GetOptionsDb();
+
+            using (_context = new ExpressVoituresContext(options))
+            {
+                _context.Database.EnsureDeleted();
+                _context.Database.EnsureCreated();
+                await SeedDb(1);
+                await SeedDb(2);
+                _service = new ExpressVoituresService(_context);
+
+                // Act
+                await _service.DeleteCarAsync(1);
+
+                // Assert
+                var listAllCars = await _context.Voitures.ToListAsync();
+                Assert.AreEqual(1, listAllCars.Count);
+                Assert.AreEqual(2, listAllCars[0].Id);
+            }
+        }
+
+        private async Task SeedDb(int id)
+        {
+            var voitureDto = new VoitureDto
+            {
+                Id = id,
+                CodeVin = $"TESTCASENUM{id}",
+                Marque = $"Marque{id}",
+                Modele = $"Modele{id}",
+                Finition = $"Finition{id}",
+                AnneeFabrication = new DateTimeOffset(1985, 5, 12, 0, 0, 0, new TimeSpan()),
+                ImagePath = "/images/imagedefault.jpg",
+                Date = new DateDto
+                {
+                    DateAchat = new DateTimeOffset(2023, 10, 1, 0, 0, 0, new TimeSpan())
+                },
+                Prix = new PrixDto
+                {
+                    PrixAchat = 15000,
+                    PrixReparation = 300,
+                    PrixVente = 15800
+                },
+                Reparation = new ReparationDto
+                {
+                    Types = new List<TypeDto>
+                                {
+                                    new TypeDto { Description = "Changement d'huile", Prix = 100, Duree = 3 },
+                                    new TypeDto { Description = "Révision", Prix = 200, Duree = 4 }
+                                }
+                },
+            };
+
+            _context!.Voitures.Add(voitureDto);
+            await _context.SaveChangesAsync();
+        }
+
+        private DbContextOptions<ExpressVoituresContext> GetOptionsDb()  => new DbContextOptionsBuilder<ExpressVoituresContext>()
+                                                                            .UseInMemoryDatabase($"TestDatabase_{Guid.NewGuid()}")
+                                                                            .Options;
     }
 }
